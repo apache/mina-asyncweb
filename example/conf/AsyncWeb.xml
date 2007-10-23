@@ -1,0 +1,187 @@
+<!-- 
+	Licensed to the Apache Software Foundation (ASF) under one
+	or more contributor license agreements.  See the NOTICE file
+	distributed with this work for additional information
+	regarding copyright ownership.  The ASF licenses this file
+	to you under the Apache License, Version 2.0 (the
+	"License"); you may not use this file except in compliance
+	with the License.  You may obtain a copy of the License at
+	
+	http://www.apache.org/licenses/LICENSE-2.0
+	
+	Unless required by applicable law or agreed to in writing,
+	software distributed under the License is distributed on an
+	"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+	KIND, either express or implied.  See the License for the
+	specific language governing permissions and limitations
+	under the License.
+-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<!-- A NIO based HTTP Transport -->
+
+	<bean id="mina-transport"
+		class="org.safehaus.asyncweb.service.transport.mina.MinaTransport">
+
+		<!--
+			This property sets the port listened on for new connections
+		-->
+		<property name="port">
+			<value>9012</value>
+		</property>
+
+		<!--
+			This property controls the number of IO worker threads.
+			Please note that this is not related to the number of concurrent
+			connections you wish to process. This will typically be a small number
+		-->
+		<property name="ioThreads">
+			<value>4</value>
+		</property>
+
+		<property name="eventThreads">
+			<value>16</value>
+		</property>
+
+		<!--
+			The HTTP IO Handler we employ. 
+		-->
+		<property name="ioHandler">
+			<bean
+				class="org.safehaus.asyncweb.service.transport.mina.DefaultHttpIoHandler" />
+		</property>
+
+	</bean>
+
+	<!-- The service container -->
+
+	<bean id="container"
+		class="org.safehaus.asyncweb.service.BasicServiceContainer">
+
+		<!--
+			This property lists the service handlers to be employed by this
+			container (in the order they are to be used).
+		-->
+		<property name="serviceFilters">
+			<list>
+				<!--
+					This handler causes the existing client session (if any) to be renewed on 
+					every request - irrespective of whether application code causes the session 
+					to be accessed.
+					
+					<bean class="org.safehaus.asyncweb.http.session.SessionKeepAliveHandler"/>
+				-->
+
+				<!--
+					The Http service handler
+				-->
+				<ref bean="httpServiceHandler" />
+
+			</list>
+		</property>
+
+		<!--
+			This property lists the transports employed by this container
+		-->
+		<property name="transports">
+			<list>
+				<ref bean="mina-transport" />
+			</list>
+		</property>
+
+		<!--
+			Session management configuration. If omitted, default (in memory) session management
+			is employed      
+		-->
+		<property name="sessionAccessor">
+			<!-- 
+				Employ a default accessor which combines a secure random key generator,
+				cookie session identification and a session store
+			-->
+			<bean
+				class="org.safehaus.asyncweb.service.session.DefaultSessionAccessor">
+				<!--
+					Employ a basic (in memory) session store with a 15 minute timeout
+				-->
+				<property name="sessionStore">
+					<bean
+						class="org.safehaus.asyncweb.service.session.BasicSessionStore">
+						<constructor-arg type="long">
+							<value>900000</value>
+						</constructor-arg>
+
+						<!--
+							SessionListeners
+						-->
+						<property name="sessionListeners">
+							<list>
+								<!-- An example listener which logs lifecyle events. This can be removed if required -->
+								<bean
+									class="org.safehaus.asyncweb.service.session.LoggingSessionListener" />
+							</list>
+						</property>
+
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="maxKeepAlives" value="1024" />
+
+	</bean>
+
+
+	<!-- The HTTP Service Resolver -->
+
+	<bean id="httpServiceHandler"
+		class="org.safehaus.asyncweb.service.HttpServiceHandler">
+
+		<!-- 
+			This property controls the service resolver employed by the 
+			container.
+			By default, we use a "SimplePrefixResolver" with a prefix of "/service/".
+			This means that all request URIs are expected to begin with "/service/",
+			and the remainder of the URI is used as the service name. Anything not
+			matching this prefix is passed through unchanged (with leading '/' removed)
+		-->
+		<property name="serviceResolver">
+			<bean
+				class="org.safehaus.asyncweb.service.resolver.CompositeResolver">
+				<property name="resolvers">
+					<list>
+						<bean
+							class="org.safehaus.asyncweb.service.resolver.SimplePrefixResolver">
+							<property name="uriPrefix">
+								<value>/service/</value>
+							</property>
+						</bean>
+						<bean
+							class="org.safehaus.asyncweb.service.resolver.PassThruResolver" />
+					</list>
+				</property>
+			</bean>
+
+
+		</property>
+
+	</bean>
+
+	<!-- 
+		HTTP Service Auto-loading.
+		
+		Auto-loading pre-registers all HttpServices in the spring application
+		context with the HttpServiceHandler.
+	-->
+	<bean id="httpServiceAutoload"
+		class="org.safehaus.asyncweb.integration.spring.HttpServiceLoader">
+
+		<property name="handler">
+			<ref bean="httpServiceHandler" />
+		</property>
+
+	</bean>
+
+
+</beans>

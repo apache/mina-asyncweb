@@ -1,0 +1,51 @@
+<!-- 
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+ -->
+<project name="asyncWebServer" default="add-service-definition">
+  <property name="serviceTemplate" value="conf/ServiceTemplate.xml"/>
+  <property name="serviceDir"      value="conf/httpServiceDefinitions"/>
+    
+  <!--
+    Adds default configuration for a new http service.
+    When this task is executed, the user is promted for a service class name
+    and a service name. An appropriate entry is then created in the
+    conf/httpServiceDefinitions directory
+  -->
+  <target name="add-service-definition">
+    <input
+      message="Enter full example class name (e.g org.safehaus.asyncweb.examples.HelloWorldHttpService): "
+      addproperty="service.class"/>
+    <input 
+      message="Enter service name (e.g. HelloWorldHttpService): "
+      addProperty="service.name"/>
+    <input 
+      message="Create service '${service.name}' for class '${service.class}'?"
+      validargs="y,n"
+      addProperty="service.create"/>
+    <condition property="do.abort">
+      <equals arg1="n" arg2="${service.create}"/>
+    </condition>
+    <fail if="do.abort">No service entry created</fail>
+    
+    <copy file="${serviceTemplate}" tofile="${serviceDir}/${service.name}.xml"></copy>
+    <replace file="${serviceDir}/${service.name}.xml" token="%[SERVICE_NAME]%" value="${service.name}"/>
+    <replace file="${serviceDir}/${service.name}.xml" token="%[SERVICE_CLASS]%" value="${service.class}"/>    
+  
+  </target>
+    
+</project>

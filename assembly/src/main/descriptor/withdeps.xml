@@ -1,0 +1,27 @@
+<assembly>
+  <id>withdeps</id>
+  <formats>
+    <format>jar</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>/</outputDirectory>
+      <unpack>true</unpack>
+      <scope>compile</scope>
+      <excludes>
+        <exclude>${pom.groupId}:asyncweb-example</exclude>
+      </excludes>
+    </dependencySet>
+  </dependencySets>
+  <fileSets>
+    <fileSet>
+      <directory>..</directory>
+      <outputDirectory>/META-INF</outputDirectory>
+      <includes>
+        <include>LICENSE*</include>
+        <include>NOTICE*</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+</assembly>
