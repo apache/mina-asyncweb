@@ -24,7 +24,6 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.safehaus.asyncweb.codec.HttpCodecUtils;
 import org.safehaus.asyncweb.codec.decoder.support.DecodingState;
 
-
 /**
  * Decodes a single <code>CRLF</code>.
  * If it is found, the bytes are consumed and <code>Boolean.TRUE</code>
@@ -33,51 +32,55 @@ import org.safehaus.asyncweb.codec.decoder.support.DecodingState;
  * product.
  * Note that if we find a CR but do not find a following LF, we raise
  * an error.
- * 
+ *
  * @author irvingd
  * @author trustin
  * @version $Rev$, $Date$
  */
 public abstract class CRLFDecodingState implements DecodingState {
 
-  private boolean hasCR;
-  
-  public DecodingState decode(IoBuffer in, ProtocolDecoderOutput out) throws Exception {
-    boolean found = false;
-    boolean finished = false;
-    while (in.hasRemaining()) {
-      byte b = in.get();
-      if (!hasCR) {
-        if (b == HttpCodecUtils.CR) {
-          hasCR = true;
-        } else {
-          if (b == HttpCodecUtils.LF) {
-            found = true;
-          } else {
-            in.position(in.position() - 1);
-            found = false;
-          }
-          finished = true;
-          break;
+    private boolean hasCR;
+
+    public DecodingState decode(IoBuffer in, ProtocolDecoderOutput out)
+            throws Exception {
+        boolean found = false;
+        boolean finished = false;
+        while (in.hasRemaining()) {
+            byte b = in.get();
+            if (!hasCR) {
+                if (b == HttpCodecUtils.CR) {
+                    hasCR = true;
+                } else {
+                    if (b == HttpCodecUtils.LF) {
+                        found = true;
+                    } else {
+                        in.position(in.position() - 1);
+                        found = false;
+                    }
+                    finished = true;
+                    break;
+                }
+            } else {
+                if (b == HttpCodecUtils.LF) {
+                    found = true;
+                    finished = true;
+                    break;
+                } else {
+                    HttpCodecUtils
+                            .throwDecoderException("Expected LF after CR but was: "
+                                    + b);
+                }
+            }
         }
-      } else {
-        if (b == HttpCodecUtils.LF) {
-          found = true;
-          finished = true;
-          break;
+
+        if (finished) {
+            hasCR = false;
+            return finishDecode(found, out);
         } else {
-          HttpCodecUtils.throwDecoderException("Expected LF after CR but was: " + b);
+            return this;
         }
-      }
     }
-    
-    if (finished) {
-      hasCR = false;
-      return finishDecode(found, out);
-    } else {
-      return this;
-    }
-  }
-  
-  protected abstract DecodingState finishDecode(boolean foundCRLF, ProtocolDecoderOutput out) throws Exception;
+
+    protected abstract DecodingState finishDecode(boolean foundCRLF,
+            ProtocolDecoderOutput out) throws Exception;
 }

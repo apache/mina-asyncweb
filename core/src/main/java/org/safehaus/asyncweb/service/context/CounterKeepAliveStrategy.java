@@ -22,30 +22,32 @@ package org.safehaus.asyncweb.service.context;
 import org.safehaus.asyncweb.common.HttpResponse;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 
-
 public class CounterKeepAliveStrategy extends BasicKeepAliveStrategy {
 
-  private static final int DEFAULT_KEEP_ALIVES = 100;
-  
-  private int maxKeepAlives = DEFAULT_KEEP_ALIVES;
-  private int keptAliveCount;
-  
-  /**
-   * @param maxKeepAlives  The maximum number of requests for which
-   *                       a connection should be kept alive
-   */
-  public CounterKeepAliveStrategy(int maxKeepAlives) {
-    this.maxKeepAlives = maxKeepAlives;
-  }
-      
-  /**
-   * Determines whether a connection should be "kept alive" based on
-   * the number of requests for which the connection has previously
-   * been kept alive.
-   * 
-   * @param response  The response to check
-   */
-  protected boolean doIsKeepAlive(HttpServiceContext context, HttpResponse response) {
-    return ++keptAliveCount < maxKeepAlives;
-  }
+    private static final int DEFAULT_KEEP_ALIVES = 100;
+
+    private int maxKeepAlives = DEFAULT_KEEP_ALIVES;
+
+    private int keptAliveCount;
+
+    /**
+     * @param maxKeepAlives  The maximum number of requests for which
+     *                       a connection should be kept alive
+     */
+    public CounterKeepAliveStrategy(int maxKeepAlives) {
+        this.maxKeepAlives = maxKeepAlives;
+    }
+
+    /**
+     * Determines whether a connection should be "kept alive" based on
+     * the number of requests for which the connection has previously
+     * been kept alive.
+     *
+     * @param response  The response to check
+     */
+    @Override
+    protected boolean doIsKeepAlive(HttpServiceContext context,
+            HttpResponse response) {
+        return ++keptAliveCount < maxKeepAlives;
+    }
 }

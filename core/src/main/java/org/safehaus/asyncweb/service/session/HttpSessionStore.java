@@ -21,47 +21,46 @@ package org.safehaus.asyncweb.service.session;
 
 import org.safehaus.asyncweb.service.HttpSession;
 
-
 /**
  * Creates and maintains <code>Session</code>s.
- * 
+ *
  * @author irvingd
  *
  */
 public interface HttpSessionStore {
 
-  /**
-   * Adds a listener to this <code>SessionStore</code>
-   * 
-   * @param listener  The listener to be added
-   */
-  public void addSessionListener(HttpSessionListener listener);
-  
-  /**
-   * Closes this store, releasing any resources it may be consuming
-   */
-  public void close();
-  
-  /**
-   * Creates a new session with a specified key.
-   * If the specified key is already in use, this method returns <code>null</code>
-   * to indicate that an alternative key should be used
-   * 
-   * @param key  The session key for the new session
-   * @return     The created session, or <code>null</code> if the supplied key
-   *             is already in use
-   */
-  public HttpSession createSession(String key);
-  
-  /**
-   * Locates an existing session with the specified key.
-   * Any store which employs session time-outs should perform the appropriate 
-   * action to mark the session as recently used before returning it.<br/>
-   * 
-   * @param key  The key for which a session is required
-   * @return     The session, or <code>null</code> if no session was found with
-   *             the specified key
-   */
-  public HttpSession locateSession(String key);
-  
+    /**
+     * Adds a listener to this <code>SessionStore</code>
+     *
+     * @param listener  The listener to be added
+     */
+    public void addSessionListener(HttpSessionListener listener);
+
+    /**
+     * Closes this store, releasing any resources it may be consuming
+     */
+    public void close();
+
+    /**
+     * Creates a new session with a specified key.
+     * If the specified key is already in use, this method returns <code>null</code>
+     * to indicate that an alternative key should be used
+     *
+     * @param key  The session key for the new session
+     * @return     The created session, or <code>null</code> if the supplied key
+     *             is already in use
+     */
+    public HttpSession createSession(String key);
+
+    /**
+     * Locates an existing session with the specified key.
+     * Any store which employs session time-outs should perform the appropriate
+     * action to mark the session as recently used before returning it.<br/>
+     *
+     * @param key  The key for which a session is required
+     * @return     The session, or <code>null</code> if no session was found with
+     *             the specified key
+     */
+    public HttpSession locateSession(String key);
+
 }

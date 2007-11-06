@@ -22,48 +22,48 @@ package org.safehaus.asyncweb.codec.decoder;
 import org.apache.mina.filter.codec.ProtocolDecoderException;
 import org.safehaus.asyncweb.common.HttpResponseStatus;
 
-
 /**
  * An exception thrown by HTTP decoders.
- * 
+ *
  * This exception enables decoders which are capable of determining the type of
  * failure to specify the response which is ultimately returned to the client.
- * 
+ *
  * @author irvingd
  * @author trustin
  * @version $Rev$, $Date$
  */
 public class HttpDecoderException extends ProtocolDecoderException {
 
-  private static final long serialVersionUID = 3256999969109063480L;
-  
-  private HttpResponseStatus responseStatus;
-  
-  /**
-   * Creates a new instance with the default response status code
-   * ({@link HttpResponseStatus#BAD_REQUEST}).
-   * 
-   * @param message The description of the failure
-   */
-  public HttpDecoderException(String message) {
-    this(message, HttpResponseStatus.BAD_REQUEST);
-  }
-  
-  /**
-   * Creates a new instance.
-   * 
-   * @param message         A description of the failure
-   * @param responseStatus  The associated response status
-   */
-  public HttpDecoderException(String message, HttpResponseStatus responseStatus) {
-    super(message);
-    this.responseStatus = responseStatus;
-  }
-  
-  /**
-   * Returns the response status associated with this exception.
-   */
-  public HttpResponseStatus getResponseStatus() {
-    return responseStatus;
-  }
+    private static final long serialVersionUID = 3256999969109063480L;
+
+    private HttpResponseStatus responseStatus;
+
+    /**
+     * Creates a new instance with the default response status code
+     * ({@link HttpResponseStatus#BAD_REQUEST}).
+     *
+     * @param message The description of the failure
+     */
+    public HttpDecoderException(String message) {
+        this(message, HttpResponseStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Creates a new instance.
+     *
+     * @param message         A description of the failure
+     * @param responseStatus  The associated response status
+     */
+    public HttpDecoderException(String message,
+            HttpResponseStatus responseStatus) {
+        super(message);
+        this.responseStatus = responseStatus;
+    }
+
+    /**
+     * Returns the response status associated with this exception.
+     */
+    public HttpResponseStatus getResponseStatus() {
+        return responseStatus;
+    }
 }

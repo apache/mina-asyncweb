@@ -28,72 +28,75 @@ import org.safehaus.asyncweb.service.ServiceContainer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-
 /**
  * Simple stand-alone server which loads configuration using Spring
- * 
+ *
  * @author irvingd
  *
  */
 public class Main {
-  
-  private static final Log LOG = LogFactory.getLog(Main.class);
-  
-  private static final String CONFIG_PROPERTY         = "asyncWeb.config";
-  private static final String SERVICE_CONFIG_PROPERTY = "asyncWeb.config.services";
-  private static final String DEFAULT_SERVICE_CONFIG  = "httpServiceDefinitions";
-  
-  private String configDir;
-  private String serviceConfigName;
-  
-  /**
-   * @param asyncWebDir The async web base directory
-   */
-  public Main(File asyncWebDir) {
-    this(asyncWebDir, DEFAULT_SERVICE_CONFIG);
-  }
-  
-  /**
-   * @param asyncWebDir         The async web configuration directory - containing the
-   *                          <code>AsyncWeb.xml</code> configuration file
-   * @param serviceConfigName The name of the directory within <code>configDir</code>
-   *                          containing service definitions
-   */
-  public Main(File asyncWebDir, String serviceConfigName) {
-    if (!asyncWebDir.isDirectory()) {
-      throw new IllegalArgumentException("Could not find asyncWeb directory: " + asyncWebDir);
+
+    private static final Log LOG = LogFactory.getLog(Main.class);
+
+    private static final String CONFIG_PROPERTY = "asyncWeb.config";
+
+    private static final String SERVICE_CONFIG_PROPERTY = "asyncWeb.config.services";
+
+    private static final String DEFAULT_SERVICE_CONFIG = "httpServiceDefinitions";
+
+    private String configDir;
+
+    private String serviceConfigName;
+
+    /**
+     * @param asyncWebDir The async web base directory
+     */
+    public Main(File asyncWebDir) {
+        this(asyncWebDir, DEFAULT_SERVICE_CONFIG);
     }
-    this.configDir = asyncWebDir.getAbsolutePath() + "/";
-    this.serviceConfigName = serviceConfigName;
-  }
-  
-  /**
-   * Uses system properties to determine the asyncWeb configuration directory,
-   * and (optionally) the service configuration directory contained within
-   */
-  Main() {
-    configDir = System.getProperty(CONFIG_PROPERTY);
-    configDir = configDir == null ? "AsyncWeb/" : (configDir + "/");
-    serviceConfigName = System.getProperty(SERVICE_CONFIG_PROPERTY, 
-                                           DEFAULT_SERVICE_CONFIG); 
-  }
-  
-  public void start() {
-    String[] configs = new String[] { configDir + "conf/AsyncWeb.xml", configDir + 
-                                      "conf/" + serviceConfigName + "/*.xml"};
-    ApplicationContext ctx = new FileSystemXmlApplicationContext(configs);
-    ServiceContainer container = (ServiceContainer) ctx.getBean("container");
-    try {
-      container.start();
-    } catch (ContainerLifecycleException e) {
-      LOG.error("Failed to start container", e);
-      System.exit(1);
+
+    /**
+     * @param asyncWebDir         The async web configuration directory - containing the
+     *                          <code>AsyncWeb.xml</code> configuration file
+     * @param serviceConfigName The name of the directory within <code>configDir</code>
+     *                          containing service definitions
+     */
+    public Main(File asyncWebDir, String serviceConfigName) {
+        if (!asyncWebDir.isDirectory()) {
+            throw new IllegalArgumentException(
+                    "Could not find asyncWeb directory: " + asyncWebDir);
+        }
+        this.configDir = asyncWebDir.getAbsolutePath() + "/";
+        this.serviceConfigName = serviceConfigName;
     }
-    LOG.info("AsyncWeb server started");    
-  }
-  
-  
-  public static void main(String[] args) throws Exception {  
-    new Main().start();  
-  }
+
+    /**
+     * Uses system properties to determine the asyncWeb configuration directory,
+     * and (optionally) the service configuration directory contained within
+     */
+    Main() {
+        configDir = System.getProperty(CONFIG_PROPERTY);
+        configDir = configDir == null ? "AsyncWeb/" : configDir + "/";
+        serviceConfigName = System.getProperty(SERVICE_CONFIG_PROPERTY,
+                DEFAULT_SERVICE_CONFIG);
+    }
+
+    public void start() {
+        String[] configs = new String[] { configDir + "conf/AsyncWeb.xml",
+                configDir + "conf/" + serviceConfigName + "/*.xml" };
+        ApplicationContext ctx = new FileSystemXmlApplicationContext(configs);
+        ServiceContainer container = (ServiceContainer) ctx
+                .getBean("container");
+        try {
+            container.start();
+        } catch (ContainerLifecycleException e) {
+            LOG.error("Failed to start container", e);
+            System.exit(1);
+        }
+        LOG.info("AsyncWeb server started");
+    }
+
+    public static void main(String[] args) throws Exception {
+        new Main().start();
+    }
 }

@@ -21,14 +21,14 @@ package org.safehaus.asyncweb.service;
 
 public class TransportException extends Exception {
 
-  private static final long serialVersionUID = 3258132466186270517L;
+    private static final long serialVersionUID = 3258132466186270517L;
 
-  public TransportException(String description) {
-    super(description);
-  }
-  
-  public TransportException(String description, Throwable cause) {
-    super(description, cause);
-  }
-  
+    public TransportException(String description) {
+        super(description);
+    }
+
+    public TransportException(String description, Throwable cause) {
+        super(description, cause);
+    }
+
 }

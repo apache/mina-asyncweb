@@ -19,12 +19,11 @@
  */
 package org.safehaus.asyncweb.codec.decoder.support;
 
-
 public abstract class ConsumeToLinearWhitespaceDecodingState extends
-    ConsumeToDynamicTerminatorDecodingState {
+        ConsumeToDynamicTerminatorDecodingState {
 
-  @Override
-  protected boolean isTerminator(byte b) {
-    return (b == 32 || b == 9);
-  }
+    @Override
+    protected boolean isTerminator(byte b) {
+        return b == 32 || b == 9;
+    }
 }

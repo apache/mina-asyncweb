@@ -40,105 +40,106 @@ import org.safehaus.asyncweb.common.content.ByteBufferContent;
 import org.safehaus.asyncweb.util.HttpHeaderConstants;
 
 public class HttpProtocolHandler implements IoHandler {
-  private static final int CONTENT_PADDING = 0; // 101
+    private static final int CONTENT_PADDING = 0; // 101
 
-  private final Map<Integer, IoBuffer> buffers = new ConcurrentHashMap<Integer, IoBuffer>();
+    private final Map<Integer, IoBuffer> buffers = new ConcurrentHashMap<Integer, IoBuffer>();
 
-  private final Timer timer;
+    private final Timer timer;
 
-  public HttpProtocolHandler() {
-    timer = new Timer(true);
-  }
-
-  public void exceptionCaught(IoSession session, Throwable cause)
-      throws Exception {
-    if (!(cause instanceof IOException)) {
-      IoSessionLogger.getLogger(session).warn(cause);
-    }
-    session.close();
-  }
-
-  public void messageReceived(IoSession session, Object message)
-      throws Exception {
-    HttpRequest req = (HttpRequest) message;
-    String path = req.getRequestUri().getPath();
-
-    MutableHttpResponse res;
-    if (path.startsWith("/size/")) {
-      doDataResponse(session, req);
-    } else if (path.startsWith("/delay/")) {
-      doAsynchronousDelayedResponse(session, req);
-    } else if (path.startsWith("/adelay/")) {
-      doAsynchronousDelayedResponse(session, req);
-    } else {
-      res = new DefaultHttpResponse();
-      res.setStatus(HttpResponseStatus.OK);
-      writeResponse(session, req, res);
-    }
-  }
-
-  private void writeResponse(IoSession session, HttpRequest req,
-      MutableHttpResponse res) {
-    res.normalize(req);
-    WriteFuture future = session.write(res);
-    if (!HttpHeaderConstants.VALUE_KEEP_ALIVE.equalsIgnoreCase(res
-        .getHeader(HttpHeaderConstants.KEY_CONNECTION))) {
-      future.addListener(IoFutureListener.CLOSE);
-    }
-  }
-
-  private void doDataResponse(IoSession session, HttpRequest req) {
-    String path = req.getRequestUri().getPath();
-    int size = Integer.parseInt(path.substring(path.lastIndexOf('/') + 1)) + CONTENT_PADDING;
-
-    MutableHttpResponse res = new DefaultHttpResponse();
-    res.setStatus(HttpResponseStatus.OK);
-    res.setHeader("ETag", "W/\"" + size + "-1164091960000\"");
-    res.setHeader("Last-Modified", "Tue, 31 Nov 2006 06:52:40 GMT");
-
-    IoBuffer buf = buffers.get(size);
-    if (buf == null) {
-      buf = IoBuffer.allocate(size);
-      buffers.put(size, buf);
+    public HttpProtocolHandler() {
+        timer = new Timer(true);
     }
 
-    res.setContent(new ByteBufferContent(buf.duplicate()));
-    writeResponse(session, req, res);
-  }
+    public void exceptionCaught(IoSession session, Throwable cause)
+            throws Exception {
+        if (!(cause instanceof IOException)) {
+            IoSessionLogger.getLogger(session).warn(cause);
+        }
+        session.close();
+    }
 
-  private void doAsynchronousDelayedResponse(final IoSession session,
-      final HttpRequest req) {
-    String path = req.getRequestUri().getPath();
-    int delay = Integer.parseInt(path.substring(path.lastIndexOf('/') + 1));
+    public void messageReceived(IoSession session, Object message)
+            throws Exception {
+        HttpRequest req = (HttpRequest) message;
+        String path = req.getRequestUri().getPath();
 
-    final MutableHttpResponse res = new DefaultHttpResponse();
-    res.setStatus(HttpResponseStatus.OK);
-    res.setHeader("ETag", "W/\"0-1164091960000\"");
-    res.setHeader("Last-Modified", "Tue, 31 Nov 2006 06:52:40 GMT");
+        MutableHttpResponse res;
+        if (path.startsWith("/size/")) {
+            doDataResponse(session, req);
+        } else if (path.startsWith("/delay/")) {
+            doAsynchronousDelayedResponse(session, req);
+        } else if (path.startsWith("/adelay/")) {
+            doAsynchronousDelayedResponse(session, req);
+        } else {
+            res = new DefaultHttpResponse();
+            res.setStatus(HttpResponseStatus.OK);
+            writeResponse(session, req, res);
+        }
+    }
 
-    timer.schedule(new TimerTask() {
-      @Override
-      public void run() {
+    private void writeResponse(IoSession session, HttpRequest req,
+            MutableHttpResponse res) {
+        res.normalize(req);
+        WriteFuture future = session.write(res);
+        if (!HttpHeaderConstants.VALUE_KEEP_ALIVE.equalsIgnoreCase(res
+                .getHeader(HttpHeaderConstants.KEY_CONNECTION))) {
+            future.addListener(IoFutureListener.CLOSE);
+        }
+    }
+
+    private void doDataResponse(IoSession session, HttpRequest req) {
+        String path = req.getRequestUri().getPath();
+        int size = Integer.parseInt(path.substring(path.lastIndexOf('/') + 1))
+                + CONTENT_PADDING;
+
+        MutableHttpResponse res = new DefaultHttpResponse();
+        res.setStatus(HttpResponseStatus.OK);
+        res.setHeader("ETag", "W/\"" + size + "-1164091960000\"");
+        res.setHeader("Last-Modified", "Tue, 31 Nov 2006 06:52:40 GMT");
+
+        IoBuffer buf = buffers.get(size);
+        if (buf == null) {
+            buf = IoBuffer.allocate(size);
+            buffers.put(size, buf);
+        }
+
+        res.setContent(new ByteBufferContent(buf.duplicate()));
         writeResponse(session, req, res);
-      }
-    }, delay);
-  }
+    }
 
-  public void messageSent(IoSession session, Object message) throws Exception {
-  }
+    private void doAsynchronousDelayedResponse(final IoSession session,
+            final HttpRequest req) {
+        String path = req.getRequestUri().getPath();
+        int delay = Integer.parseInt(path.substring(path.lastIndexOf('/') + 1));
 
-  public void sessionClosed(IoSession session) throws Exception {
-  }
+        final MutableHttpResponse res = new DefaultHttpResponse();
+        res.setStatus(HttpResponseStatus.OK);
+        res.setHeader("ETag", "W/\"0-1164091960000\"");
+        res.setHeader("Last-Modified", "Tue, 31 Nov 2006 06:52:40 GMT");
 
-  public void sessionCreated(IoSession session) throws Exception {
-  }
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                writeResponse(session, req, res);
+            }
+        }, delay);
+    }
 
-  public void sessionIdle(IoSession session, IdleStatus status)
-      throws Exception {
-    session.close();
-  }
+    public void messageSent(IoSession session, Object message) throws Exception {
+    }
 
-  public void sessionOpened(IoSession session) throws Exception {
-    session.getConfig().setIdleTime(IdleStatus.BOTH_IDLE, 30);
-  }
+    public void sessionClosed(IoSession session) throws Exception {
+    }
+
+    public void sessionCreated(IoSession session) throws Exception {
+    }
+
+    public void sessionIdle(IoSession session, IdleStatus status)
+            throws Exception {
+        session.close();
+    }
+
+    public void sessionOpened(IoSession session) throws Exception {
+        session.getConfig().setIdleTime(IdleStatus.BOTH_IDLE, 30);
+    }
 }

@@ -22,31 +22,31 @@ package org.safehaus.asyncweb.service;
 /**
  * Exception thrown when a problem is encountered whilst transitioning
  * a <code>ServiceContainer</code> through its lifecycle
- * 
+ *
  * @author irvingd
  *
  */
 public class ContainerLifecycleException extends Exception {
 
-  private static final long serialVersionUID = 3257564018624574256L;
+    private static final long serialVersionUID = 3257564018624574256L;
 
-  /**
-   * Constructs with a description of the problem
-   * 
-   * @param desc  description of the problem
-   */
-  public ContainerLifecycleException(String desc) {
-    super (desc);
-  }
-  
-  /**
-   * Constructs with a description and a root cause
-   * 
-   * @param desc   description of the problem
-   * @param cause  the root cause
-   */
-  public ContainerLifecycleException(String desc, Throwable cause) {
-    super (desc, cause);
-  }
-  
+    /**
+     * Constructs with a description of the problem
+     *
+     * @param desc  description of the problem
+     */
+    public ContainerLifecycleException(String desc) {
+        super(desc);
+    }
+
+    /**
+     * Constructs with a description and a root cause
+     *
+     * @param desc   description of the problem
+     * @param cause  the root cause
+     */
+    public ContainerLifecycleException(String desc, Throwable cause) {
+        super(desc, cause);
+    }
+
 }

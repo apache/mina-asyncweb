@@ -25,29 +25,29 @@ import org.safehaus.asyncweb.common.HttpRequest;
  * A simple <code>ServiceResolver</code> which passes the full
  * request URI as the service name, optionally removing any leading
  * "/"
- * 
+ *
  * @author irvingd
  *
  */
 public class PassThruResolver implements ServiceResolver {
 
-  private boolean removeLeadingSlash = true;
-  
-  public String resolveService(HttpRequest request) {
-    if (request.getRequestUri().isAbsolute()) {
-      return null;
+    private boolean removeLeadingSlash = true;
+
+    public String resolveService(HttpRequest request) {
+        if (request.getRequestUri().isAbsolute()) {
+            return null;
+        }
+
+        String path = request.getRequestUri().getPath();
+        int length = path.length();
+        if (removeLeadingSlash && length > 0 && path.charAt(0) == '/') {
+            path = length > 1 ? path.substring(1) : "";
+        }
+        return path;
     }
 
-    String path = request.getRequestUri().getPath();
-    int length = path.length();
-    if (removeLeadingSlash && length > 0 && path.charAt(0) == '/') {
-      path = length > 1 ? path.substring(1) : "";
+    public void setRemoveLeadingSlash(boolean removeLeadingSlash) {
+        this.removeLeadingSlash = removeLeadingSlash;
     }
-    return path;
-  }
 
-  public void setRemoveLeadingSlash(boolean removeLeadingSlash) {
-    this.removeLeadingSlash = removeLeadingSlash;
-  }
-  
 }

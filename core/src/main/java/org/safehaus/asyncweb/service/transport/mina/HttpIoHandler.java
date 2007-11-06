@@ -23,12 +23,12 @@ import org.apache.mina.common.IoHandler;
 import org.safehaus.asyncweb.service.ServiceContainer;
 
 public interface HttpIoHandler extends IoHandler {
-  
-  /**
-   * Associates this handler with the container it should dispatch requests
-   * to
-   * 
-   * @param container  The associated container
-   */
-  void setContainer(ServiceContainer container);
+
+    /**
+     * Associates this handler with the container it should dispatch requests
+     * to
+     *
+     * @param container  The associated container
+     */
+    void setContainer(ServiceContainer container);
 }

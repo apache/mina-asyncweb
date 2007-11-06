@@ -19,49 +19,50 @@
  */
 package org.safehaus.asyncweb.service;
 
-
 public interface HttpServiceFilter {
-  
-  /**
-   * Notifies this handler of the incoming request for a specified request.
-   * 
-   * This handler should call <code>invokeNext</code> when it has completed
-   * its duties. This invocation may occur asyncronously - but <i>must</i>
-   * occur for each notification
-   * 
-   * @param next           The next filter in the filter chain
-   * @param context        The service context
-   */
-  void handleRequest(NextFilter next, HttpServiceContext context) throws Exception;
-
-  /**
-   * Notifies this handler of the committed response for a specified request.
-   * 
-   * This handler should call <code>invokeNext</code> when it has completed
-   * its duties. This invocation may occur asyncronously - but <i>must</i>
-   * occur for each notification
-   * 
-   * @param next           The next filter in the filter chain
-   * @param context        The service context
-   */
-  void handleResponse(NextFilter next, HttpServiceContext context) throws Exception;
-
-  void start();
-  
-  void stop();
-  
-  /**
-   * Encapsuates a location within a chain of tasks to be performed.
-   * 
-   * @author irvingd
-   * @author trustin
-   * @version $Rev$, $Date$
-   */
-  public interface NextFilter {
 
     /**
-     * Causes the next task in the chain to be performed
+     * Notifies this handler of the incoming request for a specified request.
+     *
+     * This handler should call <code>invokeNext</code> when it has completed
+     * its duties. This invocation may occur asyncronously - but <i>must</i>
+     * occur for each notification
+     *
+     * @param next           The next filter in the filter chain
+     * @param context        The service context
      */
-    void invoke();
-  }
+    void handleRequest(NextFilter next, HttpServiceContext context)
+            throws Exception;
+
+    /**
+     * Notifies this handler of the committed response for a specified request.
+     *
+     * This handler should call <code>invokeNext</code> when it has completed
+     * its duties. This invocation may occur asyncronously - but <i>must</i>
+     * occur for each notification
+     *
+     * @param next           The next filter in the filter chain
+     * @param context        The service context
+     */
+    void handleResponse(NextFilter next, HttpServiceContext context)
+            throws Exception;
+
+    void start();
+
+    void stop();
+
+    /**
+     * Encapsuates a location within a chain of tasks to be performed.
+     *
+     * @author irvingd
+     * @author trustin
+     * @version $Rev$, $Date$
+     */
+    public interface NextFilter {
+
+        /**
+         * Causes the next task in the chain to be performed
+         */
+        void invoke();
+    }
 }

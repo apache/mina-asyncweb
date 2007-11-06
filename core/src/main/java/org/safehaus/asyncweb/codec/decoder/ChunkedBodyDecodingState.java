@@ -32,20 +32,19 @@ import org.safehaus.asyncweb.codec.decoder.support.FixedLengthDecodingState;
 import org.safehaus.asyncweb.codec.decoder.support.SkippingState;
 import org.safehaus.asyncweb.common.HttpResponseStatus;
 
-
 /**
  * A decoder which decodes the body of HTTP Requests having
  * a "chunked" transfer-coding.
- * 
+ *
  * This decoder does <i>not</i> decode trailing entity-headers - it simply
- * discards them. Tomcat currently does the same - so this is probably 
+ * discards them. Tomcat currently does the same - so this is probably
  * the most stable approach for now.<br/>
- * If the need arises to decode them in the future, we simply need to employ a 
- * <code>HttpHeaderDecoder</code> following the last chunk - yielding 
+ * If the need arises to decode them in the future, we simply need to employ a
+ * <code>HttpHeaderDecoder</code> following the last chunk - yielding
  * headers for the encountered trailing entity-headers.<p/>
- * 
+ *
  * This decoder decodes the following format:
- * 
+ *
  * <pre>
  *      Chunked-Body   = *chunk
  *                       last-chunk
@@ -60,143 +59,154 @@ import org.safehaus.asyncweb.common.HttpResponseStatus;
  *      chunk-ext-val  = token | quoted-string
  *      chunk-data     = chunk-size(OCTET)
  *      trailer        = *(entity-header CRLF)
- * </pre>     
+ * </pre>
  *
  * <code>ChunkedBodyDecoder</code> employs a <code>SharedBytesAllocator</code>
  * to enable the content of each decoded chunk to contribute to a single
  * <code>Bytes</code>. This enables all chunks to be read without requiring
  * copying.
- * 
+ *
  * @author irvingd
  */
 abstract class ChunkedBodyDecodingState extends DecodingStateMachine {
 
-  private static final Charset US_ASCII = Charset.forName("US-ASCII");
-  
-  private final CharsetDecoder asciiDecoder = US_ASCII.newDecoder();
-  private int lastChunkLength;
-  private boolean chunkHasExtension;
-  
-  ChunkedBodyDecodingState() {
-  }
-  
-  @Override
-  protected void destroy() throws Exception {
-  }
+    private static final Charset US_ASCII = Charset.forName("US-ASCII");
 
-  @Override
-  protected DecodingState init() throws Exception {
-    chunkHasExtension = false;
-    return READ_CHUNK_LENGTH;
-  }
-  
-  private final DecodingState READ_CHUNK_LENGTH = new ConsumeToDynamicTerminatorDecodingState() {
-    @Override
-    protected DecodingState finishDecode(IoBuffer product, ProtocolDecoderOutput out) throws Exception {
-      if (!product.hasRemaining()) {
-        HttpCodecUtils.throwDecoderException("Expected a chunk length.");
-      }
-      
-      String length = product.getString(asciiDecoder);
-      lastChunkLength = Integer.parseInt(length, 16);
-      if (chunkHasExtension) {
-        return SKIP_CHUNK_EXTENSION;
-      }
-      return AFTER_SKIP_CHUNK_EXTENSION.decode( IoBuffer.wrap( new byte[] { HttpCodecUtils.CR } ), out );
+    private final CharsetDecoder asciiDecoder = US_ASCII.newDecoder();
+
+    private int lastChunkLength;
+
+    private boolean chunkHasExtension;
+
+    ChunkedBodyDecodingState() {
     }
 
     @Override
-    protected boolean isTerminator(byte b) {
-      if (!(b >= '0' && b <= '9' || b >= 'a' && b <= 'f' || b >= 'A' && b <= 'F')) {
-        if (b == HttpCodecUtils.CR || b == HttpCodecUtils.SEMI_COLON) {
-          chunkHasExtension = (b == HttpCodecUtils.SEMI_COLON);
-          return true;
+    protected void destroy() throws Exception {
+    }
+
+    @Override
+    protected DecodingState init() throws Exception {
+        chunkHasExtension = false;
+        return READ_CHUNK_LENGTH;
+    }
+
+    private final DecodingState READ_CHUNK_LENGTH = new ConsumeToDynamicTerminatorDecodingState() {
+        @Override
+        protected DecodingState finishDecode(IoBuffer product,
+                ProtocolDecoderOutput out) throws Exception {
+            if (!product.hasRemaining()) {
+                HttpCodecUtils
+                        .throwDecoderException("Expected a chunk length.");
+            }
+
+            String length = product.getString(asciiDecoder);
+            lastChunkLength = Integer.parseInt(length, 16);
+            if (chunkHasExtension) {
+                return SKIP_CHUNK_EXTENSION;
+            }
+            return AFTER_SKIP_CHUNK_EXTENSION.decode(IoBuffer
+                    .wrap(new byte[] { HttpCodecUtils.CR }), out);
         }
-        throw new IllegalArgumentException();
-      }
-      return false;
-    }
-  };
-  
-  private final DecodingState SKIP_CHUNK_EXTENSION = new SkippingState() {
-    @Override
-    protected DecodingState finishDecode(int skippedBytes) throws Exception {
-      return AFTER_SKIP_CHUNK_EXTENSION;
-    }
 
-    @Override
-    protected boolean canSkip(byte b) {
-      return (b != HttpCodecUtils.CR);
-    }
-  };
-  
-  private final DecodingState AFTER_SKIP_CHUNK_EXTENSION = new CRLFDecodingState() {
-    @Override
-    protected DecodingState finishDecode(boolean foundCRLF, ProtocolDecoderOutput out) throws Exception {
-      if (!foundCRLF) {
-        HttpCodecUtils.throwDecoderException(
-            "Expected CRLF at the end of chunk extension.",
-            HttpResponseStatus.BAD_REQUEST);
-      }
-      
-      if (lastChunkLength <= 0) {
-        return FIND_END_OF_TRAILER;
-      } else {
-        return new FixedLengthDecodingState(lastChunkLength) {
-          @Override
-          protected DecodingState finishDecode(IoBuffer readData, ProtocolDecoderOutput out) throws Exception {
-            out.write(readData);
-            // Reset the state.
-            lastChunkLength = 0;
-            return AFTER_CHUNK_DATA;
-          }
-        };
-      }
-    }
-  };
-  
-  private final DecodingState AFTER_CHUNK_DATA = new CRLFDecodingState() {
-    @Override
-    protected DecodingState finishDecode(boolean foundCRLF, ProtocolDecoderOutput out) throws Exception {
-      if (!foundCRLF) {
-        HttpCodecUtils.throwDecoderException(
-            "Expected CRLF after a chunk data.", 
-            HttpResponseStatus.BAD_REQUEST);
-        
-      }
-      chunkHasExtension = false;
-      return READ_CHUNK_LENGTH;
-    }
-  };
-  
-  private final DecodingState FIND_END_OF_TRAILER = new CRLFDecodingState() {
-    @Override
-    protected DecodingState finishDecode(boolean foundCRLF, ProtocolDecoderOutput out) throws Exception {
-      if (foundCRLF) {
-        return null; // Finish
-      } else {
-        return SKIP_ENTITY_HEADER;
-      }
-    }
-  };
-  
-  private final DecodingState SKIP_ENTITY_HEADER = new SkippingState() {
+        @Override
+        protected boolean isTerminator(byte b) {
+            if (!(b >= '0' && b <= '9' || b >= 'a' && b <= 'f' || b >= 'A'
+                    && b <= 'F')) {
+                if (b == HttpCodecUtils.CR || b == HttpCodecUtils.SEMI_COLON) {
+                    chunkHasExtension = b == HttpCodecUtils.SEMI_COLON;
+                    return true;
+                }
+                throw new IllegalArgumentException();
+            }
+            return false;
+        }
+    };
 
-    @Override
-    protected boolean canSkip(byte b) {
-      return (b != HttpCodecUtils.CR);
-    }
+    private final DecodingState SKIP_CHUNK_EXTENSION = new SkippingState() {
+        @Override
+        protected DecodingState finishDecode(int skippedBytes) throws Exception {
+            return AFTER_SKIP_CHUNK_EXTENSION;
+        }
 
-    @Override
-    protected DecodingState finishDecode(int skippedBytes) throws Exception {
-      return AFTER_SKIP_ENTITY_HEADER;
-    }
-  };
-  
-  private final DecodingState AFTER_SKIP_ENTITY_HEADER = new CRLFDecodingState() {
-    @Override
-    protected DecodingState finishDecode(boolean foundCRLF, ProtocolDecoderOutput out) throws Exception {
-      return FIND_END_OF_TRAILER;
-    }
-  };
+        @Override
+        protected boolean canSkip(byte b) {
+            return b != HttpCodecUtils.CR;
+        }
+    };
+
+    private final DecodingState AFTER_SKIP_CHUNK_EXTENSION = new CRLFDecodingState() {
+        @Override
+        protected DecodingState finishDecode(boolean foundCRLF,
+                ProtocolDecoderOutput out) throws Exception {
+            if (!foundCRLF) {
+                HttpCodecUtils.throwDecoderException(
+                        "Expected CRLF at the end of chunk extension.",
+                        HttpResponseStatus.BAD_REQUEST);
+            }
+
+            if (lastChunkLength <= 0) {
+                return FIND_END_OF_TRAILER;
+            } else {
+                return new FixedLengthDecodingState(lastChunkLength) {
+                    @Override
+                    protected DecodingState finishDecode(IoBuffer readData,
+                            ProtocolDecoderOutput out) throws Exception {
+                        out.write(readData);
+                        // Reset the state.
+                        lastChunkLength = 0;
+                        return AFTER_CHUNK_DATA;
+                    }
+                };
+            }
+        }
+    };
+
+    private final DecodingState AFTER_CHUNK_DATA = new CRLFDecodingState() {
+        @Override
+        protected DecodingState finishDecode(boolean foundCRLF,
+                ProtocolDecoderOutput out) throws Exception {
+            if (!foundCRLF) {
+                HttpCodecUtils.throwDecoderException(
+                        "Expected CRLF after a chunk data.",
+                        HttpResponseStatus.BAD_REQUEST);
+
+            }
+            chunkHasExtension = false;
+            return READ_CHUNK_LENGTH;
+        }
+    };
+
+    private final DecodingState FIND_END_OF_TRAILER = new CRLFDecodingState() {
+        @Override
+        protected DecodingState finishDecode(boolean foundCRLF,
+                ProtocolDecoderOutput out) throws Exception {
+            if (foundCRLF) {
+                return null; // Finish
+            } else {
+                return SKIP_ENTITY_HEADER;
+            }
+        }
+    };
+
+    private final DecodingState SKIP_ENTITY_HEADER = new SkippingState() {
+
+        @Override
+        protected boolean canSkip(byte b) {
+            return b != HttpCodecUtils.CR;
+        }
+
+        @Override
+        protected DecodingState finishDecode(int skippedBytes) throws Exception {
+            return AFTER_SKIP_ENTITY_HEADER;
+        }
+    };
+
+    private final DecodingState AFTER_SKIP_ENTITY_HEADER = new CRLFDecodingState() {
+        @Override
+        protected DecodingState finishDecode(boolean foundCRLF,
+                ProtocolDecoderOutput out) throws Exception {
+            return FIND_END_OF_TRAILER;
+        }
+    };
 }

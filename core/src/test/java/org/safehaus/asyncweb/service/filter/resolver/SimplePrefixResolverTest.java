@@ -31,68 +31,71 @@ import org.safehaus.asyncweb.service.resolver.SimplePrefixResolver;
 
 /**
  * Tests <code>SimplePrefixResolver</code>
- * 
+ *
  * @author irvingd
  *
  */
 public class SimplePrefixResolverTest extends TestCase {
 
-  private SimplePrefixResolver resolver;
-  
-  public SimplePrefixResolverTest(String name) {
-    super (name);
-  }
-  
-  protected void setUp() {
-    resolver = new SimplePrefixResolver();
-  }
-  
-  /**
-   * Tests that if no prefix is configured, the request uri is
-   * returned as the resolved service name
-   */
-  public void testNoPrefixPassThrough() throws Exception {
-    assertResolvedValue("a", "a");
-    assertResolvedValue("some/service/Name", "some/service/Name");
-    assertResolvedValue("", "");
-    assertResolvedValue(null, null);
-  }
-  
-  /**
-   * Tests that no resolution is made if a prefix is configured and the 
-   * request uri does not start with this prefix
-   */
-  public void testPrefixNoMatch() throws Exception {
-    resolver.setUriPrefix("prefix/");
-    assertResolvedValue("a", null);
-    assertResolvedValue("/prefix/x", null);
-    assertResolvedValue("", null);
-    assertResolvedValue(null, null);
-  }
-  
-  /**
-   * Tests that a resolution is made if a prefix is configured, and the
-   * request uri matches the prefix
-   */
-  public void testPrefixMatch() throws Exception {
-    resolver.setUriPrefix("prefix/");
-    assertResolvedValue("prefix/a", "a");
-    assertResolvedValue("prefix/a/b", "a/b");
-    assertResolvedValue("prefix/", "");
-  }
-  
-  private void assertResolvedValue(String uri, String expected) throws Exception {
-    HttpRequest request = createRequestForURI(uri);
-    String resolved = resolver.resolveService(request);
-    assertEquals("Unexpected service name", expected, resolved);
-  }
-  
-  private HttpRequest createRequestForURI(String uri) throws URISyntaxException {
-    MutableHttpRequest req = new DefaultHttpRequest();
-    if (uri != null) {
-      req.setRequestUri(new URI(uri));
+    private SimplePrefixResolver resolver;
+
+    public SimplePrefixResolverTest(String name) {
+        super(name);
     }
-    return req;
-  }
-  
+
+    @Override
+    protected void setUp() {
+        resolver = new SimplePrefixResolver();
+    }
+
+    /**
+     * Tests that if no prefix is configured, the request uri is
+     * returned as the resolved service name
+     */
+    public void testNoPrefixPassThrough() throws Exception {
+        assertResolvedValue("a", "a");
+        assertResolvedValue("some/service/Name", "some/service/Name");
+        assertResolvedValue("", "");
+        assertResolvedValue(null, null);
+    }
+
+    /**
+     * Tests that no resolution is made if a prefix is configured and the
+     * request uri does not start with this prefix
+     */
+    public void testPrefixNoMatch() throws Exception {
+        resolver.setUriPrefix("prefix/");
+        assertResolvedValue("a", null);
+        assertResolvedValue("/prefix/x", null);
+        assertResolvedValue("", null);
+        assertResolvedValue(null, null);
+    }
+
+    /**
+     * Tests that a resolution is made if a prefix is configured, and the
+     * request uri matches the prefix
+     */
+    public void testPrefixMatch() throws Exception {
+        resolver.setUriPrefix("prefix/");
+        assertResolvedValue("prefix/a", "a");
+        assertResolvedValue("prefix/a/b", "a/b");
+        assertResolvedValue("prefix/", "");
+    }
+
+    private void assertResolvedValue(String uri, String expected)
+            throws Exception {
+        HttpRequest request = createRequestForURI(uri);
+        String resolved = resolver.resolveService(request);
+        assertEquals("Unexpected service name", expected, resolved);
+    }
+
+    private HttpRequest createRequestForURI(String uri)
+            throws URISyntaxException {
+        MutableHttpRequest req = new DefaultHttpRequest();
+        if (uri != null) {
+            req.setRequestUri(new URI(uri));
+        }
+        return req;
+    }
+
 }

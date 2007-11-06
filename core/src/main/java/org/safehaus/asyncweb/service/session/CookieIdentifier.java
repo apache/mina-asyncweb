@@ -25,63 +25,62 @@ import org.safehaus.asyncweb.common.HttpRequest;
 import org.safehaus.asyncweb.common.MutableCookie;
 import org.safehaus.asyncweb.common.MutableHttpResponse;
 
-
 /**
  * A <code>SessionIdentifier</code> which adds and extracts session key
  * cookies
- * 
+ *
  * @author irvingd
  *
  */
 public class CookieIdentifier implements HttpSessionIdentifier {
 
-  /**
-   * The name of the cookie
-   */
-  private static final String SESSION_ID_COOKIE = "sessionKey";
-  
-  private String cookieId = SESSION_ID_COOKIE;
-  
-  /**
-   * Sets the name of the cookie used for holding session keys.
-   * The default cookie name is <code>sessionKey</code>
-   * 
-   * @param cookieId  The cookie name to be used
-   */
-  public void setCookieId(String cookieId) {
-    this.cookieId = cookieId;
-  }
-  
-  /**
-   * Extracts a session key from the session cookie supplied with the request - 
-   * if any
-   * 
-   * @param  request  The request
-   * @return The session key, or null if a session cookie was not located
-   */
-  public String getSessionKey(HttpRequest request) {
-    Cookie sessionCookie = null;
-    for (Cookie c: request.getCookies()) {
-      if (c.getName().equals(cookieId)) {
-        sessionCookie = c;
-        break;
-      }
-    }
-    return sessionCookie == null ? null : sessionCookie.getValue();
-  }
+    /**
+     * The name of the cookie
+     */
+    private static final String SESSION_ID_COOKIE = "sessionKey";
 
-  /**
-   * Adds a session cookie to the specified request
-   * 
-   * @param key      The session key
-   * @param response The response
-   */
-  public void addSessionKey(String key, MutableHttpResponse response) {
-    MutableCookie sessionCookie = new DefaultCookie(cookieId);
-    sessionCookie.setMaxAge(-1); // "non-persistent"
-    sessionCookie.setValue(key);
-    // TODO: Set "isSecure" based on whether the request came in over
-    //       a secure transport
-    response.addCookie(sessionCookie);
-  }
+    private String cookieId = SESSION_ID_COOKIE;
+
+    /**
+     * Sets the name of the cookie used for holding session keys.
+     * The default cookie name is <code>sessionKey</code>
+     *
+     * @param cookieId  The cookie name to be used
+     */
+    public void setCookieId(String cookieId) {
+        this.cookieId = cookieId;
+    }
+
+    /**
+     * Extracts a session key from the session cookie supplied with the request -
+     * if any
+     *
+     * @param  request  The request
+     * @return The session key, or null if a session cookie was not located
+     */
+    public String getSessionKey(HttpRequest request) {
+        Cookie sessionCookie = null;
+        for (Cookie c : request.getCookies()) {
+            if (c.getName().equals(cookieId)) {
+                sessionCookie = c;
+                break;
+            }
+        }
+        return sessionCookie == null ? null : sessionCookie.getValue();
+    }
+
+    /**
+     * Adds a session cookie to the specified request
+     *
+     * @param key      The session key
+     * @param response The response
+     */
+    public void addSessionKey(String key, MutableHttpResponse response) {
+        MutableCookie sessionCookie = new DefaultCookie(cookieId);
+        sessionCookie.setMaxAge(-1); // "non-persistent"
+        sessionCookie.setValue(key);
+        // TODO: Set "isSecure" based on whether the request came in over
+        //       a secure transport
+        response.addCookie(sessionCookie);
+    }
 }

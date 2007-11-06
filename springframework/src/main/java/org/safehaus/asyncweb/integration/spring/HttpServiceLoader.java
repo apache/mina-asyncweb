@@ -27,30 +27,30 @@ import org.safehaus.asyncweb.service.HttpServiceHandler;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-
 /**
  * Loads all <code>HttpService</code>s defined in an
- * <code>ApplicationContext</code> to an associated 
+ * <code>ApplicationContext</code> to an associated
  * <code>HttpServiceHandler</code>
- * 
+ *
  * @author irvingd
  */
 public class HttpServiceLoader implements ApplicationContextAware {
 
-  private HttpServiceHandler handler;
-  
-  public void setHandler(HttpServiceHandler httpServiceHandler) {
-    this.handler = httpServiceHandler;
-  }
-  
-  public void setApplicationContext(ApplicationContext context) {
-    Map services = context.getBeansOfType(HttpService.class);
-    for (Iterator iter=services.entrySet().iterator(); iter.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) iter.next();
-      String serviceName = (String) entry.getKey();
-      HttpService service = (HttpService) entry.getValue();
-      handler.addHttpService(serviceName, service);
+    private HttpServiceHandler handler;
+
+    public void setHandler(HttpServiceHandler httpServiceHandler) {
+        this.handler = httpServiceHandler;
     }
-  }
+
+    @SuppressWarnings("unchecked")
+    public void setApplicationContext(ApplicationContext context) {
+        Map<String, HttpService> services = context.getBeansOfType(HttpService.class);
+        for (Iterator<Map.Entry<String, HttpService>> iter = services.entrySet().iterator(); iter.hasNext();) {
+            Map.Entry<String, HttpService> entry = iter.next();
+            String serviceName = entry.getKey();
+            HttpService service = entry.getValue();
+            handler.addHttpService(serviceName, service);
+        }
+    }
 
 }

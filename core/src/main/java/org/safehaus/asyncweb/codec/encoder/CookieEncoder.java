@@ -26,17 +26,17 @@ import org.safehaus.asyncweb.common.Cookie;
 
 /**
  * Defines a strategy for encoding cookies
- * 
+ *
  * @author irvingd
  *
  */
 public interface CookieEncoder {
 
-  /**
-   * Encodes a list of {@link Cookie}s in to the specified buffer
-   * 
-   * @param cookies  The cookies
-   * @param buffer   The buffer
-   */
-  public void encodeCookie(Collection<Cookie> cookies, IoBuffer buffer);
+    /**
+     * Encodes a list of {@link Cookie}s in to the specified buffer
+     *
+     * @param cookies  The cookies
+     * @param buffer   The buffer
+     */
+    public void encodeCookie(Collection<Cookie> cookies, IoBuffer buffer);
 }

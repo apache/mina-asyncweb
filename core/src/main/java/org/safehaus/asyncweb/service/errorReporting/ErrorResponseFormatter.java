@@ -24,18 +24,18 @@ import org.safehaus.asyncweb.common.MutableHttpResponse;
 
 /**
  * Formats error responses to include a descriptive body where appropriate
- * 
+ *
  * @author irvingd
- * 
+ *
  */
 public interface ErrorResponseFormatter {
 
-  /**
-   * Applies any appropriate formatting to a <code>Response</code> based on its
-   * response status code
-   * 
-   * @param response  The response to format
-   */
-  public void formatResponse(HttpRequest request, MutableHttpResponse response);
-  
+    /**
+     * Applies any appropriate formatting to a <code>Response</code> based on its
+     * response status code
+     *
+     * @param response  The response to format
+     */
+    public void formatResponse(HttpRequest request, MutableHttpResponse response);
+
 }

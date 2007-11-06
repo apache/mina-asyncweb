@@ -23,7 +23,7 @@ import java.io.Serializable;
 
 /**
  * Represents the body content of an HTTP message.
- * 
+ *
  * @author trustin
  * @version $Rev$, $Date$
  */

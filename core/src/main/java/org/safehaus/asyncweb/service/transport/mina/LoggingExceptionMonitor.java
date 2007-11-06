@@ -19,23 +19,25 @@
  */
 package org.safehaus.asyncweb.service.transport.mina;
 
+import org.apache.mina.common.ExceptionMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.mina.common.ExceptionMonitor;
 
 /**
  * An <code>ExceptionMonitor</code> which simply logs exceptions.
- * 
+ *
  * @author irvingd
  *
  */
 class LoggingExceptionMonitor extends ExceptionMonitor {
 
-  private static final Logger LOG = LoggerFactory.getLogger(LoggingExceptionMonitor.class);
-  
-  public void exceptionCaught(Throwable e) {
-    if (LOG.isWarnEnabled()) {
-      LOG.warn("NIOTransport encountered exception.", e);
+    private static final Logger LOG = LoggerFactory
+            .getLogger(LoggingExceptionMonitor.class);
+
+    @Override
+    public void exceptionCaught(Throwable e) {
+        if (LOG.isWarnEnabled()) {
+            LOG.warn("NIOTransport encountered exception.", e);
+        }
     }
-  }
 }

@@ -26,55 +26,58 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 
 public class StateMachineProtocolDecoder implements ProtocolDecoder {
 
-  private final DecodingStateMachine stateMachine;
-  private DecodingState currentState;
+    private final DecodingStateMachine stateMachine;
 
-  public StateMachineProtocolDecoder(DecodingStateMachine stateMachine) {
-    if (stateMachine == null) {
-      throw new NullPointerException("stateMachine");
-    }
-    this.stateMachine = stateMachine;
-  }
-  
-  public void decode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
-    DecodingState state = this.currentState;
-    if (state == null) {
-      state = stateMachine.init();
-    }
+    private DecodingState currentState;
 
-    try {
-      for (;;) {
-        int remaining = in.remaining();
-
-        // Wait for more data if all data is consumed.
-        if (remaining == 0) {
-          break;
+    public StateMachineProtocolDecoder(DecodingStateMachine stateMachine) {
+        if (stateMachine == null) {
+            throw new NullPointerException("stateMachine");
         }
-        
-        DecodingState oldState = state;
-        state = state.decode(in, out);
-        
+        this.stateMachine = stateMachine;
+    }
+
+    public void decode(IoSession session, IoBuffer in, ProtocolDecoderOutput out)
+            throws Exception {
+        DecodingState state = this.currentState;
         if (state == null) {
-          // Finished
-          break;
+            state = stateMachine.init();
         }
-        
-        // Wait for more data if nothing is consumed and state didn't change.
-        if (in.remaining() == remaining && oldState == state) {
-          break;
+
+        try {
+            for (;;) {
+                int remaining = in.remaining();
+
+                // Wait for more data if all data is consumed.
+                if (remaining == 0) {
+                    break;
+                }
+
+                DecodingState oldState = state;
+                state = state.decode(in, out);
+
+                if (state == null) {
+                    // Finished
+                    break;
+                }
+
+                // Wait for more data if nothing is consumed and state didn't change.
+                if (in.remaining() == remaining && oldState == state) {
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            state = null;
+            throw e;
+        } finally {
+            this.currentState = state;
         }
-      }
-    } catch (Exception e) {
-      state = null;
-      throw e;
-    } finally {
-      this.currentState = state;
     }
-  }
 
-  public void dispose(IoSession session) throws Exception {
-  }
+    public void dispose(IoSession session) throws Exception {
+    }
 
-  public void finishDecode(IoSession session, ProtocolDecoderOutput out) throws Exception {
-  }
+    public void finishDecode(IoSession session, ProtocolDecoderOutput out)
+            throws Exception {
+    }
 }

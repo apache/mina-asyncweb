@@ -32,8 +32,8 @@ import org.safehaus.asyncweb.codec.decoder.support.DecodingState;
 import org.safehaus.asyncweb.codec.decoder.support.DecodingStateMachine;
 import org.safehaus.asyncweb.codec.decoder.support.LinearWhitespaceSkippingState;
 import org.safehaus.asyncweb.common.HttpMethod;
-import org.safehaus.asyncweb.common.HttpVersion;
 import org.safehaus.asyncweb.common.HttpResponseStatus;
+import org.safehaus.asyncweb.common.HttpVersion;
 
 /**
  * Decodes an HTTP request line - populating an associated <code>Request</code>
@@ -41,99 +41,108 @@ import org.safehaus.asyncweb.common.HttpResponseStatus;
  * <pre>
  * Request-Line = Method SP Request-URI SP HTTP-Version CRLF
  * </pre>
- * 
+ *
  * @author irvingd
  *
  */
 abstract class HttpRequestLineDecodingState extends DecodingStateMachine {
 
-  private static final Charset US_ASCII = Charset.forName("US-ASCII");
-  private static final Charset UTF_8 = Charset.forName("UTF-8");
-  
-  private final CharsetDecoder asciiDecoder = US_ASCII.newDecoder();
-  private final CharsetDecoder utf8Decoder = UTF_8.newDecoder();
-  
-  @Override
-  protected DecodingState init() throws Exception {
-    return READ_METHOD;
-  }
-  
-  @Override
-  protected void destroy() throws Exception {
-  }
+    private static final Charset US_ASCII = Charset.forName("US-ASCII");
 
-  private final DecodingState READ_METHOD = new ConsumeToLinearWhitespaceDecodingState() {
-    @Override
-    protected DecodingState finishDecode(IoBuffer product, ProtocolDecoderOutput out) throws Exception {
-      HttpMethod method = HttpMethod.valueOf(product.getString(asciiDecoder));
+    private static final Charset UTF_8 = Charset.forName("UTF-8");
 
-      if (method == null) {
-        HttpCodecUtils.throwDecoderException("Bad method", 
-                                            HttpResponseStatus.NOT_IMPLEMENTED);
-      }
-      
-      out.write(method);
+    private final CharsetDecoder asciiDecoder = US_ASCII.newDecoder();
 
-      return AFTER_READ_METHOD;
-    }
-  };
-  
-  private final DecodingState AFTER_READ_METHOD = new LinearWhitespaceSkippingState() {
+    private final CharsetDecoder utf8Decoder = UTF_8.newDecoder();
+
     @Override
-    protected DecodingState finishDecode(int skippedBytes) throws Exception {
-      return READ_REQUEST_URI;
-    }
-  };
-  
-  private final DecodingState READ_REQUEST_URI = new ConsumeToLinearWhitespaceDecodingState() {
-    @Override
-    protected DecodingState finishDecode(IoBuffer product, ProtocolDecoderOutput out) throws Exception {
-      out.write(new URI(product.getString(utf8Decoder)));
-      return AFTER_READ_REQUEST_URI;
-    }
-  };
-  
-  private final DecodingState AFTER_READ_REQUEST_URI = new LinearWhitespaceSkippingState() {
-    @Override
-    protected DecodingState finishDecode(int skippedBytes) throws Exception {
-      return READ_PROTOCOL_VERSION;
-    }
-  };
-  
-  private final DecodingState READ_PROTOCOL_VERSION = new ConsumeToDynamicTerminatorDecodingState() {
-    @Override
-    protected DecodingState finishDecode(IoBuffer product, ProtocolDecoderOutput out) throws Exception {
-      String versionStr = product.getString(asciiDecoder);
-      HttpVersion version = HttpVersion.valueOf(versionStr);
-      if (version == null) {
-        HttpCodecUtils.throwDecoderException("Unsupported HTTP version: " + versionStr ,
-                                            HttpResponseStatus.HTTP_VERSION_NOT_SUPPORTED);      
-      }
-      out.write(version);
-      return AFTER_READ_PROTOCOL_VERSION;
+    protected DecodingState init() throws Exception {
+        return READ_METHOD;
     }
 
     @Override
-    protected boolean isTerminator(byte b) {
-      return (Character.isWhitespace(b));
+    protected void destroy() throws Exception {
     }
-  };
 
-  private final DecodingState AFTER_READ_PROTOCOL_VERSION = new LinearWhitespaceSkippingState() {
-    @Override
-    protected DecodingState finishDecode(int skippedBytes) throws Exception {
-      return FINISH;
-    }
-  };
-  
-  private final DecodingState FINISH = new CRLFDecodingState() {
-    @Override
-    protected DecodingState finishDecode(boolean foundCRLF, ProtocolDecoderOutput out) throws Exception {
-      if (!foundCRLF) {
-        HttpCodecUtils.throwDecoderException("Expected CR/LF at the end of the request line.");
-      }
+    private final DecodingState READ_METHOD = new ConsumeToLinearWhitespaceDecodingState() {
+        @Override
+        protected DecodingState finishDecode(IoBuffer product,
+                ProtocolDecoderOutput out) throws Exception {
+            HttpMethod method = HttpMethod.valueOf(product
+                    .getString(asciiDecoder));
 
-      return null;
-    }
-  };
+            if (method == null) {
+                HttpCodecUtils.throwDecoderException("Bad method",
+                        HttpResponseStatus.NOT_IMPLEMENTED);
+            }
+
+            out.write(method);
+
+            return AFTER_READ_METHOD;
+        }
+    };
+
+    private final DecodingState AFTER_READ_METHOD = new LinearWhitespaceSkippingState() {
+        @Override
+        protected DecodingState finishDecode(int skippedBytes) throws Exception {
+            return READ_REQUEST_URI;
+        }
+    };
+
+    private final DecodingState READ_REQUEST_URI = new ConsumeToLinearWhitespaceDecodingState() {
+        @Override
+        protected DecodingState finishDecode(IoBuffer product,
+                ProtocolDecoderOutput out) throws Exception {
+            out.write(new URI(product.getString(utf8Decoder)));
+            return AFTER_READ_REQUEST_URI;
+        }
+    };
+
+    private final DecodingState AFTER_READ_REQUEST_URI = new LinearWhitespaceSkippingState() {
+        @Override
+        protected DecodingState finishDecode(int skippedBytes) throws Exception {
+            return READ_PROTOCOL_VERSION;
+        }
+    };
+
+    private final DecodingState READ_PROTOCOL_VERSION = new ConsumeToDynamicTerminatorDecodingState() {
+        @Override
+        protected DecodingState finishDecode(IoBuffer product,
+                ProtocolDecoderOutput out) throws Exception {
+            String versionStr = product.getString(asciiDecoder);
+            HttpVersion version = HttpVersion.valueOf(versionStr);
+            if (version == null) {
+                HttpCodecUtils.throwDecoderException(
+                        "Unsupported HTTP version: " + versionStr,
+                        HttpResponseStatus.HTTP_VERSION_NOT_SUPPORTED);
+            }
+            out.write(version);
+            return AFTER_READ_PROTOCOL_VERSION;
+        }
+
+        @Override
+        protected boolean isTerminator(byte b) {
+            return Character.isWhitespace(b);
+        }
+    };
+
+    private final DecodingState AFTER_READ_PROTOCOL_VERSION = new LinearWhitespaceSkippingState() {
+        @Override
+        protected DecodingState finishDecode(int skippedBytes) throws Exception {
+            return FINISH;
+        }
+    };
+
+    private final DecodingState FINISH = new CRLFDecodingState() {
+        @Override
+        protected DecodingState finishDecode(boolean foundCRLF,
+                ProtocolDecoderOutput out) throws Exception {
+            if (!foundCRLF) {
+                HttpCodecUtils
+                        .throwDecoderException("Expected CR/LF at the end of the request line.");
+            }
+
+            return null;
+        }
+    };
 }

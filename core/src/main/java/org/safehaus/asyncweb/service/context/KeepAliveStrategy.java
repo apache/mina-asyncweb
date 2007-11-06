@@ -22,25 +22,24 @@ package org.safehaus.asyncweb.service.context;
 import org.safehaus.asyncweb.common.HttpResponse;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 
-
 /**
  * Defines a strategy for deciding whether a connection should
  * remain open after a response has been handled
- * 
+ *
  * @author irvingd
  *
  */
 public interface KeepAliveStrategy {
 
-  /**
-   * Determines whether a connection should remain open after a
-   * response has been handled
-   * 
-   * @param context   The context to check
-   * @param response  The response to check
-   * @return          <code>true</code> iff a connection should
-   *                  remain open after processing the specified response
-   */
-  public boolean keepAlive(HttpServiceContext context, HttpResponse response);
-  
+    /**
+     * Determines whether a connection should remain open after a
+     * response has been handled
+     *
+     * @param context   The context to check
+     * @param response  The response to check
+     * @return          <code>true</code> iff a connection should
+     *                  remain open after processing the specified response
+     */
+    public boolean keepAlive(HttpServiceContext context, HttpResponse response);
+
 }

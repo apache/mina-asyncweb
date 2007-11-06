@@ -29,112 +29,118 @@ import org.safehaus.asyncweb.util.TimedPermit;
 /**
  * A basic <code>Session</code> implementation which holds session values
  * in memory
- * 
+ *
  * @author irvingd
  *
  */
 class BasicSession implements HttpSession {
 
-  private TimedPermit permit;
-  private boolean isAttached;
-  private boolean isDestroyed;
-  private Object lock = new Object();
-  private BasicSessionStore owner;
-  private String id;
-  
-  private Map<String, Object> values = Collections.synchronizedMap(new HashMap<String, Object>());
-  
-  /**
-   * @param owner  The owner of this session
-   */
-  BasicSession(String id, BasicSessionStore owner) {
-    this.owner = owner;
-    this.id    = id;
-  }
-  
-  public Object getValue(String key) {
-    return values.get(key);
-  }
+    private TimedPermit permit;
 
-  public void setValue(String key, Object value) {
-    values.put(key, value);
-  }
+    private boolean isAttached;
 
-  public Object removeValue(String key) {
-    return values.remove(key);
-  }
+    private boolean isDestroyed;
 
-  public boolean isAttached() {
-    return isAttached;
-  }
+    private Object lock = new Object();
 
-  public boolean isValid() {
-    synchronized (lock) {
-      return !isDestroyed;
+    private BasicSessionStore owner;
+
+    private String id;
+
+    private Map<String, Object> values = Collections
+            .synchronizedMap(new HashMap<String, Object>());
+
+    /**
+     * @param owner  The owner of this session
+     */
+    BasicSession(String id, BasicSessionStore owner) {
+        this.owner = owner;
+        this.id = id;
     }
-  }
-  
-  /**
-   * Destroys this session if it is not already destroyed.
-   * If destruction takes place, notifications are fired.
-   */
-  public void destroy() {
-    if (destroyIfActive()) {
-      owner.sessionDestroyed(this);
-    }
-  }
 
-  /**
-   * @return  The id of this session
-   */
-  public String getId() {
-    return id;
-  }
-  
-  /**
-   * Instructs this session to expire.
-   * If this session is not already expired, expiration notifications
-   * are fired
-   */
-  void expire() {
-    if (destroyIfActive()) {
-      owner.sessionExpired(this);
+    public Object getValue(String key) {
+        return values.get(key);
     }
-  }
-  
-  /**
-   * Sets the permit associated with this session
-   * 
-   * @param permit  This sessions access permit
-   */
-  void setPermit(TimedPermit permit) {
-    this.permit = permit;
-  }
-  
-  /**
-   * Invoked when this session is referenced by a client request.
-   * The permit associated with this session is renewed, and subsequent calls
-   * to <code>isAttached</code> will return <code>true</code>
-   */
-  void access() {
-    permit.renew();
-    isAttached = true;
-  }
-  
-  /**
-   * Destroys this session if it is not destroyed already.
-   * 
-   * @return  <code>true</code> if this session is successfully
-   */
-  private boolean destroyIfActive() {
-    synchronized (lock) {
-      if (isDestroyed) {
-        return false;
-      }
-      isDestroyed = true;
+
+    public void setValue(String key, Object value) {
+        values.put(key, value);
     }
-    permit.cancel();
-    return true;
-  }
-  
+
+    public Object removeValue(String key) {
+        return values.remove(key);
+    }
+
+    public boolean isAttached() {
+        return isAttached;
+    }
+
+    public boolean isValid() {
+        synchronized (lock) {
+            return !isDestroyed;
+        }
+    }
+
+    /**
+     * Destroys this session if it is not already destroyed.
+     * If destruction takes place, notifications are fired.
+     */
+    public void destroy() {
+        if (destroyIfActive()) {
+            owner.sessionDestroyed(this);
+        }
+    }
+
+    /**
+     * @return  The id of this session
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Instructs this session to expire.
+     * If this session is not already expired, expiration notifications
+     * are fired
+     */
+    void expire() {
+        if (destroyIfActive()) {
+            owner.sessionExpired(this);
+        }
+    }
+
+    /**
+     * Sets the permit associated with this session
+     *
+     * @param permit  This sessions access permit
+     */
+    void setPermit(TimedPermit permit) {
+        this.permit = permit;
+    }
+
+    /**
+     * Invoked when this session is referenced by a client request.
+     * The permit associated with this session is renewed, and subsequent calls
+     * to <code>isAttached</code> will return <code>true</code>
+     */
+    void access() {
+        permit.renew();
+        isAttached = true;
+    }
+
+    /**
+     * Destroys this session if it is not destroyed already.
+     *
+     * @return  <code>true</code> if this session is successfully
+     */
+    private boolean destroyIfActive() {
+        synchronized (lock) {
+            if (isDestroyed) {
+                return false;
+            }
+            isDestroyed = true;
+        }
+        permit.cancel();
+        return true;
+    }
+
 }

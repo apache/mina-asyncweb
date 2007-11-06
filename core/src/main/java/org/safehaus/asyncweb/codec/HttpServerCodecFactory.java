@@ -34,36 +34,38 @@ import org.slf4j.LoggerFactory;
 
 public class HttpServerCodecFactory implements ProtocolCodecFactory {
 
-  private final Logger log = LoggerFactory.getLogger(getClass());
-  private boolean parseCookies = true;
-  
-  public boolean isParseCookies() {
-    return parseCookies;
-  }
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
-  public void setParseCookies(boolean parseCookies) {
-    this.parseCookies = parseCookies;
-  }
+    private boolean parseCookies = true;
 
-  public ProtocolDecoder getDecoder() throws Exception {
-    // TODO Use a parser pool if this performs bad.
+    public boolean isParseCookies() {
+        return parseCookies;
+    }
 
-    HttpRequestDecodingState topLevelState = new HttpRequestDecodingState() {
-      @Override
-      protected DecodingState finishDecode(List<Object> childProducts, ProtocolDecoderOutput out) throws Exception {
-        if (log.isDebugEnabled()) {
-          log.debug("Finished decoding a message: " + childProducts);
-        }
-        out.write(childProducts.get(0));
-        return this;
-      }
-    };
-    topLevelState.setParseCookies(parseCookies);
+    public void setParseCookies(boolean parseCookies) {
+        this.parseCookies = parseCookies;
+    }
 
-    return new StateMachineProtocolDecoder(topLevelState);
-  }
+    public ProtocolDecoder getDecoder() throws Exception {
+        // TODO Use a parser pool if this performs bad.
 
-  public ProtocolEncoder getEncoder() throws Exception {
-    return new OneShotHttpResponseEncoder();
-  }
+        HttpRequestDecodingState topLevelState = new HttpRequestDecodingState() {
+            @Override
+            protected DecodingState finishDecode(List<Object> childProducts,
+                    ProtocolDecoderOutput out) throws Exception {
+                if (log.isDebugEnabled()) {
+                    log.debug("Finished decoding a message: " + childProducts);
+                }
+                out.write(childProducts.get(0));
+                return this;
+            }
+        };
+        topLevelState.setParseCookies(parseCookies);
+
+        return new StateMachineProtocolDecoder(topLevelState);
+    }
+
+    public ProtocolEncoder getEncoder() throws Exception {
+        return new OneShotHttpResponseEncoder();
+    }
 }

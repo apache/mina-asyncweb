@@ -25,31 +25,31 @@ package org.safehaus.asyncweb.util;
  * method. If a permit issued by this issuer expires before it is renewed, all
  * <code>PermitExpirationListener</code>s associated with this issuer are notified of
  * the expiry.
- * 
+ *
  * @author irvingd
  *
  */
 public interface TimedPermitIssuer {
 
-  /**
-   * Closes this permit issuer
-   */
-  public void close();
-  
-  /**
-   * Issues a new permit for a specified object
-   * 
-   * @param o  The object for which a permit is required
-   * @return   The new permit
-   */
-  public TimedPermit issuePermit(Object o);
- 
-  /**
-   * Adds a listener to be notified when any permit supplied by this issuer
-   * expires
-   * 
-   * @param listener  The listener
-   */
-  public void addPermitExpirationListener(PermitExpirationListener listener);
-  
+    /**
+     * Closes this permit issuer
+     */
+    public void close();
+
+    /**
+     * Issues a new permit for a specified object
+     *
+     * @param o  The object for which a permit is required
+     * @return   The new permit
+     */
+    public TimedPermit issuePermit(Object o);
+
+    /**
+     * Adds a listener to be notified when any permit supplied by this issuer
+     * expires
+     *
+     * @param listener  The listener
+     */
+    public void addPermitExpirationListener(PermitExpirationListener listener);
+
 }

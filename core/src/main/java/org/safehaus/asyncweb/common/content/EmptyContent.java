@@ -23,19 +23,19 @@ import org.safehaus.asyncweb.common.Content;
 
 /**
  * An empty {@link Content} which contains no body.
- * 
+ *
  * @author trustin
  * @version $Rev$, $Date$
  */
 public class EmptyContent implements Content {
 
-  private static final long serialVersionUID = 2192619543978353683L;
+    private static final long serialVersionUID = 2192619543978353683L;
 
-  /**
-   * A singleton instance.
-   */
-  public static final Content INSTANCE = new EmptyContent();
-  
-  private EmptyContent() {
-  }
+    /**
+     * A singleton instance.
+     */
+    public static final Content INSTANCE = new EmptyContent();
+
+    private EmptyContent() {
+    }
 }

@@ -24,25 +24,25 @@ import org.safehaus.asyncweb.common.HttpRequest;
 /**
  * Resolves the name of the <code>HttpService</code> to be used to
  * service a request.
- * 
+ *
  * @author irvingd
  *
  */
 public interface ServiceResolver {
 
-  /**
-   * Determines the name of the <code>HttpService</code> to be employed
-   * to service a given <code>HttpRequest</code>.<br/>
-   * 
-   * If no service can be resolved for the specified request, this method
-   * should return <code>null</code>.
-   * 
-   * @param request  The request for which a service name is required
-   * @return         The name of the <code>HttpService</code> which
-   *                 should be used to service the request, or
-   *                 <code>null</code> if no appropriate service can be
-   *                 found
-   */
-  public String resolveService(HttpRequest request);
-  
+    /**
+     * Determines the name of the <code>HttpService</code> to be employed
+     * to service a given <code>HttpRequest</code>.<br/>
+     *
+     * If no service can be resolved for the specified request, this method
+     * should return <code>null</code>.
+     *
+     * @param request  The request for which a service name is required
+     * @return         The name of the <code>HttpService</code> which
+     *                 should be used to service the request, or
+     *                 <code>null</code> if no appropriate service can be
+     *                 found
+     */
+    public String resolveService(HttpRequest request);
+
 }

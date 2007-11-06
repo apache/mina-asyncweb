@@ -25,30 +25,31 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A simple <code>SessionListener</code> which logs the various lifecycle events
- * 
+ *
  * @author irvingd
  *
  */
 public class LoggingSessionListener implements HttpSessionListener {
 
-  private static final Logger LOG = LoggerFactory.getLogger(LoggingSessionListener.class);
-  
-  public void sessionCreated(HttpSession session) {
-    doLog("New Session Created", session);
-  }
+    private static final Logger LOG = LoggerFactory
+            .getLogger(LoggingSessionListener.class);
 
-  public void sessionDestroyed(HttpSession session) {
-    doLog("Session Destroyed", session);
-  }
-
-  public void sessionExpired(HttpSession session) {
-    doLog("Session Expired", session);
-  }
-
-  private void doLog(String msg, HttpSession session) {
-    if (LOG.isInfoEnabled()) {
-      LOG.info(msg + " [SessionId = " + session.getId() + "]");
+    public void sessionCreated(HttpSession session) {
+        doLog("New Session Created", session);
     }
-  }
-  
+
+    public void sessionDestroyed(HttpSession session) {
+        doLog("Session Destroyed", session);
+    }
+
+    public void sessionExpired(HttpSession session) {
+        doLog("Session Expired", session);
+    }
+
+    private void doLog(String msg, HttpSession session) {
+        if (LOG.isInfoEnabled()) {
+            LOG.info(msg + " [SessionId = " + session.getId() + "]");
+        }
+    }
+
 }

@@ -30,46 +30,47 @@ import org.slf4j.LoggerFactory;
  * each request it handles to be renewed.
  * This causes sessions attached to requests to be renewed per-request - even if
  * the request does not cause session access to occur.<br/>
- * 
+ *
  * This handler does not need to be installed for deployments which do not employ
  * sessions
- * 
+ *
  * @author irvingd
  *
  */
 public class SessionKeepAliveFilter implements HttpServiceFilter {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SessionKeepAliveFilter.class);
-  
-  /**
-   * Handles the specified request.
-   * The session associated with the current request - if any - is retrieved - 
-   * causing its lease to be renewed.
-   */
-  public void handleRequest(NextFilter next, HttpServiceContext context) {
-    HttpSession session = context.getSession(false);
-    if (session != null) {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Session renewed: " + session.getId());
-      }
-    } else {
-      LOG.debug("No session to renew");
+    private static final Logger LOG = LoggerFactory
+            .getLogger(SessionKeepAliveFilter.class);
+
+    /**
+     * Handles the specified request.
+     * The session associated with the current request - if any - is retrieved -
+     * causing its lease to be renewed.
+     */
+    public void handleRequest(NextFilter next, HttpServiceContext context) {
+        HttpSession session = context.getSession(false);
+        if (session != null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Session renewed: " + session.getId());
+            }
+        } else {
+            LOG.debug("No session to renew");
+        }
+        next.invoke();
     }
-    next.invoke();
-  }
 
-  public void start() {
-    // Not interested in startup
-  }
+    public void start() {
+        // Not interested in startup
+    }
 
-  public void stop() {
-    // Not interested in shutdown    
-  }
+    public void stop() {
+        // Not interested in shutdown
+    }
 
-  /**
-   * Simply moves the response forward in the chain
-   */
-  public void handleResponse(NextFilter next, HttpServiceContext context) {
-    next.invoke();
-  }
+    /**
+     * Simply moves the response forward in the chain
+     */
+    public void handleResponse(NextFilter next, HttpServiceContext context) {
+        next.invoke();
+    }
 }

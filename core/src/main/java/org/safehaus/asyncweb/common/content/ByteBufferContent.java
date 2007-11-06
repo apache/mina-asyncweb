@@ -24,29 +24,29 @@ import org.safehaus.asyncweb.common.Content;
 
 /**
  * A {@link Content} which contains a byte array with offset and length parameter.
- * 
+ *
  * @author trustin
  * @version $Rev$, $Date$
  */
 public class ByteBufferContent implements Content {
 
-  private static final long serialVersionUID = -3456547908555235715L;
-  
-  private final IoBuffer buffer;
-  
-  public ByteBufferContent(IoBuffer buffer) {
-    if (buffer == null) {
-      throw new NullPointerException("buffer");
+    private static final long serialVersionUID = -3456547908555235715L;
+
+    private final IoBuffer buffer;
+
+    public ByteBufferContent(IoBuffer buffer) {
+        if (buffer == null) {
+            throw new NullPointerException("buffer");
+        }
+
+        this.buffer = buffer;
     }
-    
-    this.buffer = buffer;
-  }
-  
-  public IoBuffer getByteBuffer() {
-    return buffer.duplicate();
-  }
-  
-  public int size() {
-    return buffer.remaining();
-  }
+
+    public IoBuffer getByteBuffer() {
+        return buffer.duplicate();
+    }
+
+    public int size() {
+        return buffer.remaining();
+    }
 }

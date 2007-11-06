@@ -22,67 +22,69 @@ package org.safehaus.asyncweb.codec.decoder.support;
 import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 
-
 /**
  * Consumes until a fixed (ASCII) character is reached.
  * The terminator is skipped.
- * 
+ *
  * @author irvingd
  * @author trustin
  * @version $Rev$, $Date$
  */
 public abstract class ConsumeToTerminatorDecodingState implements DecodingState {
 
-  private final byte terminator;
-  private IoBuffer buffer;
-  
-  /** 
-   * @param terminator  The terminator character
-   */
-  public ConsumeToTerminatorDecodingState(byte terminator) {
-    this.terminator = terminator;
-  }
-  
-  public DecodingState decode(IoBuffer in, ProtocolDecoderOutput out) throws Exception {
-    int terminatorPos = in.indexOf(terminator);
-    
-    if (terminatorPos >= 0) {
-      int limit = in.limit();
-      IoBuffer product;
-      
-      if (in.position() < terminatorPos) {
-        in.limit(terminatorPos);
-  
-        if (buffer == null) {
-          product = in.slice();
-        } else {
-          buffer.put(in);
-          product = buffer.flip();
-          buffer = null;
-        }
-        
-        in.limit(limit);
-      } else {
-        // When input contained only terminator rather than actual data...
-        if (buffer == null) {
-          product = IoBuffer.allocate(1);
-          product.limit(0);
-        } else {
-          product = buffer.flip();
-          buffer = null;
-        }
-      }
-      in.position(terminatorPos + 1);
-      return finishDecode(product, out);
-    } else {
-      if (buffer == null) {
-        buffer = IoBuffer.allocate(in.remaining());
-        buffer.setAutoExpand(true);
-      }
-      buffer.put(in);
-      return this;
+    private final byte terminator;
+
+    private IoBuffer buffer;
+
+    /**
+     * @param terminator  The terminator character
+     */
+    public ConsumeToTerminatorDecodingState(byte terminator) {
+        this.terminator = terminator;
     }
-  }
-  
-  protected abstract DecodingState finishDecode(IoBuffer product, ProtocolDecoderOutput out) throws Exception;
+
+    public DecodingState decode(IoBuffer in, ProtocolDecoderOutput out)
+            throws Exception {
+        int terminatorPos = in.indexOf(terminator);
+
+        if (terminatorPos >= 0) {
+            int limit = in.limit();
+            IoBuffer product;
+
+            if (in.position() < terminatorPos) {
+                in.limit(terminatorPos);
+
+                if (buffer == null) {
+                    product = in.slice();
+                } else {
+                    buffer.put(in);
+                    product = buffer.flip();
+                    buffer = null;
+                }
+
+                in.limit(limit);
+            } else {
+                // When input contained only terminator rather than actual data...
+                if (buffer == null) {
+                    product = IoBuffer.allocate(1);
+                    product.limit(0);
+                } else {
+                    product = buffer.flip();
+                    buffer = null;
+                }
+            }
+            in.position(terminatorPos + 1);
+            return finishDecode(product, out);
+        } else {
+            if (buffer == null) {
+                buffer = IoBuffer.allocate(in.remaining());
+                buffer.setAutoExpand(true);
+            }
+            buffer.put(in);
+            return this;
+        }
+    }
+
+    protected abstract DecodingState finishDecode(IoBuffer product,
+            ProtocolDecoderOutput out) throws Exception;
 }

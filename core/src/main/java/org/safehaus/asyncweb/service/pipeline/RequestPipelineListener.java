@@ -22,5 +22,5 @@ package org.safehaus.asyncweb.service.pipeline;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 
 public interface RequestPipelineListener {
-  public void responseReleased(HttpServiceContext context);
+    public void responseReleased(HttpServiceContext context);
 }

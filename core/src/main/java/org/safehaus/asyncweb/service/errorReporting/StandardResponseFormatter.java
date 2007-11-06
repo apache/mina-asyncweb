@@ -29,85 +29,85 @@ import org.safehaus.asyncweb.common.HttpResponseStatus.Category;
 import org.safehaus.asyncweb.common.content.ByteBufferContent;
 import org.safehaus.asyncweb.util.StringBundle;
 
-
 public class StandardResponseFormatter implements ErrorResponseFormatter {
 
-  private static final StringBundle bundle 
-    = StringBundle.getBundle(StandardResponseFormatter.class.getPackage().getName());
-  
-  public void formatResponse(HttpRequest request, MutableHttpResponse response) {
-    if (shouldFormat(response)) {
-      doFormat(request, response);
-      response.addHeader("content-type", "text/html");
-    }
-  }
-  
-  private boolean shouldFormat(MutableHttpResponse response) {
-    boolean shouldFormat = false;
-    // FIXME Should be able to handler other content types.
-    if (!(response.getContent() instanceof ByteBufferContent)) {
-      HttpResponseStatus status = response.getStatus();
-      HttpResponseStatus.Category category = response.getStatus().getCategory();
-      shouldFormat = status.allowsMessageBody() && 
-                     (category == Category.CLIENT_ERROR || 
-                      category == Category.SERVER_ERROR);
-    }
-    return shouldFormat;
-  }
+    private static final StringBundle bundle = StringBundle
+            .getBundle(StandardResponseFormatter.class.getPackage().getName());
 
-  private void doFormat(HttpRequest request, MutableHttpResponse response) {
-    StringBuilder html = new StringBuilder(1024);
-    html.append("<html><head><title>");
-    html.append("AsyncWeb Server - ");
-    html.append(bundle.getString("errorMessage"));
-    html.append("</title><style><!--");
-    CSS.appendTo(html).append("--></style>");
-    html.append("</head></body>");
-    html.append("<h1>");
-    html.append(bundle.getString("errorTitle"));
-    html.append("</h1>");
-    response.getStatusReasonPhrase();
-    String code = String.valueOf(response.getStatus().getCode());
-    html.append("<h1>");
-    html.append(bundle.getString("statusInfo", code));
-    html.append("</h1>");
-    html.append("<HR size=\"1\" noshade=\"noshade\">");
-    
-    html.append("<p><table cellpadding=\"5\">");
-    appendInfo("statusCode", String.valueOf(response.getStatus().getCode()), html);
-    appendInfo("description", getErrorMessage(response), html);
-    appendInfo("requestMethod", request.getMethod().toString(), html);
-    html.append("</table></p>");
-    
-    html.append("<HR size=\"1\" noshade=\"noshade\">");
-    html.append("<H2>AsyncWeb Server</H2>");
-    
-    IoBuffer out = IoBuffer.allocate(html.length());
+    public void formatResponse(HttpRequest request, MutableHttpResponse response) {
+        if (shouldFormat(response)) {
+            doFormat(request, response);
+            response.addHeader("content-type", "text/html");
+        }
+    }
 
-    // TODO: Need to sort this out when we start dealing with character encodings
-    try {
-      byte[] bytes = html.toString().getBytes("US-ASCII");
-      out.put(bytes);
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
+    private boolean shouldFormat(MutableHttpResponse response) {
+        boolean shouldFormat = false;
+        // FIXME Should be able to handler other content types.
+        if (!(response.getContent() instanceof ByteBufferContent)) {
+            HttpResponseStatus status = response.getStatus();
+            HttpResponseStatus.Category category = response.getStatus()
+                    .getCategory();
+            shouldFormat = status.allowsMessageBody()
+                    && (category == Category.CLIENT_ERROR || category == Category.SERVER_ERROR);
+        }
+        return shouldFormat;
     }
-    
-    out.flip();
-    response.setContent(new ByteBufferContent(out));
-  }
-  
-  private void appendInfo(String title, String info, StringBuilder html) {
-    html.append("<tr><th>").append(bundle.getString(title)).append("</th>");
-    html.append("<td>").append(info).append("</td>");
-  }
-  
-  private String getErrorMessage(MutableHttpResponse response) {
-    int responseCode = response.getStatus().getCode();
-    String errorMessage = response.getStatusReasonPhrase();
-    if (errorMessage == null) {
-      errorMessage = "";
+
+    private void doFormat(HttpRequest request, MutableHttpResponse response) {
+        StringBuilder html = new StringBuilder(1024);
+        html.append("<html><head><title>");
+        html.append("AsyncWeb Server - ");
+        html.append(bundle.getString("errorMessage"));
+        html.append("</title><style><!--");
+        CSS.appendTo(html).append("--></style>");
+        html.append("</head></body>");
+        html.append("<h1>");
+        html.append(bundle.getString("errorTitle"));
+        html.append("</h1>");
+        response.getStatusReasonPhrase();
+        String code = String.valueOf(response.getStatus().getCode());
+        html.append("<h1>");
+        html.append(bundle.getString("statusInfo", code));
+        html.append("</h1>");
+        html.append("<HR size=\"1\" noshade=\"noshade\">");
+
+        html.append("<p><table cellpadding=\"5\">");
+        appendInfo("statusCode",
+                String.valueOf(response.getStatus().getCode()), html);
+        appendInfo("description", getErrorMessage(response), html);
+        appendInfo("requestMethod", request.getMethod().toString(), html);
+        html.append("</table></p>");
+
+        html.append("<HR size=\"1\" noshade=\"noshade\">");
+        html.append("<H2>AsyncWeb Server</H2>");
+
+        IoBuffer out = IoBuffer.allocate(html.length());
+
+        // TODO: Need to sort this out when we start dealing with character encodings
+        try {
+            byte[] bytes = html.toString().getBytes("US-ASCII");
+            out.put(bytes);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+        out.flip();
+        response.setContent(new ByteBufferContent(out));
     }
-    return bundle.getString("http." + responseCode, errorMessage);
-  }
-  
+
+    private void appendInfo(String title, String info, StringBuilder html) {
+        html.append("<tr><th>").append(bundle.getString(title)).append("</th>");
+        html.append("<td>").append(info).append("</td>");
+    }
+
+    private String getErrorMessage(MutableHttpResponse response) {
+        int responseCode = response.getStatus().getCode();
+        String errorMessage = response.getStatusReasonPhrase();
+        if (errorMessage == null) {
+            errorMessage = "";
+        }
+        return bundle.getString("http." + responseCode, errorMessage);
+    }
+
 }

@@ -22,30 +22,29 @@ package org.safehaus.asyncweb.service.session;
 import org.safehaus.asyncweb.common.HttpRequest;
 import org.safehaus.asyncweb.common.MutableHttpResponse;
 
-
 /**
  * A strategy for encoding / decoding session keys information to / from
  * requests.
- * 
+ *
  * @author irvingd
  *
  */
 public interface HttpSessionIdentifier {
 
-  /**
-   * Attempts to extract a session key from a specified request.
-   *
-   * @param request  The request from which to extract a session key
-   * @return         The extracted key, or <code>null</code> if the request
-   *                 does not contain a session key
-   */
-  public String getSessionKey(HttpRequest request);
-  
-  /**
-   * Adds a session key to the specified response
-   * 
-   * @param key      The session key
-   * @param response  The response
-   */
-  public void addSessionKey(String key, MutableHttpResponse response);
+    /**
+     * Attempts to extract a session key from a specified request.
+     *
+     * @param request  The request from which to extract a session key
+     * @return         The extracted key, or <code>null</code> if the request
+     *                 does not contain a session key
+     */
+    public String getSessionKey(HttpRequest request);
+
+    /**
+     * Adds a session key to the specified response
+     *
+     * @param key      The session key
+     * @param response  The response
+     */
+    public void addSessionKey(String key, MutableHttpResponse response);
 }

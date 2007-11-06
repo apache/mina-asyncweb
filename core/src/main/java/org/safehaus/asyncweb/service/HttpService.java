@@ -19,19 +19,18 @@
  */
 package org.safehaus.asyncweb.service;
 
-
 /**
  * An application-level HTTP request processor.
- * 
+ *
  * @author irvingd
  *
  */
 public interface HttpService {
 
-  public void handleRequest(HttpServiceContext context) throws Exception;
-  
-  public void start();
-  
-  public void stop();
-  
+    public void handleRequest(HttpServiceContext context) throws Exception;
+
+    public void start();
+
+    public void stop();
+
 }

@@ -23,11 +23,10 @@ import org.safehaus.asyncweb.common.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * A very simple resolver which simply uses the full URI after
  * stripping an optional prefix as the name of the service.
- * 
+ *
  * <code>SimplePrefixResolver</code> is useful when a very
  * naming scheme is used - and allows services to be resolved
  * "dynamically" without any global configuration.<br/>
@@ -46,61 +45,63 @@ import org.slf4j.LoggerFactory;
  *  <tr><td>/services/x/serviceX</td><td>x/serviceA</td></tr>
  *  <tr><td>/x/serviceA</td><td>null</td></tr>
  * </table>
- * 
+ *
  * @author irvingd
  *
  */
 public class SimplePrefixResolver implements ServiceResolver {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SimplePrefixResolver.class);
-  
-  // FIXME Rename to pathPrefix.
-  private String uriPrefix;
+    private static final Logger LOG = LoggerFactory
+            .getLogger(SimplePrefixResolver.class);
 
-  /**
-   * Sets the prefix associated with this resolver.
-   * URIs which begin with the specified prefix are resolved to the URI
-   * with the prefix stripped. URIs which do not begin with the specified
-   * prefix are not resolved.<br/>
-   * <br/>
-   * If a prefix is not set, requests are resolved to their URI value.
-   * 
-   * @param uriPrefix  The uri prefix to apply
-   */
-  public void setUriPrefix(String uriPrefix) {
-    this.uriPrefix = uriPrefix;  
-    LOG.info("URI prefix: " + uriPrefix);
-  }
-  
-  /**
-   * Resolves the name of the service to be employed for the specified request.
-   * If this resolver is not configured with a prefix, the request resoves to
-   * the request URI.<br/>
-   * Otherwise, if the request URI begins with the configured prefix, the request
-   * resolves to the URI with the prefix stripped. If the request URI does not
-   * begin with the configured prefix, the request is unresolved
-   * 
-   * @param request The request to resolve to a service name
-   * @return        The resolved service name, or <code>null</code> if
-   *                the request is un-resolved
-   */
-  public String resolveService(HttpRequest request) {
-    if (request.getRequestUri() == null || request.getRequestUri().isAbsolute()) {
-      return null;
+    // FIXME Rename to pathPrefix.
+    private String uriPrefix;
+
+    /**
+     * Sets the prefix associated with this resolver.
+     * URIs which begin with the specified prefix are resolved to the URI
+     * with the prefix stripped. URIs which do not begin with the specified
+     * prefix are not resolved.<br/>
+     * <br/>
+     * If a prefix is not set, requests are resolved to their URI value.
+     *
+     * @param uriPrefix  The uri prefix to apply
+     */
+    public void setUriPrefix(String uriPrefix) {
+        this.uriPrefix = uriPrefix;
+        LOG.info("URI prefix: " + uriPrefix);
     }
 
-    String path = request.getRequestUri().getPath();
-    if (uriPrefix != null && path != null) {
-      if (path.startsWith(uriPrefix)) {
-        path = path.substring(uriPrefix.length());
-      } else {
-        path = null;
-      }
+    /**
+     * Resolves the name of the service to be employed for the specified request.
+     * If this resolver is not configured with a prefix, the request resoves to
+     * the request URI.<br/>
+     * Otherwise, if the request URI begins with the configured prefix, the request
+     * resolves to the URI with the prefix stripped. If the request URI does not
+     * begin with the configured prefix, the request is unresolved
+     *
+     * @param request The request to resolve to a service name
+     * @return        The resolved service name, or <code>null</code> if
+     *                the request is un-resolved
+     */
+    public String resolveService(HttpRequest request) {
+        if (request.getRequestUri() == null
+                || request.getRequestUri().isAbsolute()) {
+            return null;
+        }
+
+        String path = request.getRequestUri().getPath();
+        if (uriPrefix != null && path != null) {
+            if (path.startsWith(uriPrefix)) {
+                path = path.substring(uriPrefix.length());
+            } else {
+                path = null;
+            }
+        }
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Resolved request to service name: " + path);
+        }
+        return path;
     }
-    if (LOG.isInfoEnabled()) {
-      LOG.info("Resolved request to service name: " + path);
-    }
-    return path;
-  }
 
 }

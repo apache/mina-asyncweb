@@ -26,7 +26,7 @@ import org.safehaus.asyncweb.common.HttpRequest;
  */
 public class FixedServiceResolver implements ServiceResolver {
     private String service;
-    
+
     public String resolveService(HttpRequest request) {
         return service;
     }

@@ -37,130 +37,133 @@ import org.safehaus.asyncweb.common.content.ByteBufferContent;
 import org.safehaus.asyncweb.service.HttpService;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 
-
 /**
  * A simple <code>HttpService</code> which sends "hello world"
  * responses to every request.
- * 
+ *
  * Note that normally we wouldn't be generating html directly in a service :o)
- * 
+ *
  * @author irvingd
  *
  */
 public class HelloWorldHttpService implements HttpService {
 
-  private String message = "Hello from AsyncWeb!!";
-  
-  /**
-   * Sends the configured message as an HTTP response
-   */
-  public void handleRequest(HttpServiceContext context) throws Exception {
-    MutableHttpResponse response = new DefaultHttpResponse();
-    
-    StringWriter buf = new StringWriter();
-    PrintWriter writer = new PrintWriter(buf);
-    writer.println("<html><body><b>Your message of the day:</b><br/><br/>");
-    writer.println("<h2><i>" + message + "</h2></i><br/><br/>");
-    writeHeaders(context.getRequest(), writer);
-    writer.println("<br/>");
-    writeParameters(context.getRequest(), writer);
-    writer.println("<br/>");
-    writeCookies(context.getRequest(), writer);
-    writer.flush();
-    
-    IoBuffer bb = IoBuffer.allocate(1024);
-    bb.setAutoExpand(true);
-    bb.putString(buf.toString(), Charset.forName("UTF-8").newEncoder());
-    bb.flip();
-    response.setContent(new ByteBufferContent(bb));
+    private String message = "Hello from AsyncWeb!!";
 
-    response.setHeader("Pragma", "no-cache");
-    response.setHeader("Cache-Control", "no-cache");
-    response.setStatus(HttpResponseStatus.OK);
-    
-    
-    context.commitResponse(response);
-  }
+    /**
+     * Sends the configured message as an HTTP response
+     */
+    public void handleRequest(HttpServiceContext context) throws Exception {
+        MutableHttpResponse response = new DefaultHttpResponse();
 
-  /**
-   * Sets the message to return in responses.
-   * This is called for you by the framework!
-   * 
-   * @param message  The message
-   */
-  public void setMessage(String message) {
-    this.message = message;
-  }
-  
-  /**
-   * Writes headers from the request to the specified writer
-   * 
-   * @param request   The request
-   * @param writer    The writer
-   */
-  private void writeHeaders(HttpRequest request, PrintWriter writer) {
-    writer.println("You sent these headers with your request:<br/>");
-    writer.println("<ul>");
-    for (String headerName: request.getHeaders().keySet()) {
-      String headerValue = request.getHeader(headerName);
-      writer.print("<li>" + headerName + " = " + headerValue + "</li>");
+        StringWriter buf = new StringWriter();
+        PrintWriter writer = new PrintWriter(buf);
+        writer.println("<html><body><b>Your message of the day:</b><br/><br/>");
+        writer.println("<h2><i>" + message + "</h2></i><br/><br/>");
+        writeHeaders(context.getRequest(), writer);
+        writer.println("<br/>");
+        writeParameters(context.getRequest(), writer);
+        writer.println("<br/>");
+        writeCookies(context.getRequest(), writer);
+        writer.flush();
+
+        IoBuffer bb = IoBuffer.allocate(1024);
+        bb.setAutoExpand(true);
+        bb.putString(buf.toString(), Charset.forName("UTF-8").newEncoder());
+        bb.flip();
+        response.setContent(new ByteBufferContent(bb));
+
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setStatus(HttpResponseStatus.OK);
+
+        context.commitResponse(response);
     }
-    writer.println("</ul>");
-  }
-  
-  /**
-   * Writes cookies from the request to the specified writer
-   * 
-   * @param request  The request
-   * @param writer   The writer
-   */
-  private void writeCookies(HttpRequest request, PrintWriter writer) {
-    Collection<Cookie> cookies = request.getCookies();
-    if (!cookies.isEmpty()) {
-      writer.println("You sent these cookies with your request:<br/>");
-      writer.println("<ul>");
-      for (Cookie cookie: cookies) {
-        writer.println("<li>Name = " + cookie.getName() + " Value = " + cookie.getValue());
-        writer.println(" Path = " + cookie.getPath() + " Version = " + cookie.getVersion() + "</li>");
-      }
-      writer.println("</ul>");
+
+    /**
+     * Sets the message to return in responses.
+     * This is called for you by the framework!
+     *
+     * @param message  The message
+     */
+    public void setMessage(String message) {
+        this.message = message;
     }
-  }
-  
-  /**
-   * Writes request parameters to the specified writer
-   * 
-   * @param request  The request
-   * @param writer   The writer
-   */
-  private void writeParameters(HttpRequest request, PrintWriter writer) {
-    if (request.getParameters().size() > 0) {
-      writer.println("You sent these parameters with your request:<br/><br/>");
-      writer.println("<ul>");
 
-      for (Map.Entry<String, List<String>> entry: request.getParameters().entrySet()) {
-        writer.println("<li>");
-        writer.print("'" + entry.getKey() + "' =  ");
-        for (Iterator<String> i = entry.getValue().iterator(); i.hasNext();) {
-          String value = i.next();
-          writer.print("'" + value + "'");
-          if (i.hasNext()) {
-            writer.print(", ");
-          }
-        }  
-        writer.println("</li/>");
-      }
-      
-      writer.println("</ul>"); 
-    } 
-  }
-  
-  public void start() {
-    // Dont care
-  }
+    /**
+     * Writes headers from the request to the specified writer
+     *
+     * @param request   The request
+     * @param writer    The writer
+     */
+    private void writeHeaders(HttpRequest request, PrintWriter writer) {
+        writer.println("You sent these headers with your request:<br/>");
+        writer.println("<ul>");
+        for (String headerName : request.getHeaders().keySet()) {
+            String headerValue = request.getHeader(headerName);
+            writer.print("<li>" + headerName + " = " + headerValue + "</li>");
+        }
+        writer.println("</ul>");
+    }
 
-  public void stop() {
-    // Dont care
-  }
+    /**
+     * Writes cookies from the request to the specified writer
+     *
+     * @param request  The request
+     * @param writer   The writer
+     */
+    private void writeCookies(HttpRequest request, PrintWriter writer) {
+        Collection<Cookie> cookies = request.getCookies();
+        if (!cookies.isEmpty()) {
+            writer.println("You sent these cookies with your request:<br/>");
+            writer.println("<ul>");
+            for (Cookie cookie : cookies) {
+                writer.println("<li>Name = " + cookie.getName() + " Value = "
+                        + cookie.getValue());
+                writer.println(" Path = " + cookie.getPath() + " Version = "
+                        + cookie.getVersion() + "</li>");
+            }
+            writer.println("</ul>");
+        }
+    }
+
+    /**
+     * Writes request parameters to the specified writer
+     *
+     * @param request  The request
+     * @param writer   The writer
+     */
+    private void writeParameters(HttpRequest request, PrintWriter writer) {
+        if (request.getParameters().size() > 0) {
+            writer
+                    .println("You sent these parameters with your request:<br/><br/>");
+            writer.println("<ul>");
+
+            for (Map.Entry<String, List<String>> entry : request
+                    .getParameters().entrySet()) {
+                writer.println("<li>");
+                writer.print("'" + entry.getKey() + "' =  ");
+                for (Iterator<String> i = entry.getValue().iterator(); i
+                        .hasNext();) {
+                    String value = i.next();
+                    writer.print("'" + value + "'");
+                    if (i.hasNext()) {
+                        writer.print(", ");
+                    }
+                }
+                writer.println("</li/>");
+            }
+
+            writer.println("</ul>");
+        }
+    }
+
+    public void start() {
+        // Dont care
+    }
+
+    public void stop() {
+        // Dont care
+    }
 
 }

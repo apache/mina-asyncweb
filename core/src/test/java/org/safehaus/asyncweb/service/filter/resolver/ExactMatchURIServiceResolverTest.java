@@ -31,77 +31,79 @@ import org.safehaus.asyncweb.service.resolver.ExactMatchURIServiceResolver;
 
 /**
  * Tests the <code>ExactMatchURIServiceResolver</code>
- * 
+ *
  * @author irvingd
  *
  */
 public class ExactMatchURIServiceResolverTest extends TestCase {
 
-  private ExactMatchURIServiceResolver resolver;
-  
-  public ExactMatchURIServiceResolverTest(String name) {
-    super (name);
-  }
-  
-  protected void setUp() {
-    resolver = new ExactMatchURIServiceResolver();
-  }
-  
-  /**
-   * Tests that the resolver returns <code>null</code> if an exact math
-   * is not made
-   */
-  public void testNoMatch() throws Exception {
-    resolver.addURIMapping("something", "aService");
-    assertNoMatch("somethingElse");
-  }
-  
-  /**
-   * Tests that with a single registered service, we can perform a match
-   */
-  public void testMatch() throws Exception {
-    resolver.addURIMapping("something", "aService");
-    assertMatch("something", "aService");
-  }
-  
-  /**
-   * Tests that with multiple registrations, we can perform matches
-   */
-  public void testMatch_MultipleRegistrations() throws Exception {
-    resolver.addURIMapping("uriA", "serviceA");
-    resolver.addURIMapping("uriB", "serviceB");
-    resolver.addURIMapping("uriC", "serviceC");
-    assertMatch("uriA", "serviceA");
-    assertMatch("uriB", "serviceB");
-    assertMatch("uriC", "serviceC");
-    assertNoMatch("uriD");
-  }
-  
-  /**
-   * Tests that we can overwrite existing mappings with new ones
-   */
-  public void testMappingOverwrite() throws Exception {
-    String uri = "uri";
-    resolver.addURIMapping(uri, "oldService");
-    resolver.addURIMapping(uri, "newService");
-    assertMatch(uri, "newService");
-  }
-  
-  private void assertMatch(String uri, String expectedService) throws URISyntaxException {
-    HttpRequest request = requestForURI(uri);
-    String service = resolver.resolveService(request);
-    assertEquals("Unexpected service", expectedService, service);  
-  }
-  
-  private void assertNoMatch(String uri) throws URISyntaxException {
-    HttpRequest request = requestForURI(uri);
-    assertNull("Unexpected match", resolver.resolveService(request));
-  }
-  
-  private HttpRequest requestForURI(String uri) throws URISyntaxException {
-     MutableHttpRequest request = new DefaultHttpRequest();
-     request.setRequestUri(new URI(uri));
-     return request;
-  }
-  
+    private ExactMatchURIServiceResolver resolver;
+
+    public ExactMatchURIServiceResolverTest(String name) {
+        super(name);
+    }
+
+    @Override
+    protected void setUp() {
+        resolver = new ExactMatchURIServiceResolver();
+    }
+
+    /**
+     * Tests that the resolver returns <code>null</code> if an exact math
+     * is not made
+     */
+    public void testNoMatch() throws Exception {
+        resolver.addURIMapping("something", "aService");
+        assertNoMatch("somethingElse");
+    }
+
+    /**
+     * Tests that with a single registered service, we can perform a match
+     */
+    public void testMatch() throws Exception {
+        resolver.addURIMapping("something", "aService");
+        assertMatch("something", "aService");
+    }
+
+    /**
+     * Tests that with multiple registrations, we can perform matches
+     */
+    public void testMatch_MultipleRegistrations() throws Exception {
+        resolver.addURIMapping("uriA", "serviceA");
+        resolver.addURIMapping("uriB", "serviceB");
+        resolver.addURIMapping("uriC", "serviceC");
+        assertMatch("uriA", "serviceA");
+        assertMatch("uriB", "serviceB");
+        assertMatch("uriC", "serviceC");
+        assertNoMatch("uriD");
+    }
+
+    /**
+     * Tests that we can overwrite existing mappings with new ones
+     */
+    public void testMappingOverwrite() throws Exception {
+        String uri = "uri";
+        resolver.addURIMapping(uri, "oldService");
+        resolver.addURIMapping(uri, "newService");
+        assertMatch(uri, "newService");
+    }
+
+    private void assertMatch(String uri, String expectedService)
+            throws URISyntaxException {
+        HttpRequest request = requestForURI(uri);
+        String service = resolver.resolveService(request);
+        assertEquals("Unexpected service", expectedService, service);
+    }
+
+    private void assertNoMatch(String uri) throws URISyntaxException {
+        HttpRequest request = requestForURI(uri);
+        assertNull("Unexpected match", resolver.resolveService(request));
+    }
+
+    private HttpRequest requestForURI(String uri) throws URISyntaxException {
+        MutableHttpRequest request = new DefaultHttpRequest();
+        request.setRequestUri(new URI(uri));
+        return request;
+    }
+
 }

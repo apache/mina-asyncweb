@@ -35,86 +35,91 @@ import org.safehaus.asyncweb.service.HttpServiceContext;
 
 public class CookieExample implements HttpService {
 
-  private static final String ADD_COOKIE_NAME   = "cookieName";
-  private static final String ADD_COOKIE_VALUE  = "cookieValue";
-  private static final String ADD_COOKIE_PATH   = "cookiePath";
-  private static final String ADD_COOKIE_EXPIRY = "cookieExpiry";
-  
-  private String form;
-  
-  public void handleRequest(HttpServiceContext context) throws Exception {
-    MutableHttpResponse response = new DefaultHttpResponse();
-    
-    StringWriter buf = new StringWriter();
-    PrintWriter writer = new PrintWriter(buf);
-    writer.println("<html><body>");
-    writer.println(form);
-    MutableCookie addedCookie = addCookieIfPresent(context, response);
-    if (addedCookie != null) {
-      writeAddedCookie(addedCookie, writer); 
-    }
-    writer.println("</body></html>");
-    writer.flush();
-    
-    IoBuffer bb = IoBuffer.allocate(1024);
-    bb.setAutoExpand(true);
-    bb.putString(buf.toString(), Charset.forName("UTF-8").newEncoder());
-    bb.flip();
-    response.setContent(new ByteBufferContent(bb));
-    
-    context.commitResponse(response);
-  }
+    private static final String ADD_COOKIE_NAME = "cookieName";
 
-  /**
-   * Sets the string containing our cookie form
-   * 
-   * @param form  The form string
-   */
-  public void setForm(String form) {
-    this.form = form;
-  }
-  
-  public void start() {
-    // Dont care
-  }
+    private static final String ADD_COOKIE_VALUE = "cookieValue";
 
-  public void stop() {
-    // Dont care
-  }
+    private static final String ADD_COOKIE_PATH = "cookiePath";
 
-  private void writeAddedCookie(MutableCookie cookie, PrintWriter writer) {
-    writer.println("<b><i>Cookie Added:</i></b>");
-    writer.println(cookie);
-  }
-  
-  private MutableCookie addCookieIfPresent(HttpServiceContext context, MutableHttpResponse response) {
-    HttpRequest request = context.getRequest();
-    String name  = getParamValue(request, ADD_COOKIE_NAME);
-    String value = getParamValue(request, ADD_COOKIE_VALUE);
-    if (name == null || value == null) {
-      return null;
+    private static final String ADD_COOKIE_EXPIRY = "cookieExpiry";
+
+    private String form;
+
+    public void handleRequest(HttpServiceContext context) throws Exception {
+        MutableHttpResponse response = new DefaultHttpResponse();
+
+        StringWriter buf = new StringWriter();
+        PrintWriter writer = new PrintWriter(buf);
+        writer.println("<html><body>");
+        writer.println(form);
+        MutableCookie addedCookie = addCookieIfPresent(context, response);
+        if (addedCookie != null) {
+            writeAddedCookie(addedCookie, writer);
+        }
+        writer.println("</body></html>");
+        writer.flush();
+
+        IoBuffer bb = IoBuffer.allocate(1024);
+        bb.setAutoExpand(true);
+        bb.putString(buf.toString(), Charset.forName("UTF-8").newEncoder());
+        bb.flip();
+        response.setContent(new ByteBufferContent(bb));
+
+        context.commitResponse(response);
     }
-    MutableCookie cookie = new DefaultCookie(name);
-    cookie.setValue(value);
-    
-    if (getParamValue(request, ADD_COOKIE_PATH) != null) {
-      cookie.setPath(request.getParameter(ADD_COOKIE_PATH));
+
+    /**
+     * Sets the string containing our cookie form
+     *
+     * @param form  The form string
+     */
+    public void setForm(String form) {
+        this.form = form;
     }
-    if (getParamValue(request, ADD_COOKIE_EXPIRY) != null) {
-      try {
-        int expiry = Integer.parseInt(request.getParameter(ADD_COOKIE_EXPIRY));
-        cookie.setMaxAge(expiry);
-      } catch (NumberFormatException e) {
-        // ignore expiry
-      }
+
+    public void start() {
+        // Dont care
     }
-    response.addCookie(cookie);
-    return cookie;
-  }
-    
-  private static final String getParamValue(HttpRequest request, String name) {
-    String value = request.getParameter(name);
-    return value == null || "".equals(value )? null : value;
-  }
-  
+
+    public void stop() {
+        // Dont care
+    }
+
+    private void writeAddedCookie(MutableCookie cookie, PrintWriter writer) {
+        writer.println("<b><i>Cookie Added:</i></b>");
+        writer.println(cookie);
+    }
+
+    private MutableCookie addCookieIfPresent(HttpServiceContext context,
+            MutableHttpResponse response) {
+        HttpRequest request = context.getRequest();
+        String name = getParamValue(request, ADD_COOKIE_NAME);
+        String value = getParamValue(request, ADD_COOKIE_VALUE);
+        if (name == null || value == null) {
+            return null;
+        }
+        MutableCookie cookie = new DefaultCookie(name);
+        cookie.setValue(value);
+
+        if (getParamValue(request, ADD_COOKIE_PATH) != null) {
+            cookie.setPath(request.getParameter(ADD_COOKIE_PATH));
+        }
+        if (getParamValue(request, ADD_COOKIE_EXPIRY) != null) {
+            try {
+                int expiry = Integer.parseInt(request
+                        .getParameter(ADD_COOKIE_EXPIRY));
+                cookie.setMaxAge(expiry);
+            } catch (NumberFormatException e) {
+                // ignore expiry
+            }
+        }
+        response.addCookie(cookie);
+        return cookie;
+    }
+
+    private static final String getParamValue(HttpRequest request, String name) {
+        String value = request.getParameter(name);
+        return value == null || "".equals(value) ? null : value;
+    }
+
 }

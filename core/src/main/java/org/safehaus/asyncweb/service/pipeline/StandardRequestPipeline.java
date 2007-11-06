@@ -30,90 +30,94 @@ import org.slf4j.LoggerFactory;
 
 public class StandardRequestPipeline implements RequestPipeline {
 
-  private static final Logger LOG = LoggerFactory.getLogger(StandardRequestPipeline.class);
-  
-  private int maxPipelinedRequests;
-  private RequestPipelineListener listener;
-  private Runnable emptyCommand;
-  private Map<HttpServiceContext, HttpResponse> entryMap = new LinkedHashMap<HttpServiceContext, HttpResponse>();
-  
-  
-  public StandardRequestPipeline(int maxPipelinedRequests) {
-    this.maxPipelinedRequests = maxPipelinedRequests;
-  }
-  
-  public boolean addRequest(HttpServiceContext context) {
-    boolean added = false;
-    synchronized (entryMap) {
-      if (entryMap.size() < maxPipelinedRequests) {
-        entryMap.put(context, null);
-        added = true;
-      }
-    }
-    if (added && LOG.isDebugEnabled()) {
-      LOG.debug("Request added to pipeline ok");
-    }
-    return added;
-  }
+    private static final Logger LOG = LoggerFactory
+            .getLogger(StandardRequestPipeline.class);
 
-  public void releaseResponse(HttpServiceContext context) {
-    if (context.getCommittedResponse() == null) {
-      throw new IllegalStateException("response is not committed.");
+    private int maxPipelinedRequests;
+
+    private RequestPipelineListener listener;
+
+    private Runnable emptyCommand;
+
+    private Map<HttpServiceContext, HttpResponse> entryMap = new LinkedHashMap<HttpServiceContext, HttpResponse>();
+
+    public StandardRequestPipeline(int maxPipelinedRequests) {
+        this.maxPipelinedRequests = maxPipelinedRequests;
     }
-    synchronized (entryMap) {
-      entryMap.put(context, context.getCommittedResponse());
-      releaseRequests();
-    }
-  }
-  
-  public void disposeAll() {
-    synchronized (entryMap) {
-      entryMap.clear();
-    }
-  }
-  
-  public void runWhenEmpty(Runnable command) {
-    synchronized (entryMap) {
-      if (entryMap.isEmpty()) {
-        command.run();
-      } else {
-        emptyCommand = command;
-      }
-    }
-  }
-  
-  /**
-   * Sets the pipeline listener associated with this pipeline
-   * 
-   * @param listener The listener
-   */
-  public void setPipelineListener(RequestPipelineListener listener) {
-    this.listener = listener;
-  }
-  
-  /**
-   * Releases any requests which can be freed as a result of a request
-   * being freed.
-   * We simply iterate through the list (in insertion order) - freeing
-   * all responses until we arive at one which has not yet been completed
-   */
-  private void releaseRequests() {
-    for (Iterator<Map.Entry<HttpServiceContext, HttpResponse>> iter = entryMap.entrySet().iterator(); iter.hasNext(); ) {
-      Map.Entry<HttpServiceContext, HttpResponse> entry = iter.next();
-      HttpResponse response = entry.getValue();
-      if (response != null) {
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Response freed from pipeline. Notifying");
+
+    public boolean addRequest(HttpServiceContext context) {
+        boolean added = false;
+        synchronized (entryMap) {
+            if (entryMap.size() < maxPipelinedRequests) {
+                entryMap.put(context, null);
+                added = true;
+            }
         }
-        listener.responseReleased(entry.getKey());
-        iter.remove();
-      } else {
-        break;
-      }
+        if (added && LOG.isDebugEnabled()) {
+            LOG.debug("Request added to pipeline ok");
+        }
+        return added;
     }
-    if (emptyCommand != null && entryMap.isEmpty()) {
-      emptyCommand.run();
+
+    public void releaseResponse(HttpServiceContext context) {
+        if (context.getCommittedResponse() == null) {
+            throw new IllegalStateException("response is not committed.");
+        }
+        synchronized (entryMap) {
+            entryMap.put(context, context.getCommittedResponse());
+            releaseRequests();
+        }
     }
-  }
-  
+
+    public void disposeAll() {
+        synchronized (entryMap) {
+            entryMap.clear();
+        }
+    }
+
+    public void runWhenEmpty(Runnable command) {
+        synchronized (entryMap) {
+            if (entryMap.isEmpty()) {
+                command.run();
+            } else {
+                emptyCommand = command;
+            }
+        }
+    }
+
+    /**
+     * Sets the pipeline listener associated with this pipeline
+     *
+     * @param listener The listener
+     */
+    public void setPipelineListener(RequestPipelineListener listener) {
+        this.listener = listener;
+    }
+
+    /**
+     * Releases any requests which can be freed as a result of a request
+     * being freed.
+     * We simply iterate through the list (in insertion order) - freeing
+     * all responses until we arive at one which has not yet been completed
+     */
+    private void releaseRequests() {
+        for (Iterator<Map.Entry<HttpServiceContext, HttpResponse>> iter = entryMap
+                .entrySet().iterator(); iter.hasNext();) {
+            Map.Entry<HttpServiceContext, HttpResponse> entry = iter.next();
+            HttpResponse response = entry.getValue();
+            if (response != null) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Response freed from pipeline. Notifying");
+                }
+                listener.responseReleased(entry.getKey());
+                iter.remove();
+            } else {
+                break;
+            }
+        }
+        if (emptyCommand != null && entryMap.isEmpty()) {
+            emptyCommand.run();
+        }
+    }
+
 }

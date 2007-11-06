@@ -23,15 +23,15 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 public class HeaderNameComparator implements Comparator<String>, Serializable {
-  private static final long serialVersionUID = -3781572057321507963L;
-  
-  public static final HeaderNameComparator INSTANCE = new HeaderNameComparator();
+    private static final long serialVersionUID = -3781572057321507963L;
 
-  public int compare(String o1, String o2) {
-    return o1.compareToIgnoreCase(o2);
-  }
+    public static final HeaderNameComparator INSTANCE = new HeaderNameComparator();
 
-  private Object readResolve() {
-    return INSTANCE;
-  }
+    public int compare(String o1, String o2) {
+        return o1.compareToIgnoreCase(o2);
+    }
+
+    private Object readResolve() {
+        return INSTANCE;
+    }
 }

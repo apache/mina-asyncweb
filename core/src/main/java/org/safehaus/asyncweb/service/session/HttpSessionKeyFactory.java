@@ -23,23 +23,23 @@ package org.safehaus.asyncweb.service.session;
  * A factory for creating Session keys.
  * <code>SessionKeyFactory</code> implementations should make a best effort to:
  * <ul>
- *   <li>Avoid the generation of two keys <i>k(1), k(2)</i> 
+ *   <li>Avoid the generation of two keys <i>k(1), k(2)</i>
  *       such that <i>k(1) == k(2)</i></li>
  *   <li>Avoid the generation of a key <i>k</i> such that an adversary can
  *       make an informed guess of the content of any other key created by this factory
  *       at any time in the future</li>
  * </ul>
- *  
+ *
  * @author irvingd
  *
  */
 public interface HttpSessionKeyFactory {
 
-  /**
-   * Returns a new session key String
-   * 
-   * @return  The session key
-   */
-  public String createSessionKey();
-  
+    /**
+     * Returns a new session key String
+     *
+     * @return  The session key
+     */
+    public String createSessionKey();
+
 }

@@ -25,39 +25,38 @@ import java.util.Map;
 import org.safehaus.asyncweb.common.HttpRequest;
 import org.safehaus.asyncweb.service.resolver.ServiceResolver;
 
-
 /**
  * A simple <code>ServiceResolver</code> which allows mappings
  * from requests to service names to be registered
- * 
+ *
  * @author irvingd
  *
  */
 public class DummyResolver implements ServiceResolver {
 
-  private Map<HttpRequest, String> serviceMap = new HashMap<HttpRequest, String>();
-  
-  /**
-   * Adds a mapping from a request to a service name
-   * 
-   * @param request  The request
-   * @param service  The service name
-   */
-  public void addMapping(HttpRequest request, String service) {
-    serviceMap.put(request, service);
-  }
-  
-  /**
-   * Returns the service name mapped to the specified request,
-   * or <code>null</code> if no mapping has been made for the
-   * request
-   * 
-   * @param  request  The request to resolve
-   * @return The mapped service, or <code>null</code> if no mapping
-   *         exists for the request
-   */
-  public String resolveService(HttpRequest request) {
-    return serviceMap.get(request);
-  }
+    private Map<HttpRequest, String> serviceMap = new HashMap<HttpRequest, String>();
+
+    /**
+     * Adds a mapping from a request to a service name
+     *
+     * @param request  The request
+     * @param service  The service name
+     */
+    public void addMapping(HttpRequest request, String service) {
+        serviceMap.put(request, service);
+    }
+
+    /**
+     * Returns the service name mapped to the specified request,
+     * or <code>null</code> if no mapping has been made for the
+     * request
+     *
+     * @param  request  The request to resolve
+     * @return The mapped service, or <code>null</code> if no mapping
+     *         exists for the request
+     */
+    public String resolveService(HttpRequest request) {
+        return serviceMap.get(request);
+    }
 
 }

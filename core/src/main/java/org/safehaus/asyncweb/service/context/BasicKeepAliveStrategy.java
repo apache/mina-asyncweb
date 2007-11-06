@@ -24,7 +24,6 @@ import org.safehaus.asyncweb.service.HttpServiceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Defines common sensible behaviour for the rules under which a
  * connection should be kept alive.
@@ -37,61 +36,65 @@ import org.slf4j.LoggerFactory;
  * </ul>
  * Implementations should override <code></code> to provide additional
  * constraints
- * 
+ *
  * @author irvingd
  *
  */
 public class BasicKeepAliveStrategy implements KeepAliveStrategy {
 
-  private static final Logger LOG = LoggerFactory.getLogger(BasicKeepAliveStrategy.class);
-  
-  /**
-   * Determines whether a connection should be kept alive based
-   * on a response.
-   * This method returns true iff either:
-   * <ul>
-   *   <li>The request is not committed</li>
-   * </u>
-   * or (in order):
-   * <ul>
-   *   <li>The status of a response does not force closure</li>
-   *   <li>The request indicates that it wants the connection to remain
-   *       open</li>
-   *   <li><code>doIsKeepAlive</code> returns true</li>
-   * </ul>
-   * 
-   * @param response  The response to examine
-   * @return <code>true</code> iff a connection should be kept alive
-   */
-  public final boolean keepAlive(HttpServiceContext context, HttpResponse response) {
-    boolean isKeepAlive;
-    if (!context.isResponseCommitted()) {
-      isKeepAlive = true;
-    } else {
-      isKeepAlive = !response.getStatus().forcesConnectionClosure() &&
-                    context.getRequest().isKeepAlive() &&
-                    doIsKeepAlive(context, response);
-      if (!isKeepAlive && LOG.isDebugEnabled() && 
-          response.getStatus().forcesConnectionClosure()) {
-        LOG.debug("Response status forces closure: " + response.getStatus());
-      }
+    private static final Logger LOG = LoggerFactory
+            .getLogger(BasicKeepAliveStrategy.class);
+
+    /**
+     * Determines whether a connection should be kept alive based
+     * on a response.
+     * This method returns true iff either:
+     * <ul>
+     *   <li>The request is not committed</li>
+     * </u>
+     * or (in order):
+     * <ul>
+     *   <li>The status of a response does not force closure</li>
+     *   <li>The request indicates that it wants the connection to remain
+     *       open</li>
+     *   <li><code>doIsKeepAlive</code> returns true</li>
+     * </ul>
+     *
+     * @param response  The response to examine
+     * @return <code>true</code> iff a connection should be kept alive
+     */
+    public final boolean keepAlive(HttpServiceContext context,
+            HttpResponse response) {
+        boolean isKeepAlive;
+        if (!context.isResponseCommitted()) {
+            isKeepAlive = true;
+        } else {
+            isKeepAlive = !response.getStatus().forcesConnectionClosure()
+                    && context.getRequest().isKeepAlive()
+                    && doIsKeepAlive(context, response);
+            if (!isKeepAlive && LOG.isDebugEnabled()
+                    && response.getStatus().forcesConnectionClosure()) {
+                LOG.debug("Response status forces closure: "
+                        + response.getStatus());
+            }
+        }
+        return isKeepAlive;
     }
-    return isKeepAlive;
-  }
-  
-  /**
-   * Simply returns <code>true</code> by default.
-   * Implementations should override this method to provide any
-   * additional keep-alive conditions
-   * 
-   * @param context   The context to check
-   * @param response  The request to check
-   * @return          <code>true</code> if the connection should
-   *                  be kept alive
-   */
-  @SuppressWarnings("unused")
-  protected boolean doIsKeepAlive(HttpServiceContext context, HttpResponse response) {
-    return true;
-  }
+
+    /**
+     * Simply returns <code>true</code> by default.
+     * Implementations should override this method to provide any
+     * additional keep-alive conditions
+     *
+     * @param context   The context to check
+     * @param response  The request to check
+     * @return          <code>true</code> if the connection should
+     *                  be kept alive
+     */
+    @SuppressWarnings("unused")
+    protected boolean doIsKeepAlive(HttpServiceContext context,
+            HttpResponse response) {
+        return true;
+    }
 
 }

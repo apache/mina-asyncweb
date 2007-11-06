@@ -19,40 +19,39 @@
  */
 package org.safehaus.asyncweb.service;
 
-
 /**
  * A mechanism over which <code>Request</code>s are received.
- * 
+ *
  * @author irvingd
  *
  */
 public interface Transport {
 
-  /**
-   * Associates this <code>Transport</code> with its container.
-   * 
-   * @param container  The container to which incoming requests should
-   *                   be provided
-   */
-  public void setServiceContainer(ServiceContainer container);
-  
-  /**
-   * Starts this <code>Transport</code>.
-   * Once a <code>Transport</code> has been started, it may begin
-   * submitting <code>Request</code>s to its associated 
-   * <code>ServiceContainer</code>
-   * 
-   * @throws TransportException  If the transport can not be started
-   */
-  public void start() throws TransportException;
-  
-  /**
-   * Stops this <code>Transport</code>.
-   * No further requests should be sent to the transports associated
-   * <code>ServiceContainer</code>
-   * 
-   * @throws TransportException  If there were problems stopping the transport
-   */
-  public void stop() throws TransportException;
-  
+    /**
+     * Associates this <code>Transport</code> with its container.
+     *
+     * @param container  The container to which incoming requests should
+     *                   be provided
+     */
+    public void setServiceContainer(ServiceContainer container);
+
+    /**
+     * Starts this <code>Transport</code>.
+     * Once a <code>Transport</code> has been started, it may begin
+     * submitting <code>Request</code>s to its associated
+     * <code>ServiceContainer</code>
+     *
+     * @throws TransportException  If the transport can not be started
+     */
+    public void start() throws TransportException;
+
+    /**
+     * Stops this <code>Transport</code>.
+     * No further requests should be sent to the transports associated
+     * <code>ServiceContainer</code>
+     *
+     * @throws TransportException  If there were problems stopping the transport
+     */
+    public void stop() throws TransportException;
+
 }

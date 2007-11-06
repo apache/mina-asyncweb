@@ -19,11 +19,10 @@
  */
 package org.safehaus.asyncweb.codec.decoder.support;
 
-
 public abstract class LinearWhitespaceSkippingState extends SkippingState {
 
-  @Override
-  protected boolean canSkip(byte b) {
-    return (b == 32 || b == 9);
-  }
+    @Override
+    protected boolean canSkip(byte b) {
+        return b == 32 || b == 9;
+    }
 }

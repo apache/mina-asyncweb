@@ -21,58 +21,58 @@ package org.safehaus.asyncweb.util;
 
 /**
  * HTTP Header Constants.
- * 
+ *
  * @author irvingd
  * @author trustin
  * @version $Rev$, $Date$
  */
 public class HttpHeaderConstants {
 
-  /**
-   * The name of the "connection" header
-   */
-  public static final String KEY_CONNECTION = "Connection";
-  
-  /**
-   * The server header
-   */
-  public static final String KEY_SERVER = "Server";
-    
-  /**
-   * The header value to indicate connection closure
-   */
-  public static final String VALUE_CLOSE = "close";
-  
-  /**
-   * The header value to indicate connection keep-alive (http 1.0)
-   */
-  public static final String VALUE_KEEP_ALIVE = "Keep-Alive";
-  
-  /**
-   * The "content-length" header name
-   */
-  public static final String KEY_CONTENT_LENGTH = "Content-Length";
-  
-  /**
-   * The "transfer-coding" header name
-   */
-  public static final String KEY_TRANSFER_CODING = "Transfer-Coding";
-  
-  /**
-   * The "expect" header name
-   */
-  public static final String KEY_EXPECT = "Expect";
-  
-  /**
-   * The continue expectation
-   */
-  public static final String VALUE_CONTINUE_EXPECTATION = "100-continue";
-  
-  /**
-   * The "date" header
-   */
-  public static final String KEY_DATE = "Date";
+    /**
+     * The name of the "connection" header
+     */
+    public static final String KEY_CONNECTION = "Connection";
 
-  private HttpHeaderConstants() {
-  }
+    /**
+     * The server header
+     */
+    public static final String KEY_SERVER = "Server";
+
+    /**
+     * The header value to indicate connection closure
+     */
+    public static final String VALUE_CLOSE = "close";
+
+    /**
+     * The header value to indicate connection keep-alive (http 1.0)
+     */
+    public static final String VALUE_KEEP_ALIVE = "Keep-Alive";
+
+    /**
+     * The "content-length" header name
+     */
+    public static final String KEY_CONTENT_LENGTH = "Content-Length";
+
+    /**
+     * The "transfer-coding" header name
+     */
+    public static final String KEY_TRANSFER_CODING = "Transfer-Coding";
+
+    /**
+     * The "expect" header name
+     */
+    public static final String KEY_EXPECT = "Expect";
+
+    /**
+     * The continue expectation
+     */
+    public static final String VALUE_CONTINUE_EXPECTATION = "100-continue";
+
+    /**
+     * The "date" header
+     */
+    public static final String KEY_DATE = "Date";
+
+    private HttpHeaderConstants() {
+    }
 }

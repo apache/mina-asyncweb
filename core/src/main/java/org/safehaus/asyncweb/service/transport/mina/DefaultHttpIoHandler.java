@@ -28,33 +28,34 @@ import org.safehaus.asyncweb.service.ServiceContainer;
 /**
  * @author trustin
  */
-public class DefaultHttpIoHandler extends SingleSessionIoHandlerDelegate implements HttpIoHandler {
+public class DefaultHttpIoHandler extends SingleSessionIoHandlerDelegate
+        implements HttpIoHandler {
 
-  public DefaultHttpIoHandler() {
-    super(new Factory());
-  }
+    public DefaultHttpIoHandler() {
+        super(new Factory());
+    }
 
-  public ServiceContainer getContainer() {
-    return ((Factory) getFactory()).getContainer();
-  }
-
-  public void setContainer(ServiceContainer container) {
-    ((Factory) getFactory()).setContainer(container);
-  }
-
-  private static class Factory implements SingleSessionIoHandlerFactory {
-    private ServiceContainer container;
-    
     public ServiceContainer getContainer() {
-      return container;
+        return ((Factory) getFactory()).getContainer();
     }
 
     public void setContainer(ServiceContainer container) {
-      this.container = container;
+        ((Factory) getFactory()).setContainer(container);
     }
 
-    public SingleSessionIoHandler getHandler(IoSession session) {
-      return new SingleHttpSessionIoHandler(container, session);
+    private static class Factory implements SingleSessionIoHandlerFactory {
+        private ServiceContainer container;
+
+        public ServiceContainer getContainer() {
+            return container;
+        }
+
+        public void setContainer(ServiceContainer container) {
+            this.container = container;
+        }
+
+        public SingleSessionIoHandler getHandler(IoSession session) {
+            return new SingleHttpSessionIoHandler(container, session);
+        }
     }
-  }
 }

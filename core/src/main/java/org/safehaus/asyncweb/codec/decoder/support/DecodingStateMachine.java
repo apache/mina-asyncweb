@@ -28,72 +28,79 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class DecodingStateMachine implements DecodingState {
-  private final Logger log = LoggerFactory.getLogger(DecodingStateMachine.class);
+    private final Logger log = LoggerFactory
+            .getLogger(DecodingStateMachine.class);
 
-  private final List<Object> childProducts = new ArrayList<Object>();
-  private final ProtocolDecoderOutput childOutput = new ProtocolDecoderOutput() {
-    public void flush() {
-    }
+    private final List<Object> childProducts = new ArrayList<Object>();
 
-    public void write(Object message) {
-      childProducts.add(message);
-    }
-  };
-  private DecodingState currentState;
-
-  protected abstract DecodingState init() throws Exception;
-  protected abstract DecodingState finishDecode(List<Object> childProducts, ProtocolDecoderOutput out) throws Exception;
-  protected abstract void destroy() throws Exception;
-  
-  public DecodingState decode(IoBuffer in, ProtocolDecoderOutput out) throws Exception {
-    DecodingState state = this.currentState;
-    if (state == null) {
-      state = init();
-    }
-    
-    final int limit = in.limit();
-    int pos = in.position();
-
-    try {
-      for (;;) {
-        // Wait for more data if all data is consumed.
-        if (pos == limit) {
-          break;
+    private final ProtocolDecoderOutput childOutput = new ProtocolDecoderOutput() {
+        public void flush() {
         }
-        
-        DecodingState oldState = state;
-        state = state.decode(in, childOutput);
-        
-        // If finished, call finishDecode
+
+        public void write(Object message) {
+            childProducts.add(message);
+        }
+    };
+
+    private DecodingState currentState;
+
+    protected abstract DecodingState init() throws Exception;
+
+    protected abstract DecodingState finishDecode(List<Object> childProducts,
+            ProtocolDecoderOutput out) throws Exception;
+
+    protected abstract void destroy() throws Exception;
+
+    public DecodingState decode(IoBuffer in, ProtocolDecoderOutput out)
+            throws Exception {
+        DecodingState state = this.currentState;
         if (state == null) {
-          return finishDecode(childProducts, out);
+            state = init();
         }
-        
-        int newPos = in.position();
-        
-        // Wait for more data if nothing is consumed and state didn't change.
-        if (newPos == pos && oldState == state) {
-          break;
-        }
-        pos = newPos;
-      }
-      
-      return this;
-    } catch (Exception e) {
-      state = null;
-      throw e;
-    } finally {
-      this.currentState = state;
-      
-      // Destroy if decoding is finished or failed.
-      if (state == null) {
-        childProducts.clear();
+
+        final int limit = in.limit();
+        int pos = in.position();
+
         try {
-          destroy();
-        } catch (Exception e2) {
-          log.warn("Failed to destroy a decoding state machine.", e2);
+            for (;;) {
+                // Wait for more data if all data is consumed.
+                if (pos == limit) {
+                    break;
+                }
+
+                DecodingState oldState = state;
+                state = state.decode(in, childOutput);
+
+                // If finished, call finishDecode
+                if (state == null) {
+                    return finishDecode(childProducts, out);
+                }
+
+                int newPos = in.position();
+
+                // Wait for more data if nothing is consumed and state didn't change.
+                if (newPos == pos && oldState == state) {
+                    break;
+                }
+                pos = newPos;
+            }
+
+            return this;
+        } catch (Exception e) {
+            state = null;
+            throw e;
+        } finally {
+            this.currentState = state;
+
+            // Destroy if decoding is finished or failed.
+            if (state == null) {
+                childProducts.clear();
+                try {
+                    destroy();
+                } catch (Exception e2) {
+                    log.warn("Failed to destroy a decoding state machine.", e2);
+                }
+            }
         }
-      }
     }
-  }
 }
