@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.safehaus.asyncweb.codec.decoder.support.ConsumeToCRLFDecodingState;
 import org.safehaus.asyncweb.codec.decoder.support.ConsumeToTerminatorDecodingState;
@@ -84,7 +84,7 @@ abstract class HttpHeaderDecodingState extends DecodingStateMachine {
   
   private final DecodingState READ_HEADER_NAME = new ConsumeToTerminatorDecodingState((byte) ':') {
     @Override
-    protected DecodingState finishDecode(ByteBuffer product, ProtocolDecoderOutput out) throws Exception {
+    protected DecodingState finishDecode(IoBuffer product, ProtocolDecoderOutput out) throws Exception {
       lastHeaderName = product.getString(asciiDecoder);
       return AFTER_READ_HEADER_NAME;
     }
@@ -100,7 +100,7 @@ abstract class HttpHeaderDecodingState extends DecodingStateMachine {
   
   private final DecodingState READ_HEADER_VALUE = new ConsumeToCRLFDecodingState() {
     @Override
-    protected DecodingState finishDecode(ByteBuffer product, ProtocolDecoderOutput out) throws Exception {
+    protected DecodingState finishDecode(IoBuffer product, ProtocolDecoderOutput out) throws Exception {
       String value = product.getString(utf8Decoder);
       if (lastHeaderValue.length() == 0) {
         lastHeaderValue.append(value);

@@ -21,7 +21,7 @@ package org.safehaus.asyncweb.service.errorReporting;
 
 import java.io.UnsupportedEncodingException;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 
 /**
  * Manages the stylesheet info used for generated pages
@@ -60,7 +60,7 @@ public class CSS {
     }
   }
   
-  public static void writeTo(ByteBuffer buf) {
+  public static void writeTo(IoBuffer buf) {
     buf.put(BYTES);
   }
   

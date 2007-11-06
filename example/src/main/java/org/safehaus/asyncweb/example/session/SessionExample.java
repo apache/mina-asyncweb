@@ -23,7 +23,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.safehaus.asyncweb.common.DefaultHttpResponse;
 import org.safehaus.asyncweb.common.MutableHttpResponse;
 import org.safehaus.asyncweb.common.content.ByteBufferContent;
@@ -61,7 +61,7 @@ public class SessionExample implements HttpService {
     writer.println("</body></html>");
     writer.flush();
     
-    ByteBuffer bb = ByteBuffer.allocate(1024);
+    IoBuffer bb = IoBuffer.allocate(1024);
     bb.setAutoExpand(true);
     bb.putString(buf.toString(), Charset.forName("UTF-8").newEncoder());
     bb.flip();

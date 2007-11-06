@@ -21,7 +21,7 @@ package org.safehaus.asyncweb.codec.encoder;
 
 import java.util.Collection;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.safehaus.asyncweb.common.Cookie;
 
 /**
@@ -38,5 +38,5 @@ public interface CookieEncoder {
    * @param cookies  The cookies
    * @param buffer   The buffer
    */
-  public void encodeCookie(Collection<Cookie> cookies, ByteBuffer buffer);
+  public void encodeCookie(Collection<Cookie> cookies, IoBuffer buffer);
 }

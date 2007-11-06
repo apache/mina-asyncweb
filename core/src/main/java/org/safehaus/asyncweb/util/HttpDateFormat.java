@@ -42,8 +42,9 @@ public class HttpDateFormat {
   /**
    * Thread local <code>HttpDateFormat</code>
    */
-  private static final ThreadLocal FORMAT_LOCAL = new ThreadLocal() {
-    protected Object initialValue() {
+  private static final ThreadLocal<HttpDateFormat> FORMAT_LOCAL = new ThreadLocal<HttpDateFormat>() {
+    @Override
+    protected HttpDateFormat initialValue() {
       return new HttpDateFormat();
     }
   };
@@ -75,7 +76,7 @@ public class HttpDateFormat {
    * @return  The formatted date
    */
   public static String getCurrentHttpDate() {
-    return ((HttpDateFormat) FORMAT_LOCAL.get()).getCurrentDate();
+    return (FORMAT_LOCAL.get()).getCurrentDate();
   }
   
   /**

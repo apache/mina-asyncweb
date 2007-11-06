@@ -247,8 +247,8 @@ public class BasicServiceContainer implements ServiceContainer {
   private void startHandlers() {
     LOG.info("Starting handlers");
     synchronized (filters) {
-      for (Iterator iter=filters.iterator(); iter.hasNext(); ) {
-        HttpServiceFilter handler = (HttpServiceFilter) iter.next();
+      for (Iterator<HttpServiceFilter> iter=filters.iterator(); iter.hasNext(); ) {
+        HttpServiceFilter handler = iter.next();
         handler.start();
       } 
     }
@@ -258,8 +258,8 @@ public class BasicServiceContainer implements ServiceContainer {
   private void stopHandlers() {
     LOG.info("Stopping handlers");
     synchronized (filters) {
-      for (Iterator iter=filters.iterator(); iter.hasNext(); ) {
-        HttpServiceFilter handler = (HttpServiceFilter) iter.next();
+      for (Iterator<HttpServiceFilter> iter=filters.iterator(); iter.hasNext(); ) {
+        HttpServiceFilter handler = iter.next();
         LOG.info("Stopping handler '" + handler + "'");
         handler.stop();
         LOG.info("Handler '" + handler + "' stopped");
@@ -282,8 +282,8 @@ public class BasicServiceContainer implements ServiceContainer {
   private void startTransports() throws ContainerLifecycleException {
     LOG.info("Starting transports");
     synchronized (transports) {
-      for (Iterator iter=transports.iterator(); iter.hasNext(); ) {
-        Transport transport = (Transport) iter.next();
+      for (Iterator<Transport> iter=transports.iterator(); iter.hasNext(); ) {
+        Transport transport = iter.next();
         LOG.info("Starting transport '" + transport + "'");
         try {
           transport.start();
@@ -301,8 +301,8 @@ public class BasicServiceContainer implements ServiceContainer {
     LOG.info("Stopping transports");
     boolean isError = false;
     synchronized (transports) {
-      for (Iterator iter=transports.iterator(); iter.hasNext(); ) {
-        Transport transport = (Transport) iter.next();
+      for (Iterator<Transport> iter=transports.iterator(); iter.hasNext(); ) {
+        Transport transport = iter.next();
         LOG.info("Stopping transport '" + transport + "'");
         try {
           transport.stop();

@@ -19,7 +19,7 @@
  */
 package org.safehaus.asyncweb.codec.decoder.support;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 
 
@@ -39,7 +39,7 @@ public abstract class SkippingState implements DecodingState {
   public SkippingState() {
   }
   
-  public DecodingState decode(ByteBuffer in, ProtocolDecoderOutput out) throws Exception {
+  public DecodingState decode(IoBuffer in, ProtocolDecoderOutput out) throws Exception {
     int beginPos = in.position();
     int limit = in.limit();
     for (int i = beginPos; i < limit; i++) {

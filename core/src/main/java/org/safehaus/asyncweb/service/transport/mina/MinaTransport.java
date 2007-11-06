@@ -29,8 +29,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.mina.common.IoFilter;
 import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.filter.logging.LoggingFilter;
-import org.apache.mina.transport.socket.SocketSessionConfig;
-import org.apache.mina.transport.socket.nio.SocketAcceptor;
+import org.apache.mina.transport.socket.SocketAcceptor;
+import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.safehaus.asyncweb.service.ServiceContainer;
 import org.safehaus.asyncweb.service.Transport;
 import org.safehaus.asyncweb.service.TransportException;
@@ -150,14 +150,14 @@ public class MinaTransport implements Transport {
         ioThreads + 1, ioThreads + 1, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>() );
     eventExecutor = new ThreadPoolExecutor(
         eventThreads + 1, eventThreads + 1, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>() );
-    acceptor = new SocketAcceptor(ioThreads, ioExecutor);
+    acceptor = new NioSocketAcceptor(ioThreads, ioExecutor);
 
     try {
       acceptor.getFilterChain().addLast(
               "threadPool",
               new ExecutorFilter(eventExecutor));
       acceptor.setReuseAddress(true);
-      ((SocketSessionConfig) acceptor.getSessionConfig()).setReuseAddress(true);
+      acceptor.getSessionConfig().setReuseAddress(true);
       if (isLoggingTraffic) {
         LOG.info("Configuring traffic logging filter");
         IoFilter filter = new LoggingFilter();
@@ -191,7 +191,8 @@ public class MinaTransport implements Transport {
   /**
    * @return A string representation of this transport
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "NIOTransport [port=" + port + "]";
   }
     

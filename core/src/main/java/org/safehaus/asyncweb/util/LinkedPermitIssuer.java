@@ -183,8 +183,8 @@ public class LinkedPermitIssuer implements TimedPermitIssuer {
    */
   private void notifyExpiry(Object target) {
     synchronized (listeners) {
-      for (Iterator iter = listeners.iterator(); iter.hasNext(); ) {
-        PermitExpirationListener listener = (PermitExpirationListener) iter.next();
+      for (Iterator<PermitExpirationListener> iter = listeners.iterator(); iter.hasNext(); ) {
+        PermitExpirationListener listener = iter.next();
         listener.permitExpired(target);
       }
     }

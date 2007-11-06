@@ -23,7 +23,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderException;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.safehaus.asyncweb.codec.HttpCodecUtils;
@@ -33,9 +33,9 @@ import org.safehaus.asyncweb.codec.decoder.support.FixedLengthDecodingState;
 import org.safehaus.asyncweb.common.DefaultHttpRequest;
 import org.safehaus.asyncweb.common.HttpMethod;
 import org.safehaus.asyncweb.common.HttpRequest;
+import org.safehaus.asyncweb.common.HttpResponseStatus;
 import org.safehaus.asyncweb.common.HttpVersion;
 import org.safehaus.asyncweb.common.MutableHttpRequest;
-import org.safehaus.asyncweb.common.HttpResponseStatus;
 import org.safehaus.asyncweb.common.content.ByteBufferContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -174,19 +174,19 @@ public abstract class HttpRequestDecodingState extends DecodingStateMachine {
             if (childProducts.size() != 1) {
               int chunkSize = 0;
               for (Object product: childProducts) {
-                ByteBuffer chunk = (ByteBuffer) product;
+                IoBuffer chunk = (IoBuffer) product;
                 chunkSize += chunk.remaining();
               }
             
-              ByteBuffer body = ByteBuffer.allocate(chunkSize);
+              IoBuffer body = IoBuffer.allocate(chunkSize);
               for (Object product: childProducts) {
-                ByteBuffer chunk = (ByteBuffer) product;
+                IoBuffer chunk = (IoBuffer) product;
                 body.put(chunk);
               }
               body.flip();
               request.setContent(new ByteBufferContent(body));
             } else {
-              request.setContent(new ByteBufferContent((ByteBuffer) childProducts.get(0)));
+              request.setContent(new ByteBufferContent((IoBuffer) childProducts.get(0)));
             }
             
             out.write(request);
@@ -201,7 +201,7 @@ public abstract class HttpRequestDecodingState extends DecodingStateMachine {
           }
           nextState = new FixedLengthDecodingState(length) {
             @Override
-            protected DecodingState finishDecode(ByteBuffer readData, ProtocolDecoderOutput out) throws Exception {
+            protected DecodingState finishDecode(IoBuffer readData, ProtocolDecoderOutput out) throws Exception {
               request.setContent(new ByteBufferContent(readData));
               out.write(request);
               return null;

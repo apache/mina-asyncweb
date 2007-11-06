@@ -23,7 +23,7 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.safehaus.asyncweb.codec.HttpCodecUtils;
 import org.safehaus.asyncweb.codec.decoder.support.ConsumeToDynamicTerminatorDecodingState;
@@ -64,7 +64,7 @@ abstract class HttpRequestLineDecodingState extends DecodingStateMachine {
 
   private final DecodingState READ_METHOD = new ConsumeToLinearWhitespaceDecodingState() {
     @Override
-    protected DecodingState finishDecode(ByteBuffer product, ProtocolDecoderOutput out) throws Exception {
+    protected DecodingState finishDecode(IoBuffer product, ProtocolDecoderOutput out) throws Exception {
       HttpMethod method = HttpMethod.valueOf(product.getString(asciiDecoder));
 
       if (method == null) {
@@ -87,7 +87,7 @@ abstract class HttpRequestLineDecodingState extends DecodingStateMachine {
   
   private final DecodingState READ_REQUEST_URI = new ConsumeToLinearWhitespaceDecodingState() {
     @Override
-    protected DecodingState finishDecode(ByteBuffer product, ProtocolDecoderOutput out) throws Exception {
+    protected DecodingState finishDecode(IoBuffer product, ProtocolDecoderOutput out) throws Exception {
       out.write(new URI(product.getString(utf8Decoder)));
       return AFTER_READ_REQUEST_URI;
     }
@@ -102,7 +102,7 @@ abstract class HttpRequestLineDecodingState extends DecodingStateMachine {
   
   private final DecodingState READ_PROTOCOL_VERSION = new ConsumeToDynamicTerminatorDecodingState() {
     @Override
-    protected DecodingState finishDecode(ByteBuffer product, ProtocolDecoderOutput out) throws Exception {
+    protected DecodingState finishDecode(IoBuffer product, ProtocolDecoderOutput out) throws Exception {
       String versionStr = product.getString(asciiDecoder);
       HttpVersion version = HttpVersion.valueOf(versionStr);
       if (version == null) {

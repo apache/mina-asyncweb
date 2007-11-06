@@ -120,10 +120,10 @@ public class HttpServiceHandler implements HttpServiceFilter {
    */
   public void start() {
     LOG.info("HttpServiceHandler starting");
-    for (Iterator iter=serviceMap.entrySet().iterator(); iter.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) iter.next();
-      String serviceName  = (String) entry.getKey();
-      HttpService service = (HttpService) entry.getValue();
+    for (Iterator<Map.Entry<String, HttpService>> iter=serviceMap.entrySet().iterator(); iter.hasNext(); ) {
+      Map.Entry<String, HttpService> entry = iter.next();
+      String serviceName  = entry.getKey();
+      HttpService service = entry.getValue();
       LOG.info("Starting HttpService '" + serviceName + "'");
       service.start();
       LOG.info("HttpService '" + serviceName + "' started");
@@ -135,10 +135,10 @@ public class HttpServiceHandler implements HttpServiceFilter {
    */
   public void stop() {
     LOG.info("HttpServiceHandler stopping");
-    for (Iterator iter=serviceMap.entrySet().iterator(); iter.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) iter.next();
-      String serviceName  = (String) entry.getKey();
-      HttpService service = (HttpService) entry.getValue();
+    for (Iterator<Map.Entry<String, HttpService>> iter=serviceMap.entrySet().iterator(); iter.hasNext(); ) {
+        Map.Entry<String, HttpService> entry = iter.next();
+      String serviceName  = entry.getKey();
+      HttpService service = entry.getValue();
       LOG.info("Stopping HttpService '" + serviceName + "'");
       service.stop();
       LOG.info("HttpService '" + serviceName + "' stopped");

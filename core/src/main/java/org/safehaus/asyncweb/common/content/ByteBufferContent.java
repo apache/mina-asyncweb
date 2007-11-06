@@ -19,7 +19,7 @@
  */
 package org.safehaus.asyncweb.common.content;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.safehaus.asyncweb.common.Content;
 
 /**
@@ -32,9 +32,9 @@ public class ByteBufferContent implements Content {
 
   private static final long serialVersionUID = -3456547908555235715L;
   
-  private final ByteBuffer buffer;
+  private final IoBuffer buffer;
   
-  public ByteBufferContent(ByteBuffer buffer) {
+  public ByteBufferContent(IoBuffer buffer) {
     if (buffer == null) {
       throw new NullPointerException("buffer");
     }
@@ -42,7 +42,7 @@ public class ByteBufferContent implements Content {
     this.buffer = buffer;
   }
   
-  public ByteBuffer getByteBuffer() {
+  public IoBuffer getByteBuffer() {
     return buffer.duplicate();
   }
   

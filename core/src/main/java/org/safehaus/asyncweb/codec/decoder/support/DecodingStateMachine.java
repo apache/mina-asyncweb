@@ -22,7 +22,7 @@ package org.safehaus.asyncweb.codec.decoder.support;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public abstract class DecodingStateMachine implements DecodingState {
   protected abstract DecodingState finishDecode(List<Object> childProducts, ProtocolDecoderOutput out) throws Exception;
   protected abstract void destroy() throws Exception;
   
-  public DecodingState decode(ByteBuffer in, ProtocolDecoderOutput out) throws Exception {
+  public DecodingState decode(IoBuffer in, ProtocolDecoderOutput out) throws Exception {
     DecodingState state = this.currentState;
     if (state == null) {
       state = init();

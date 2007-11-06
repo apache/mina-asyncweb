@@ -24,29 +24,27 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.transport.socket.SocketSessionConfig;
-import org.apache.mina.transport.socket.nio.SocketAcceptor;
+import org.apache.mina.transport.socket.SocketAcceptor;
+import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.safehaus.asyncweb.codec.HttpServerCodecFactory;
 
 public class Main {
   public static void main(String[] args) throws Exception {
     Executor threadPool = Executors.newCachedThreadPool();
-    SocketAcceptor acceptor = new SocketAcceptor(
+    SocketAcceptor acceptor = new NioSocketAcceptor(
     		Runtime.getRuntime().availableProcessors() + 1,
     		threadPool);
 
     acceptor.getFilterChain().addLast(
         "codec",
         new ProtocolCodecFilter(new HttpServerCodecFactory()));
-//    acceptor.getFilterChain().addLast(
-//            "threadPool",
-//            new ExecutorFilter(threadPool));
+
     acceptor.setReuseAddress(true);
-    ((SocketSessionConfig) acceptor.getSessionConfig()).setReuseAddress(true);
-    ((SocketSessionConfig) acceptor.getSessionConfig()).setReceiveBufferSize(1024);
-    ((SocketSessionConfig) acceptor.getSessionConfig()).setSendBufferSize(1024);
-    //((SocketSessionConfig) acceptor.getSessionConfig()).setTcpNoDelay(true);
-    ((SocketSessionConfig) acceptor.getSessionConfig()).setSoLinger(-1);
+    acceptor.getSessionConfig().setReuseAddress(true);
+    acceptor.getSessionConfig().setReceiveBufferSize(1024);
+    acceptor.getSessionConfig().setSendBufferSize(1024);
+    acceptor.getSessionConfig().setTcpNoDelay(true);
+    acceptor.getSessionConfig().setSoLinger(-1);
     acceptor.setBacklog(10240);
     
     acceptor.setLocalAddress(new InetSocketAddress(9012));

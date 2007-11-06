@@ -19,7 +19,7 @@
  */
 package org.safehaus.asyncweb.codec.decoder.support;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.filter.codec.ProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
@@ -36,7 +36,7 @@ public class StateMachineProtocolDecoder implements ProtocolDecoder {
     this.stateMachine = stateMachine;
   }
   
-  public void decode(IoSession session, ByteBuffer in, ProtocolDecoderOutput out) throws Exception {
+  public void decode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
     DecodingState state = this.currentState;
     if (state == null) {
       state = stateMachine.init();

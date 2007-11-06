@@ -22,7 +22,7 @@ package org.safehaus.asyncweb.codec.decoder;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.safehaus.asyncweb.codec.HttpCodecUtils;
 import org.safehaus.asyncweb.codec.decoder.support.ConsumeToDynamicTerminatorDecodingState;
@@ -92,7 +92,7 @@ abstract class ChunkedBodyDecodingState extends DecodingStateMachine {
   
   private final DecodingState READ_CHUNK_LENGTH = new ConsumeToDynamicTerminatorDecodingState() {
     @Override
-    protected DecodingState finishDecode(ByteBuffer product, ProtocolDecoderOutput out) throws Exception {
+    protected DecodingState finishDecode(IoBuffer product, ProtocolDecoderOutput out) throws Exception {
       if (!product.hasRemaining()) {
         HttpCodecUtils.throwDecoderException("Expected a chunk length.");
       }
@@ -102,7 +102,7 @@ abstract class ChunkedBodyDecodingState extends DecodingStateMachine {
       if (chunkHasExtension) {
         return SKIP_CHUNK_EXTENSION;
       }
-      return AFTER_SKIP_CHUNK_EXTENSION.decode( ByteBuffer.wrap( new byte[] { HttpCodecUtils.CR } ), out );
+      return AFTER_SKIP_CHUNK_EXTENSION.decode( IoBuffer.wrap( new byte[] { HttpCodecUtils.CR } ), out );
     }
 
     @Override
@@ -144,7 +144,7 @@ abstract class ChunkedBodyDecodingState extends DecodingStateMachine {
       } else {
         return new FixedLengthDecodingState(lastChunkLength) {
           @Override
-          protected DecodingState finishDecode(ByteBuffer readData, ProtocolDecoderOutput out) throws Exception {
+          protected DecodingState finishDecode(IoBuffer readData, ProtocolDecoderOutput out) throws Exception {
             out.write(readData);
             // Reset the state.
             lastChunkLength = 0;

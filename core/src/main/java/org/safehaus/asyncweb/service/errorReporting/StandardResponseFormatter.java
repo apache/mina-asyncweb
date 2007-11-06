@@ -21,7 +21,7 @@ package org.safehaus.asyncweb.service.errorReporting;
 
 import java.io.UnsupportedEncodingException;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.safehaus.asyncweb.common.HttpRequest;
 import org.safehaus.asyncweb.common.HttpResponseStatus;
 import org.safehaus.asyncweb.common.MutableHttpResponse;
@@ -82,7 +82,7 @@ public class StandardResponseFormatter implements ErrorResponseFormatter {
     html.append("<HR size=\"1\" noshade=\"noshade\">");
     html.append("<H2>AsyncWeb Server</H2>");
     
-    ByteBuffer out = ByteBuffer.allocate(html.length());
+    IoBuffer out = IoBuffer.allocate(html.length());
 
     // TODO: Need to sort this out when we start dealing with character encodings
     try {

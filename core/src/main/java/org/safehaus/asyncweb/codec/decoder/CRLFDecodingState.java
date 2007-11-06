@@ -19,7 +19,7 @@
  */
 package org.safehaus.asyncweb.codec.decoder;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.safehaus.asyncweb.codec.HttpCodecUtils;
 import org.safehaus.asyncweb.codec.decoder.support.DecodingState;
@@ -42,7 +42,7 @@ public abstract class CRLFDecodingState implements DecodingState {
 
   private boolean hasCR;
   
-  public DecodingState decode(ByteBuffer in, ProtocolDecoderOutput out) throws Exception {
+  public DecodingState decode(IoBuffer in, ProtocolDecoderOutput out) throws Exception {
     boolean found = false;
     boolean finished = false;
     while (in.hasRemaining()) {

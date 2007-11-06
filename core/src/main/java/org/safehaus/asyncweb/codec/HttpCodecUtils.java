@@ -21,7 +21,7 @@ package org.safehaus.asyncweb.codec;
 
 import java.io.UnsupportedEncodingException;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderException;
 import org.safehaus.asyncweb.codec.decoder.HttpDecoderException;
 import org.safehaus.asyncweb.common.HttpResponseStatus;
@@ -208,7 +208,7 @@ public class HttpCodecUtils {
    * 
    * @param buffer  The buffer to "push back" to
    */
-  public static void pushBack(ByteBuffer buffer) {
+  public static void pushBack(IoBuffer buffer) {
     buffer.position(buffer.position() - 1);
   }
     
@@ -266,7 +266,7 @@ public class HttpCodecUtils {
   }
   
   /**
-   * Appends a string to a specified {@link ByteBuffer}.
+   * Appends a string to a specified {@link IoBuffer}.
    * This method assumes ascii encoding and is primarily used for encoding 
    * http header names and values.<br/>
    * Note that encoding header values this way is not stricly correct 
@@ -277,7 +277,7 @@ public class HttpCodecUtils {
    * @param buffer  The buffer to append to
    * @param string  The string to append
    */
-  public static void appendString(ByteBuffer buffer, String string) {
+  public static void appendString(IoBuffer buffer, String string) {
     if (string == null) {
       return;
     }
@@ -297,7 +297,7 @@ public class HttpCodecUtils {
    * 
    * @param buffer  The buffer
    */
-  public static void appendCRLF(ByteBuffer buffer) {
+  public static void appendCRLF(IoBuffer buffer) {
     buffer.put(CRLF_BYTES);
   }
     

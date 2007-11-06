@@ -19,7 +19,7 @@
  */
 package org.safehaus.asyncweb.codec.decoder.support;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 
 
@@ -34,7 +34,7 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 public abstract class FixedLengthDecodingState implements DecodingState {
 
   private final int length;
-  private ByteBuffer buffer;
+  private IoBuffer buffer;
   
   /**
    * Constructs with a known decode length.
@@ -45,17 +45,17 @@ public abstract class FixedLengthDecodingState implements DecodingState {
     this.length = length;
   }
   
-  public DecodingState decode(ByteBuffer in, ProtocolDecoderOutput out) throws Exception {
+  public DecodingState decode(IoBuffer in, ProtocolDecoderOutput out) throws Exception {
     if (buffer == null) {
       if (in.remaining() >= length) {
         int limit = in.limit();
         in.limit(in.position() + length);
-        ByteBuffer product = in.slice();
+        IoBuffer product = in.slice();
         in.position(in.position() + length);
         in.limit(limit);
         return finishDecode(product, out);
       } else {
-        buffer = ByteBuffer.allocate(length);
+        buffer = IoBuffer.allocate(length);
         buffer.put(in);
         return this;
       }
@@ -65,7 +65,7 @@ public abstract class FixedLengthDecodingState implements DecodingState {
         in.limit(in.position() + length - buffer.position());
         buffer.put(in);
         in.limit(limit);
-        ByteBuffer product = this.buffer;
+        IoBuffer product = this.buffer;
         this.buffer = null;
         return finishDecode(product.flip(), out);
       } else {
@@ -75,5 +75,5 @@ public abstract class FixedLengthDecodingState implements DecodingState {
     }
   }
   
-  protected abstract DecodingState finishDecode(ByteBuffer readData, ProtocolDecoderOutput out) throws Exception;
+  protected abstract DecodingState finishDecode(IoBuffer readData, ProtocolDecoderOutput out) throws Exception;
 }

@@ -19,10 +19,10 @@
  */
 package org.safehaus.asyncweb.codec.decoder.support;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 
 public interface DecodingState {
   // TODO Find out the best way to provide init/destroy.
-  DecodingState decode(ByteBuffer in, ProtocolDecoderOutput out) throws Exception;
+  DecodingState decode(IoBuffer in, ProtocolDecoderOutput out) throws Exception;
 }

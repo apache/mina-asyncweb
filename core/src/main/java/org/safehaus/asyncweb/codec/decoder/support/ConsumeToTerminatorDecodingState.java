@@ -19,7 +19,7 @@
  */
 package org.safehaus.asyncweb.codec.decoder.support;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 
 
@@ -34,7 +34,7 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 public abstract class ConsumeToTerminatorDecodingState implements DecodingState {
 
   private final byte terminator;
-  private ByteBuffer buffer;
+  private IoBuffer buffer;
   
   /** 
    * @param terminator  The terminator character
@@ -43,12 +43,12 @@ public abstract class ConsumeToTerminatorDecodingState implements DecodingState 
     this.terminator = terminator;
   }
   
-  public DecodingState decode(ByteBuffer in, ProtocolDecoderOutput out) throws Exception {
+  public DecodingState decode(IoBuffer in, ProtocolDecoderOutput out) throws Exception {
     int terminatorPos = in.indexOf(terminator);
     
     if (terminatorPos >= 0) {
       int limit = in.limit();
-      ByteBuffer product;
+      IoBuffer product;
       
       if (in.position() < terminatorPos) {
         in.limit(terminatorPos);
@@ -65,7 +65,7 @@ public abstract class ConsumeToTerminatorDecodingState implements DecodingState 
       } else {
         // When input contained only terminator rather than actual data...
         if (buffer == null) {
-          product = ByteBuffer.allocate(1);
+          product = IoBuffer.allocate(1);
           product.limit(0);
         } else {
           product = buffer.flip();
@@ -76,7 +76,7 @@ public abstract class ConsumeToTerminatorDecodingState implements DecodingState 
       return finishDecode(product, out);
     } else {
       if (buffer == null) {
-        buffer = ByteBuffer.allocate(in.remaining());
+        buffer = IoBuffer.allocate(in.remaining());
         buffer.setAutoExpand(true);
       }
       buffer.put(in);
@@ -84,5 +84,5 @@ public abstract class ConsumeToTerminatorDecodingState implements DecodingState 
     }
   }
   
-  protected abstract DecodingState finishDecode(ByteBuffer product, ProtocolDecoderOutput out) throws Exception;
+  protected abstract DecodingState finishDecode(IoBuffer product, ProtocolDecoderOutput out) throws Exception;
 }

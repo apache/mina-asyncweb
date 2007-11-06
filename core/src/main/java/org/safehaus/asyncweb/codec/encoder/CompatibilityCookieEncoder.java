@@ -19,13 +19,14 @@
  */
 package org.safehaus.asyncweb.codec.encoder;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.safehaus.asyncweb.codec.HttpCodecUtils;
 import org.safehaus.asyncweb.common.Cookie;
 
@@ -50,9 +51,9 @@ public class CompatibilityCookieEncoder implements CookieEncoder {
   /**
    * Thread-local DateFormat for old-style cookies
    */
-  private static final ThreadLocal EXPIRY_FORMAT_LOACAL = new ThreadLocal() {
-  
-    protected Object initialValue() {
+  private static final ThreadLocal<DateFormat> EXPIRY_FORMAT_LOACAL = new ThreadLocal<DateFormat>() {
+    @Override
+    protected DateFormat initialValue() {
       SimpleDateFormat format = new SimpleDateFormat("EEE, dd-MMM-yyyy HH:mm:ss z", Locale.US);
       format.setTimeZone(FORMAT_TIME_ZONE);
       return format;
@@ -65,7 +66,7 @@ public class CompatibilityCookieEncoder implements CookieEncoder {
    */
   private static final String EXPIRED_DATE = getFormattedExpiry(0);
   
-  public void encodeCookie(Collection<Cookie> cookies, ByteBuffer buffer) {
+  public void encodeCookie(Collection<Cookie> cookies, IoBuffer buffer) {
     for (Cookie c: cookies) {
       buffer.put(HEADER_BYTES);
       encodeCookieValue(c, buffer);
@@ -78,7 +79,7 @@ public class CompatibilityCookieEncoder implements CookieEncoder {
     return format.format(new Date(time));
   }
   
-  private void encodeCookieValue(Cookie cookie, ByteBuffer buffer) {
+  private void encodeCookieValue(Cookie cookie, IoBuffer buffer) {
     HttpCodecUtils.appendString(buffer, cookie.getName());
     buffer.put(HttpCodecUtils.EQUALS);
     HttpCodecUtils.appendString(buffer, cookie.getValue());
@@ -106,7 +107,7 @@ public class CompatibilityCookieEncoder implements CookieEncoder {
    * @param cookie  The cookie
    * @param buffer  The buffer
    */
-  private void encodeExpiry(Cookie cookie, ByteBuffer buffer) {
+  private void encodeExpiry(Cookie cookie, IoBuffer buffer) {
     long expiry = cookie.getMaxAge();
     int version = cookie.getVersion();
     if (expiry >= 0) {

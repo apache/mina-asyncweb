@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.mina.common.ByteBuffer;
+import org.apache.mina.common.IoBuffer;
 import org.safehaus.asyncweb.common.Cookie;
 import org.safehaus.asyncweb.common.DefaultHttpResponse;
 import org.safehaus.asyncweb.common.HttpRequest;
@@ -68,7 +68,7 @@ public class HelloWorldHttpService implements HttpService {
     writeCookies(context.getRequest(), writer);
     writer.flush();
     
-    ByteBuffer bb = ByteBuffer.allocate(1024);
+    IoBuffer bb = IoBuffer.allocate(1024);
     bb.setAutoExpand(true);
     bb.putString(buf.toString(), Charset.forName("UTF-8").newEncoder());
     bb.flip();

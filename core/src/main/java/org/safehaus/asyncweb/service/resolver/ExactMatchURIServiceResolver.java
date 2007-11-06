@@ -67,12 +67,12 @@ public class ExactMatchURIServiceResolver implements ServiceResolver {
    * @throws ClassCastException  If any element (key or value) in the map
    *                             is not a <code>java.lang.String</code>
    */
-  public void setMappings(Map map) {
+  public void setMappings(Map<String, String> map) {
     serviceMap.clear();
-    for (Iterator iter=map.entrySet().iterator(); iter.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) iter.next();
-      String key   = (String) entry.getKey();
-      String value = (String) entry.getValue();
+    for (Iterator<Map.Entry<String, String>> iter=map.entrySet().iterator(); iter.hasNext(); ) {
+      Map.Entry<String, String> entry = iter.next();
+      String key   = entry.getKey();
+      String value = entry.getValue();
       addURIMapping(key, value);
     }
   }

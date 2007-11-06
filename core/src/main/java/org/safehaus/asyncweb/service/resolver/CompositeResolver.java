@@ -77,11 +77,11 @@ public class CompositeResolver implements ServiceResolver {
    * 
    * @param resolvers  The resolvers
    */
-  public void setResolvers(List resolvers) {
+  public void setResolvers(List<ServiceResolver> resolvers) {
     this.resolvers.clear();
     // Find bad types early
-    for (Iterator iter = resolvers.iterator(); iter.hasNext(); ) {
-      ServiceResolver resolver = (ServiceResolver) iter.next();
+    for (Iterator<ServiceResolver> iter = resolvers.iterator(); iter.hasNext(); ) {
+      ServiceResolver resolver = iter.next();
       
       addResolver(resolver);
     }

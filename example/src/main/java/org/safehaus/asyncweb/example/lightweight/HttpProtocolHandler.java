@@ -25,8 +25,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.IdleStatus;
+import org.apache.mina.common.IoBuffer;
 import org.apache.mina.common.IoFutureListener;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoSession;
@@ -42,7 +42,7 @@ import org.safehaus.asyncweb.util.HttpHeaderConstants;
 public class HttpProtocolHandler implements IoHandler {
   private static final int CONTENT_PADDING = 0; // 101
 
-  private final Map<Integer, ByteBuffer> buffers = new ConcurrentHashMap<Integer, ByteBuffer>();
+  private final Map<Integer, IoBuffer> buffers = new ConcurrentHashMap<Integer, IoBuffer>();
 
   private final Timer timer;
 
@@ -53,7 +53,7 @@ public class HttpProtocolHandler implements IoHandler {
   public void exceptionCaught(IoSession session, Throwable cause)
       throws Exception {
     if (!(cause instanceof IOException)) {
-      IoSessionLogger.warn(session, "Unexpected exception:", cause);
+      IoSessionLogger.getLogger(session).warn(cause);
     }
     session.close();
   }
@@ -96,9 +96,9 @@ public class HttpProtocolHandler implements IoHandler {
     res.setHeader("ETag", "W/\"" + size + "-1164091960000\"");
     res.setHeader("Last-Modified", "Tue, 31 Nov 2006 06:52:40 GMT");
 
-    ByteBuffer buf = buffers.get(size);
+    IoBuffer buf = buffers.get(size);
     if (buf == null) {
-      buf = ByteBuffer.allocate(size);
+      buf = IoBuffer.allocate(size);
       buffers.put(size, buf);
     }
 

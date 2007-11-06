@@ -27,13 +27,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.safehaus.asyncweb.service.HttpSession;
 import org.safehaus.asyncweb.util.LinkedPermitIssuer;
 import org.safehaus.asyncweb.util.PermitExpirationListener;
 import org.safehaus.asyncweb.util.TimedPermit;
 import org.safehaus.asyncweb.util.TimedPermitIssuer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A simple <code>SessionStore</code> implementation which holds all session
@@ -219,8 +219,8 @@ public class BasicSessionStore implements HttpSessionStore {
    */
   private void fireCreated(HttpSession session) {
     synchronized (listeners) {
-      for (Iterator iter = listeners.iterator(); iter.hasNext(); ) {
-        HttpSessionListener listener = (HttpSessionListener) iter.next();
+      for (Iterator<HttpSessionListener> iter = listeners.iterator(); iter.hasNext(); ) {
+        HttpSessionListener listener = iter.next();
         listener.sessionCreated(session);
       }
     }    
@@ -233,8 +233,8 @@ public class BasicSessionStore implements HttpSessionStore {
    */
   private void fireDestroyed(HttpSession session) {
     synchronized (listeners) {
-      for (Iterator iter = listeners.iterator(); iter.hasNext(); ) {
-        HttpSessionListener listener = (HttpSessionListener) iter.next();
+      for (Iterator<HttpSessionListener> iter = listeners.iterator(); iter.hasNext(); ) {
+        HttpSessionListener listener = iter.next();
         listener.sessionDestroyed(session);
       }
     }    
@@ -247,8 +247,8 @@ public class BasicSessionStore implements HttpSessionStore {
    */
   private void fireExpiry(HttpSession session) {
     synchronized (listeners) {
-      for (Iterator iter = listeners.iterator(); iter.hasNext(); ) {
-        HttpSessionListener listener = (HttpSessionListener) iter.next();
+      for (Iterator<HttpSessionListener> iter = listeners.iterator(); iter.hasNext(); ) {
+        HttpSessionListener listener = iter.next();
         listener.sessionExpired(session);
       }
     }
