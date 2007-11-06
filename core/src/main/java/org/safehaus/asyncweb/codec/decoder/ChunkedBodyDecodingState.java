@@ -24,12 +24,13 @@ import java.nio.charset.CharsetDecoder;
 
 import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
+import org.apache.mina.filter.codec.statemachine.CRLFDecodingState;
+import org.apache.mina.filter.codec.statemachine.ConsumeToDynamicTerminatorDecodingState;
+import org.apache.mina.filter.codec.statemachine.DecodingState;
+import org.apache.mina.filter.codec.statemachine.DecodingStateMachine;
+import org.apache.mina.filter.codec.statemachine.FixedLengthDecodingState;
+import org.apache.mina.filter.codec.statemachine.SkippingState;
 import org.safehaus.asyncweb.codec.HttpCodecUtils;
-import org.safehaus.asyncweb.codec.decoder.support.ConsumeToDynamicTerminatorDecodingState;
-import org.safehaus.asyncweb.codec.decoder.support.DecodingState;
-import org.safehaus.asyncweb.codec.decoder.support.DecodingStateMachine;
-import org.safehaus.asyncweb.codec.decoder.support.FixedLengthDecodingState;
-import org.safehaus.asyncweb.codec.decoder.support.SkippingState;
 import org.safehaus.asyncweb.common.HttpResponseStatus;
 
 /**

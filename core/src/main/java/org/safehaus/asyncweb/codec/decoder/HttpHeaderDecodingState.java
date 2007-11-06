@@ -28,11 +28,12 @@ import java.util.Map;
 
 import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
-import org.safehaus.asyncweb.codec.decoder.support.ConsumeToCRLFDecodingState;
-import org.safehaus.asyncweb.codec.decoder.support.ConsumeToTerminatorDecodingState;
-import org.safehaus.asyncweb.codec.decoder.support.DecodingState;
-import org.safehaus.asyncweb.codec.decoder.support.DecodingStateMachine;
-import org.safehaus.asyncweb.codec.decoder.support.LinearWhitespaceSkippingState;
+import org.apache.mina.filter.codec.statemachine.CRLFDecodingState;
+import org.apache.mina.filter.codec.statemachine.ConsumeToCRLFDecodingState;
+import org.apache.mina.filter.codec.statemachine.ConsumeToTerminatorDecodingState;
+import org.apache.mina.filter.codec.statemachine.DecodingState;
+import org.apache.mina.filter.codec.statemachine.DecodingStateMachine;
+import org.apache.mina.filter.codec.statemachine.LinearWhitespaceSkippingState;
 
 /**
  * Decodes the Headers of HTTP requests.
