@@ -26,7 +26,7 @@ import java.util.Map;
 import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderException;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
-import org.apache.mina.filter.codec.statemachine.CRLFDecodingState;
+import org.apache.mina.filter.codec.statemachine.CrLfDecodingState;
 import org.apache.mina.filter.codec.statemachine.DecodingState;
 import org.apache.mina.filter.codec.statemachine.DecodingStateMachine;
 import org.apache.mina.filter.codec.statemachine.FixedLengthDecodingState;
@@ -113,7 +113,7 @@ public abstract class HttpRequestDecodingState extends DecodingStateMachine {
     protected void destroy() throws Exception {
     }
 
-    private final DecodingState SKIP_EMPTY_LINES = new CRLFDecodingState() {
+    private final DecodingState SKIP_EMPTY_LINES = new CrLfDecodingState() {
 
         @Override
         protected DecodingState finishDecode(boolean foundCRLF,

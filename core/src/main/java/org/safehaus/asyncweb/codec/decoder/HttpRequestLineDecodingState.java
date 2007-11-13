@@ -25,9 +25,9 @@ import java.nio.charset.CharsetDecoder;
 
 import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
-import org.apache.mina.filter.codec.statemachine.CRLFDecodingState;
 import org.apache.mina.filter.codec.statemachine.ConsumeToDynamicTerminatorDecodingState;
 import org.apache.mina.filter.codec.statemachine.ConsumeToLinearWhitespaceDecodingState;
+import org.apache.mina.filter.codec.statemachine.CrLfDecodingState;
 import org.apache.mina.filter.codec.statemachine.DecodingState;
 import org.apache.mina.filter.codec.statemachine.DecodingStateMachine;
 import org.apache.mina.filter.codec.statemachine.LinearWhitespaceSkippingState;
@@ -134,7 +134,7 @@ abstract class HttpRequestLineDecodingState extends DecodingStateMachine {
         }
     };
 
-    private final DecodingState FINISH = new CRLFDecodingState() {
+    private final DecodingState FINISH = new CrLfDecodingState() {
         @Override
         protected DecodingState finishDecode(boolean foundCRLF,
                 ProtocolDecoderOutput out) throws Exception {

@@ -22,12 +22,10 @@ package org.safehaus.asyncweb.service.transport.mina;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.mina.common.IoFilter;
 import org.apache.mina.filter.executor.ExecutorFilter;
+import org.apache.mina.filter.executor.OrderedThreadPoolExecutor;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
@@ -57,8 +55,6 @@ public class MinaTransport implements Transport {
     private static final int DEFAULT_EVENT_THREADS = 16;
 
     private SocketAcceptor acceptor;
-
-    private ExecutorService ioExecutor;
 
     private ExecutorService eventExecutor;
 
@@ -158,13 +154,10 @@ public class MinaTransport implements Transport {
      */
     public void start() throws TransportException {
         initIOHandler();
-        ioExecutor = new ThreadPoolExecutor(ioThreads + 1, ioThreads + 1, 60,
-                TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
-        eventExecutor = new ThreadPoolExecutor(eventThreads + 1,
-                eventThreads + 1, 60, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>());
-        acceptor = new NioSocketAcceptor(ioThreads, ioExecutor);
-
+        acceptor = new NioSocketAcceptor(ioThreads);
+        eventExecutor = new OrderedThreadPoolExecutor(this.eventThreads);
+        
+        boolean success = false;
         try {
             acceptor.getFilterChain().addLast("threadPool",
                     new ExecutorFilter(eventExecutor));
@@ -185,11 +178,17 @@ public class MinaTransport implements Transport {
             acceptor.setHandler(ioHandler);
 
             acceptor.bind();
-
+            
+            success = true;
             LOG.info("NIO HTTP Transport bound on port " + port);
         } catch (IOException e) {
             throw new TransportException("NIOTransport Failed to bind to port "
                     + port, e);
+        } finally {
+            if (!success) {
+                acceptor.dispose();
+                acceptor = null;
+            }
         }
     }
 
@@ -197,9 +196,14 @@ public class MinaTransport implements Transport {
      * Stops this transport
      */
     public void stop() throws TransportException {
-        acceptor.unbind();
-        ioExecutor.shutdown();
+        if (acceptor == null) {
+            return;
+        }
+
+        acceptor.dispose();
         eventExecutor.shutdown();
+        acceptor = null;
+        eventExecutor = null;
     }
 
     /**
@@ -211,7 +215,7 @@ public class MinaTransport implements Transport {
     }
 
     /**
-     * Initialises our handler - creating a new (default) handler if none has
+     * Initializes our handler - creating a new (default) handler if none has
      * been specified
      *
      * @throws IllegalStateException If we have not yet been associated with a

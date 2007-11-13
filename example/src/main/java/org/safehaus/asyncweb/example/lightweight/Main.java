@@ -20,8 +20,6 @@
 package org.safehaus.asyncweb.example.lightweight;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.transport.socket.SocketAcceptor;
@@ -30,9 +28,7 @@ import org.safehaus.asyncweb.codec.HttpServerCodecFactory;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Executor threadPool = Executors.newCachedThreadPool();
-        SocketAcceptor acceptor = new NioSocketAcceptor(Runtime.getRuntime()
-                .availableProcessors() + 1, threadPool);
+        SocketAcceptor acceptor = new NioSocketAcceptor();
 
         acceptor.getFilterChain().addLast("codec",
                 new ProtocolCodecFilter(new HttpServerCodecFactory()));

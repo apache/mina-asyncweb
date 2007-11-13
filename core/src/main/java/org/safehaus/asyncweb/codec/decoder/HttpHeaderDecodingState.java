@@ -28,9 +28,9 @@ import java.util.Map;
 
 import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
-import org.apache.mina.filter.codec.statemachine.CRLFDecodingState;
-import org.apache.mina.filter.codec.statemachine.ConsumeToCRLFDecodingState;
+import org.apache.mina.filter.codec.statemachine.ConsumeToCrLfDecodingState;
 import org.apache.mina.filter.codec.statemachine.ConsumeToTerminatorDecodingState;
+import org.apache.mina.filter.codec.statemachine.CrLfDecodingState;
 import org.apache.mina.filter.codec.statemachine.DecodingState;
 import org.apache.mina.filter.codec.statemachine.DecodingStateMachine;
 import org.apache.mina.filter.codec.statemachine.LinearWhitespaceSkippingState;
@@ -72,7 +72,7 @@ abstract class HttpHeaderDecodingState extends DecodingStateMachine {
     protected void destroy() throws Exception {
     }
 
-    private final DecodingState FIND_EMPTY_LINE = new CRLFDecodingState() {
+    private final DecodingState FIND_EMPTY_LINE = new CrLfDecodingState() {
         @Override
         protected DecodingState finishDecode(boolean foundCRLF,
                 ProtocolDecoderOutput out) throws Exception {
@@ -105,7 +105,7 @@ abstract class HttpHeaderDecodingState extends DecodingStateMachine {
         }
     };
 
-    private final DecodingState READ_HEADER_VALUE = new ConsumeToCRLFDecodingState() {
+    private final DecodingState READ_HEADER_VALUE = new ConsumeToCrLfDecodingState() {
         @Override
         protected DecodingState finishDecode(IoBuffer product,
                 ProtocolDecoderOutput out) throws Exception {

@@ -24,8 +24,8 @@ import java.nio.charset.CharsetDecoder;
 
 import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
-import org.apache.mina.filter.codec.statemachine.CRLFDecodingState;
 import org.apache.mina.filter.codec.statemachine.ConsumeToDynamicTerminatorDecodingState;
+import org.apache.mina.filter.codec.statemachine.CrLfDecodingState;
 import org.apache.mina.filter.codec.statemachine.DecodingState;
 import org.apache.mina.filter.codec.statemachine.DecodingStateMachine;
 import org.apache.mina.filter.codec.statemachine.FixedLengthDecodingState;
@@ -136,7 +136,7 @@ abstract class ChunkedBodyDecodingState extends DecodingStateMachine {
         }
     };
 
-    private final DecodingState AFTER_SKIP_CHUNK_EXTENSION = new CRLFDecodingState() {
+    private final DecodingState AFTER_SKIP_CHUNK_EXTENSION = new CrLfDecodingState() {
         @Override
         protected DecodingState finishDecode(boolean foundCRLF,
                 ProtocolDecoderOutput out) throws Exception {
@@ -163,7 +163,7 @@ abstract class ChunkedBodyDecodingState extends DecodingStateMachine {
         }
     };
 
-    private final DecodingState AFTER_CHUNK_DATA = new CRLFDecodingState() {
+    private final DecodingState AFTER_CHUNK_DATA = new CrLfDecodingState() {
         @Override
         protected DecodingState finishDecode(boolean foundCRLF,
                 ProtocolDecoderOutput out) throws Exception {
@@ -178,7 +178,7 @@ abstract class ChunkedBodyDecodingState extends DecodingStateMachine {
         }
     };
 
-    private final DecodingState FIND_END_OF_TRAILER = new CRLFDecodingState() {
+    private final DecodingState FIND_END_OF_TRAILER = new CrLfDecodingState() {
         @Override
         protected DecodingState finishDecode(boolean foundCRLF,
                 ProtocolDecoderOutput out) throws Exception {
@@ -203,7 +203,7 @@ abstract class ChunkedBodyDecodingState extends DecodingStateMachine {
         }
     };
 
-    private final DecodingState AFTER_SKIP_ENTITY_HEADER = new CRLFDecodingState() {
+    private final DecodingState AFTER_SKIP_ENTITY_HEADER = new CrLfDecodingState() {
         @Override
         protected DecodingState finishDecode(boolean foundCRLF,
                 ProtocolDecoderOutput out) throws Exception {

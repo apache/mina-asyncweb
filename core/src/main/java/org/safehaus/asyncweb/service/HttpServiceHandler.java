@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.mina.common.IoFilter;
 import org.safehaus.asyncweb.common.DefaultHttpResponse;
 import org.safehaus.asyncweb.common.HttpRequest;
 import org.safehaus.asyncweb.common.HttpResponseStatus;
@@ -111,7 +112,8 @@ public class HttpServiceHandler implements HttpServiceFilter {
 
     /**
      * Handles a response. This handler does not perform any
-     * action for responses - so the specified {@link NextFilter} is invoked immediately.
+     * action for responses - so the specified {@link IoFilter.NextFilter} is
+     * invoked immediately.
      */
     public void handleResponse(NextFilter next, HttpServiceContext context) {
         next.invoke();
