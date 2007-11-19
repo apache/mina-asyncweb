@@ -80,8 +80,8 @@ public class HttpProtocolHandler implements IoHandler {
             MutableHttpResponse res) {
         res.normalize(req);
         WriteFuture future = session.write(res);
-        if (!HttpHeaderConstants.VALUE_KEEP_ALIVE.equalsIgnoreCase(res
-                .getHeader(HttpHeaderConstants.KEY_CONNECTION))) {
+        if (!HttpHeaderConstants.VALUE_KEEP_ALIVE.equalsIgnoreCase(
+                res.getHeader(HttpHeaderConstants.KEY_CONNECTION))) {
             future.addListener(IoFutureListener.CLOSE);
         }
     }
