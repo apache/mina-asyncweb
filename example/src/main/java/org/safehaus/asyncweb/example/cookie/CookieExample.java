@@ -24,12 +24,11 @@ import java.io.StringWriter;
 import java.nio.charset.Charset;
 
 import org.apache.mina.common.IoBuffer;
-import org.safehaus.asyncweb.common.DefaultCookie;
-import org.safehaus.asyncweb.common.DefaultHttpResponse;
-import org.safehaus.asyncweb.common.HttpRequest;
-import org.safehaus.asyncweb.common.MutableCookie;
-import org.safehaus.asyncweb.common.MutableHttpResponse;
-import org.safehaus.asyncweb.common.content.ByteBufferContent;
+import org.apache.mina.filter.codec.http.DefaultCookie;
+import org.apache.mina.filter.codec.http.DefaultHttpResponse;
+import org.apache.mina.filter.codec.http.HttpRequest;
+import org.apache.mina.filter.codec.http.MutableCookie;
+import org.apache.mina.filter.codec.http.MutableHttpResponse;
 import org.safehaus.asyncweb.service.HttpService;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 
@@ -63,7 +62,7 @@ public class CookieExample implements HttpService {
         bb.setAutoExpand(true);
         bb.putString(buf.toString(), Charset.forName("UTF-8").newEncoder());
         bb.flip();
-        response.setContent(new ByteBufferContent(bb));
+        response.setContent(bb);
 
         context.commitResponse(response);
     }

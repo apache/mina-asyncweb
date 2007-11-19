@@ -22,11 +22,10 @@ package org.safehaus.asyncweb.service.errorReporting;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.mina.common.IoBuffer;
-import org.safehaus.asyncweb.common.HttpRequest;
-import org.safehaus.asyncweb.common.HttpResponseStatus;
-import org.safehaus.asyncweb.common.MutableHttpResponse;
-import org.safehaus.asyncweb.common.HttpResponseStatus.Category;
-import org.safehaus.asyncweb.common.content.ByteBufferContent;
+import org.apache.mina.filter.codec.http.HttpRequest;
+import org.apache.mina.filter.codec.http.HttpResponseStatus;
+import org.apache.mina.filter.codec.http.MutableHttpResponse;
+import org.apache.mina.filter.codec.http.HttpResponseStatus.Category;
 import org.safehaus.asyncweb.util.StringBundle;
 
 public class StandardResponseFormatter implements ErrorResponseFormatter {
@@ -43,8 +42,7 @@ public class StandardResponseFormatter implements ErrorResponseFormatter {
 
     private boolean shouldFormat(MutableHttpResponse response) {
         boolean shouldFormat = false;
-        // FIXME Should be able to handler other content types.
-        if (!(response.getContent() instanceof ByteBufferContent)) {
+        if (!response.getContent().hasRemaining()) {
             HttpResponseStatus status = response.getStatus();
             HttpResponseStatus.Category category = response.getStatus()
                     .getCategory();
@@ -93,7 +91,7 @@ public class StandardResponseFormatter implements ErrorResponseFormatter {
         }
 
         out.flip();
-        response.setContent(new ByteBufferContent(out));
+        response.setContent(out);
     }
 
     private void appendInfo(String title, String info, StringBuilder html) {

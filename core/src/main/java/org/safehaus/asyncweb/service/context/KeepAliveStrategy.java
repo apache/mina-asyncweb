@@ -19,7 +19,7 @@
  */
 package org.safehaus.asyncweb.service.context;
 
-import org.safehaus.asyncweb.common.HttpResponse;
+import org.apache.mina.filter.codec.http.HttpResponse;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 
 /**

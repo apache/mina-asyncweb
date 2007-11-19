@@ -19,11 +19,11 @@
  */
 package org.safehaus.asyncweb.service.session;
 
-import org.safehaus.asyncweb.common.Cookie;
-import org.safehaus.asyncweb.common.DefaultCookie;
-import org.safehaus.asyncweb.common.HttpRequest;
-import org.safehaus.asyncweb.common.MutableCookie;
-import org.safehaus.asyncweb.common.MutableHttpResponse;
+import org.apache.mina.filter.codec.http.Cookie;
+import org.apache.mina.filter.codec.http.DefaultCookie;
+import org.apache.mina.filter.codec.http.HttpRequest;
+import org.apache.mina.filter.codec.http.MutableCookie;
+import org.apache.mina.filter.codec.http.MutableHttpResponse;
 
 /**
  * A <code>SessionIdentifier</code> which adds and extracts session key

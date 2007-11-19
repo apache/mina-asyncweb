@@ -31,15 +31,15 @@ import org.apache.mina.common.WriteFuture;
 import org.apache.mina.common.WriteRequest;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.ProtocolDecoderException;
+import org.apache.mina.filter.codec.http.DefaultHttpRequest;
+import org.apache.mina.filter.codec.http.DefaultHttpResponse;
+import org.apache.mina.filter.codec.http.HttpCodecFactory;
+import org.apache.mina.filter.codec.http.HttpRequest;
+import org.apache.mina.filter.codec.http.HttpRequestDecoderException;
+import org.apache.mina.filter.codec.http.HttpResponseStatus;
+import org.apache.mina.filter.codec.http.HttpVersion;
+import org.apache.mina.filter.codec.http.MutableHttpResponse;
 import org.apache.mina.handler.multiton.SingleSessionIoHandler;
-import org.safehaus.asyncweb.codec.HttpServerCodecFactory;
-import org.safehaus.asyncweb.codec.decoder.HttpDecoderException;
-import org.safehaus.asyncweb.common.DefaultHttpRequest;
-import org.safehaus.asyncweb.common.DefaultHttpResponse;
-import org.safehaus.asyncweb.common.HttpRequest;
-import org.safehaus.asyncweb.common.HttpResponseStatus;
-import org.safehaus.asyncweb.common.HttpVersion;
-import org.safehaus.asyncweb.common.MutableHttpResponse;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 import org.safehaus.asyncweb.service.HttpServiceFilter;
 import org.safehaus.asyncweb.service.ServiceContainer;
@@ -87,7 +87,7 @@ class SingleHttpSessionIoHandler implements SingleSessionIoHandler {
         session.getConfig().setIdleTime(IdleStatus.READER_IDLE, readIdleTime);
 
         session.getFilterChain().addLast("codec",
-                new ProtocolCodecFilter(new HttpServerCodecFactory()));
+                new ProtocolCodecFilter(new HttpCodecFactory()));
 
         session.getFilterChain().addLast("converter", new ContextConverter());
 
@@ -141,8 +141,8 @@ class SingleHttpSessionIoHandler implements SingleSessionIoHandler {
         MutableHttpResponse response = null;
         if (cause instanceof ProtocolDecoderException) {
             HttpResponseStatus status;
-            if (cause instanceof HttpDecoderException) {
-                status = ((HttpDecoderException) cause).getResponseStatus();
+            if (cause instanceof HttpRequestDecoderException) {
+                status = ((HttpRequestDecoderException) cause).getResponseStatus();
             } else {
                 status = HttpResponseStatus.BAD_REQUEST;
             }

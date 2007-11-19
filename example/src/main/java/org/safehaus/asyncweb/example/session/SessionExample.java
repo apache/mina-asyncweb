@@ -24,9 +24,8 @@ import java.io.StringWriter;
 import java.nio.charset.Charset;
 
 import org.apache.mina.common.IoBuffer;
-import org.safehaus.asyncweb.common.DefaultHttpResponse;
-import org.safehaus.asyncweb.common.MutableHttpResponse;
-import org.safehaus.asyncweb.common.content.ByteBufferContent;
+import org.apache.mina.filter.codec.http.DefaultHttpResponse;
+import org.apache.mina.filter.codec.http.MutableHttpResponse;
 import org.safehaus.asyncweb.service.HttpService;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 import org.safehaus.asyncweb.service.HttpSession;
@@ -66,7 +65,7 @@ public class SessionExample implements HttpService {
         bb.setAutoExpand(true);
         bb.putString(buf.toString(), Charset.forName("UTF-8").newEncoder());
         bb.flip();
-        response.setContent(new ByteBufferContent(bb));
+        response.setContent(bb);
 
         context.commitResponse(response);
     }

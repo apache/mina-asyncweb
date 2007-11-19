@@ -40,5 +40,10 @@
 			<artifactId>mina-core</artifactId>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.mina</groupId>
+			<artifactId>mina-filter-codec-http</artifactId>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 </project>

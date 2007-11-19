@@ -21,15 +21,15 @@ package org.safehaus.asyncweb.service.context;
 
 import java.net.InetSocketAddress;
 
-import org.safehaus.asyncweb.common.DefaultHttpResponse;
-import org.safehaus.asyncweb.common.HttpRequest;
-import org.safehaus.asyncweb.common.HttpResponse;
-import org.safehaus.asyncweb.common.HttpResponseStatus;
-import org.safehaus.asyncweb.common.MutableHttpResponse;
+import org.apache.mina.filter.codec.http.DefaultHttpResponse;
+import org.apache.mina.filter.codec.http.HttpHeaderConstants;
+import org.apache.mina.filter.codec.http.HttpRequest;
+import org.apache.mina.filter.codec.http.HttpResponse;
+import org.apache.mina.filter.codec.http.HttpResponseStatus;
+import org.apache.mina.filter.codec.http.MutableHttpResponse;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 import org.safehaus.asyncweb.service.HttpSession;
 import org.safehaus.asyncweb.service.ServiceContainer;
-import org.safehaus.asyncweb.util.HttpHeaderConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

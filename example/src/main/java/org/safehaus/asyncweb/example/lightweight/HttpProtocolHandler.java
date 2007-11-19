@@ -32,12 +32,11 @@ import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.common.IoSessionLogger;
 import org.apache.mina.common.WriteFuture;
-import org.safehaus.asyncweb.common.DefaultHttpResponse;
-import org.safehaus.asyncweb.common.HttpRequest;
-import org.safehaus.asyncweb.common.HttpResponseStatus;
-import org.safehaus.asyncweb.common.MutableHttpResponse;
-import org.safehaus.asyncweb.common.content.ByteBufferContent;
-import org.safehaus.asyncweb.util.HttpHeaderConstants;
+import org.apache.mina.filter.codec.http.DefaultHttpResponse;
+import org.apache.mina.filter.codec.http.HttpHeaderConstants;
+import org.apache.mina.filter.codec.http.HttpRequest;
+import org.apache.mina.filter.codec.http.HttpResponseStatus;
+import org.apache.mina.filter.codec.http.MutableHttpResponse;
 
 public class HttpProtocolHandler implements IoHandler {
     private static final int CONTENT_PADDING = 0; // 101
@@ -103,7 +102,7 @@ public class HttpProtocolHandler implements IoHandler {
             buffers.put(size, buf);
         }
 
-        res.setContent(new ByteBufferContent(buf.duplicate()));
+        res.setContent(buf.duplicate());
         writeResponse(session, req, res);
     }
 

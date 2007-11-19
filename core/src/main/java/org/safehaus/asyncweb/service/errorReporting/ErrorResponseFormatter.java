@@ -19,8 +19,8 @@
  */
 package org.safehaus.asyncweb.service.errorReporting;
 
-import org.safehaus.asyncweb.common.HttpRequest;
-import org.safehaus.asyncweb.common.MutableHttpResponse;
+import org.apache.mina.filter.codec.http.HttpRequest;
+import org.apache.mina.filter.codec.http.MutableHttpResponse;
 
 /**
  * Formats error responses to include a descriptive body where appropriate

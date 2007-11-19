@@ -19,7 +19,7 @@
  */
 package org.safehaus.asyncweb.service.session;
 
-import org.safehaus.asyncweb.common.MutableHttpResponse;
+import org.apache.mina.filter.codec.http.MutableHttpResponse;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 import org.safehaus.asyncweb.service.HttpSession;
 import org.slf4j.Logger;

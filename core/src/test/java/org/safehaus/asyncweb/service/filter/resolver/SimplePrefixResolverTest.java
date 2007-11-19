@@ -24,9 +24,9 @@ import java.net.URISyntaxException;
 
 import junit.framework.TestCase;
 
-import org.safehaus.asyncweb.common.DefaultHttpRequest;
-import org.safehaus.asyncweb.common.HttpRequest;
-import org.safehaus.asyncweb.common.MutableHttpRequest;
+import org.apache.mina.filter.codec.http.DefaultHttpRequest;
+import org.apache.mina.filter.codec.http.HttpRequest;
+import org.apache.mina.filter.codec.http.MutableHttpRequest;
 import org.safehaus.asyncweb.service.resolver.SimplePrefixResolver;
 
 /**

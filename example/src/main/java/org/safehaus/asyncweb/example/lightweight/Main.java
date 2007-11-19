@@ -22,16 +22,16 @@ package org.safehaus.asyncweb.example.lightweight;
 import java.net.InetSocketAddress;
 
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.apache.mina.filter.codec.http.HttpCodecFactory;
 import org.apache.mina.transport.socket.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-import org.safehaus.asyncweb.codec.HttpServerCodecFactory;
 
 public class Main {
     public static void main(String[] args) throws Exception {
         SocketAcceptor acceptor = new NioSocketAcceptor();
 
         acceptor.getFilterChain().addLast("codec",
-                new ProtocolCodecFilter(new HttpServerCodecFactory()));
+                new ProtocolCodecFilter(new HttpCodecFactory()));
 
         acceptor.setReuseAddress(true);
         acceptor.getSessionConfig().setReuseAddress(true);

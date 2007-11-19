@@ -22,7 +22,7 @@ package org.safehaus.asyncweb.service.filter.resolver;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.safehaus.asyncweb.common.HttpRequest;
+import org.apache.mina.filter.codec.http.HttpRequest;
 import org.safehaus.asyncweb.service.resolver.ServiceResolver;
 
 /**

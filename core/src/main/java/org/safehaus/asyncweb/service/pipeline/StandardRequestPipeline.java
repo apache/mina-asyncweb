@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.safehaus.asyncweb.common.HttpResponse;
+import org.apache.mina.filter.codec.http.HttpResponse;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

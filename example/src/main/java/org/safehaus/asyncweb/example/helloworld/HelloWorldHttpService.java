@@ -28,12 +28,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.mina.common.IoBuffer;
-import org.safehaus.asyncweb.common.Cookie;
-import org.safehaus.asyncweb.common.DefaultHttpResponse;
-import org.safehaus.asyncweb.common.HttpRequest;
-import org.safehaus.asyncweb.common.HttpResponseStatus;
-import org.safehaus.asyncweb.common.MutableHttpResponse;
-import org.safehaus.asyncweb.common.content.ByteBufferContent;
+import org.apache.mina.filter.codec.http.Cookie;
+import org.apache.mina.filter.codec.http.DefaultHttpResponse;
+import org.apache.mina.filter.codec.http.HttpRequest;
+import org.apache.mina.filter.codec.http.HttpResponseStatus;
+import org.apache.mina.filter.codec.http.MutableHttpResponse;
 import org.safehaus.asyncweb.service.HttpService;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 
@@ -71,7 +70,7 @@ public class HelloWorldHttpService implements HttpService {
         bb.setAutoExpand(true);
         bb.putString(buf.toString(), Charset.forName("UTF-8").newEncoder());
         bb.flip();
-        response.setContent(new ByteBufferContent(bb));
+        response.setContent(bb);
 
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache");
