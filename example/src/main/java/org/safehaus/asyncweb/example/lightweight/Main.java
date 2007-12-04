@@ -41,9 +41,7 @@ public class Main {
         acceptor.getSessionConfig().setSoLinger(-1);
         acceptor.setBacklog(10240);
 
-        acceptor.setLocalAddress(new InetSocketAddress(9012));
         acceptor.setHandler(new HttpProtocolHandler());
-
-        acceptor.bind();
+        acceptor.bind(new InetSocketAddress(9012));
     }
 }

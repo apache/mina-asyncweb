@@ -170,14 +170,13 @@ public class MinaTransport implements Transport {
             }
             acceptor.setBacklog(100);
 
-            if (address != null) {
-                acceptor.setLocalAddress(new InetSocketAddress(address, port));
-            } else {
-                acceptor.setLocalAddress(new InetSocketAddress(port));
-            }
             acceptor.setHandler(ioHandler);
 
-            acceptor.bind();
+            if (address != null) {
+                acceptor.bind(new InetSocketAddress(address, port));
+            } else {
+                acceptor.bind(new InetSocketAddress(port));
+            }
             
             success = true;
             LOG.info("NIO HTTP Transport bound on port " + port);
