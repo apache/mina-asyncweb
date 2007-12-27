@@ -71,7 +71,7 @@ class SingleHttpSessionIoHandler implements SingleSessionIoHandler {
 
     private final ServiceContainer container;
 
-    private final IoSession session;
+    protected final IoSession session;
 
     private final RequestPipeline pipeline;
 
