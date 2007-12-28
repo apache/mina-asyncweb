@@ -79,7 +79,7 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler {
 
     private int readIdleTime = DEFAULT_IDLE_TIME;
 
-    SingleHttpSessionIoHandler(ServiceContainer container, IoSession session) {
+    public SingleHttpSessionIoHandler(ServiceContainer container, IoSession session) {
         this.container = container;
         this.session = session;
         this.pipeline = new StandardRequestPipeline(DEFAULT_PIPELINE);
