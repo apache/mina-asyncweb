@@ -50,7 +50,7 @@ import org.safehaus.asyncweb.service.pipeline.StandardRequestPipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class SingleHttpSessionIoHandler implements SingleSessionIoHandler {
+public class SingleHttpSessionIoHandler implements SingleSessionIoHandler {
 
     private static final Logger LOG = LoggerFactory
             .getLogger(SingleHttpSessionIoHandler.class);
@@ -220,7 +220,7 @@ class SingleHttpSessionIoHandler implements SingleSessionIoHandler {
         this.readIdleTime = readIdleTime;
     }
 
-    private HttpServiceContext createContext(HttpRequest request) {
+    protected HttpServiceContext createContext(HttpRequest request) {
         return new DefaultHttpServiceContext(request);
     }
 
