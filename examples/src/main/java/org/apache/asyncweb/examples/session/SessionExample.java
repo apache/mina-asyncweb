@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.example.session;
+package org.apache.asyncweb.examples.session;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

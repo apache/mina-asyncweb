@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.example.lightweight;
+package org.apache.asyncweb.examples.lightweight;
 
 import java.io.IOException;
 import java.util.Map;

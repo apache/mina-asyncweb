@@ -72,7 +72,7 @@
 					every request - irrespective of whether application code causes the session 
 					to be accessed.
 					
-					<bean class="org.safehaus.asyncweb.http.session.SessionKeepAliveHandler"/>
+					<bean class="org.apache.asyncweb.server.session.SessionKeepAliveHandler"/>
 				-->
 
 				<!--

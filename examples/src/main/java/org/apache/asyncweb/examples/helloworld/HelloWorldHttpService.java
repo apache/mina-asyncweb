@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.example.helloworld;
+package org.apache.asyncweb.examples.helloworld;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.example.cookie;
+package org.apache.asyncweb.examples.cookie;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

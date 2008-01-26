@@ -30,7 +30,7 @@
 		to configure itself!
 	-->
 	<bean name="helloWorldHttpService"
-		class="org.safehaus.asyncweb.example.helloworld.HelloWorldHttpService">
+		class="org.apache.asyncweb.examples.helloworld.HelloWorldHttpService">
 
 		<property name="message">
 			<value>AsyncWeb says hi!</value>

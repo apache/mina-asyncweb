@@ -31,6 +31,6 @@
 		be destroyed
 	-->
 	<bean name="sessionService"
-		class="org.safehaus.asyncweb.example.session.SessionExample" />
+		class="org.apache.asyncweb.examples.session.SessionExample" />
 
 </beans>

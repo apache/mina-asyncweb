@@ -26,7 +26,7 @@
 		Cookies sent by the client can be viewed with the exmaple "hello world" service
 	-->
 	<bean name="cookieDrop"
-		class="org.safehaus.asyncweb.example.cookie.CookieExample">
+		class="org.apache.asyncweb.examples.cookie.CookieExample">
 
 		<property name="form">
 			<value>

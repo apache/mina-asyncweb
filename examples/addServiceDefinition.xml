@@ -28,7 +28,7 @@
   -->
   <target name="add-service-definition">
     <input
-      message="Enter full example class name (e.g org.safehaus.asyncweb.examples.HelloWorldHttpService): "
+      message="Enter full example class name (e.g org.apache.asyncweb.examples.HelloWorldHttpService): "
       addproperty="service.class"/>
     <input 
       message="Enter service name (e.g. HelloWorldHttpService): "
