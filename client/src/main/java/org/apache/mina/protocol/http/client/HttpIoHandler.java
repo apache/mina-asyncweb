@@ -21,7 +21,7 @@ package org.apache.mina.protocol.http.client;
 
 import org.apache.mina.common.IoHandlerAdapter;
 import org.apache.mina.common.IoSession;
-import org.apache.mina.filter.codec.http.HttpResponse;
+import org.apache.asyncweb.codec.HttpResponse;
 
 public class HttpIoHandler extends IoHandlerAdapter {
     private AsyncHttpClientCallback callback;

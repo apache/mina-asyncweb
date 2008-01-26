@@ -22,7 +22,7 @@ package org.safehaus.asyncweb.common;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.apache.mina.filter.codec.http.DefaultHttpRequest;
+import org.apache.asyncweb.codec.DefaultHttpRequest;
 
 public class DefaultHttpRequestTest extends TestCase {
     public void testSetParametersFromQueryString() throws Exception {

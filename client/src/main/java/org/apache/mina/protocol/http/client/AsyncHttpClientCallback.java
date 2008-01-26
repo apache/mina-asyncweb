@@ -19,7 +19,7 @@
  */
 package org.apache.mina.protocol.http.client;
 
-import org.apache.mina.filter.codec.http.HttpResponse;
+import org.apache.asyncweb.codec.HttpResponse;
 
 public interface AsyncHttpClientCallback {
     public void onResponse(HttpResponse message);

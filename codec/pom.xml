@@ -29,8 +29,7 @@
   <packaging>bundle</packaging>
 
   <properties>
-    <!-- exportedPackage>${groupId}.filter.codec.http</exportedPackage -->
-    <exportedPackage>org.apache.mina.filter.codec.http</exportedPackage>
+    <exportedPackage>${groupId}.codec</exportedPackage>
   </properties>
 
   <dependencies>

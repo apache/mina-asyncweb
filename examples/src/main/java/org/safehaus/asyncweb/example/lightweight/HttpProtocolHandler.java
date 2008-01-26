@@ -32,11 +32,11 @@ import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.common.IoSessionLogger;
 import org.apache.mina.common.WriteFuture;
-import org.apache.mina.filter.codec.http.DefaultHttpResponse;
-import org.apache.mina.filter.codec.http.HttpHeaderConstants;
-import org.apache.mina.filter.codec.http.HttpRequest;
-import org.apache.mina.filter.codec.http.HttpResponseStatus;
-import org.apache.mina.filter.codec.http.MutableHttpResponse;
+import org.apache.asyncweb.codec.HttpRequest;
+import org.apache.asyncweb.codec.HttpResponseStatus;
+import org.apache.asyncweb.codec.MutableHttpResponse;
+import org.apache.asyncweb.codec.DefaultHttpResponse;
+import org.apache.asyncweb.codec.HttpHeaderConstants;
 
 public class HttpProtocolHandler implements IoHandler {
     private static final int CONTENT_PADDING = 0; // 101
@@ -81,7 +81,7 @@ public class HttpProtocolHandler implements IoHandler {
         res.normalize(req);
         WriteFuture future = session.write(res);
         if (!HttpHeaderConstants.VALUE_KEEP_ALIVE.equalsIgnoreCase(
-                res.getHeader(HttpHeaderConstants.KEY_CONNECTION))) {
+                res.getHeader( HttpHeaderConstants.KEY_CONNECTION))) {
             future.addListener(IoFutureListener.CLOSE);
         }
     }

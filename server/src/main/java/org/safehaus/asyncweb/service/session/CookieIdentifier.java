@@ -19,11 +19,11 @@
  */
 package org.safehaus.asyncweb.service.session;
 
-import org.apache.mina.filter.codec.http.Cookie;
-import org.apache.mina.filter.codec.http.DefaultCookie;
-import org.apache.mina.filter.codec.http.HttpRequest;
-import org.apache.mina.filter.codec.http.MutableCookie;
-import org.apache.mina.filter.codec.http.MutableHttpResponse;
+import org.apache.asyncweb.codec.Cookie;
+import org.apache.asyncweb.codec.DefaultCookie;
+import org.apache.asyncweb.codec.HttpRequest;
+import org.apache.asyncweb.codec.MutableCookie;
+import org.apache.asyncweb.codec.MutableHttpResponse;
 
 /**
  * A <code>SessionIdentifier</code> which adds and extracts session key
@@ -58,7 +58,7 @@ public class CookieIdentifier implements HttpSessionIdentifier {
      * @param  request  The request
      * @return The session key, or null if a session cookie was not located
      */
-    public String getSessionKey(HttpRequest request) {
+    public String getSessionKey( HttpRequest request) {
         Cookie sessionCookie = null;
         for (Cookie c : request.getCookies()) {
             if (c.getName().equals(cookieId)) {

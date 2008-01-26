@@ -28,11 +28,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.mina.common.IoBuffer;
-import org.apache.mina.filter.codec.http.Cookie;
-import org.apache.mina.filter.codec.http.DefaultHttpResponse;
-import org.apache.mina.filter.codec.http.HttpRequest;
-import org.apache.mina.filter.codec.http.HttpResponseStatus;
-import org.apache.mina.filter.codec.http.MutableHttpResponse;
+import org.apache.asyncweb.codec.HttpRequest;
+import org.apache.asyncweb.codec.HttpResponseStatus;
+import org.apache.asyncweb.codec.MutableHttpResponse;
+import org.apache.asyncweb.codec.Cookie;
+import org.apache.asyncweb.codec.DefaultHttpResponse;
 import org.safehaus.asyncweb.service.HttpService;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 
@@ -95,7 +95,7 @@ public class HelloWorldHttpService implements HttpService {
      * @param request   The request
      * @param writer    The writer
      */
-    private void writeHeaders(HttpRequest request, PrintWriter writer) {
+    private void writeHeaders( HttpRequest request, PrintWriter writer) {
         writer.println("You sent these headers with your request:<br/>");
         writer.println("<ul>");
         for (String headerName : request.getHeaders().keySet()) {
@@ -116,7 +116,7 @@ public class HelloWorldHttpService implements HttpService {
         if (!cookies.isEmpty()) {
             writer.println("You sent these cookies with your request:<br/>");
             writer.println("<ul>");
-            for (Cookie cookie : cookies) {
+            for ( Cookie cookie : cookies) {
                 writer.println("<li>Name = " + cookie.getName() + " Value = "
                         + cookie.getValue());
                 writer.println(" Path = " + cookie.getPath() + " Version = "

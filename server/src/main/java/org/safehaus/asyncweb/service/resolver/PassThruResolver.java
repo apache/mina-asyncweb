@@ -19,7 +19,7 @@
  */
 package org.safehaus.asyncweb.service.resolver;
 
-import org.apache.mina.filter.codec.http.HttpRequest;
+import org.apache.asyncweb.codec.HttpRequest;
 
 /**
  * A simple <code>ServiceResolver</code> which passes the full

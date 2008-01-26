@@ -23,8 +23,8 @@ import junit.framework.TestCase;
 
 import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolCodecSession;
-import org.apache.mina.filter.codec.http.HttpResponse;
-import org.apache.mina.filter.codec.http.HttpResponseDecoder;
+import org.apache.asyncweb.codec.HttpResponse;
+import org.apache.asyncweb.codec.HttpResponseDecoder;
 
 public class ChunkedTest extends TestCase {
 
@@ -49,7 +49,7 @@ public class ChunkedTest extends TestCase {
         HttpResponseDecoder decoder = new HttpResponseDecoder();
         decoder.decode(session, buffer, session.getDecoderOutput());
 
-        HttpResponse response = (HttpResponse) session
+        HttpResponse response = ( HttpResponse ) session
                 .getDecoderOutputQueue().poll();
         assertEquals(
                 IoBuffer.wrap("abcdefghijklmnopqrstuvwxyz1234567890abcdef".getBytes()),

@@ -22,7 +22,7 @@ package org.safehaus.asyncweb.service.resolver;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.mina.filter.codec.http.HttpRequest;
+import org.apache.asyncweb.codec.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

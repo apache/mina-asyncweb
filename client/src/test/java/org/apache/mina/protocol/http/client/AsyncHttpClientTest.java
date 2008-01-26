@@ -25,11 +25,11 @@ import java.net.URI;
 import java.nio.charset.Charset;
 
 import org.apache.mina.common.IoBuffer;
-import org.apache.mina.filter.codec.http.DefaultHttpRequest;
-import org.apache.mina.filter.codec.http.HttpMethod;
-import org.apache.mina.filter.codec.http.HttpRequest;
-import org.apache.mina.filter.codec.http.HttpResponse;
-import org.apache.mina.filter.codec.http.MutableHttpRequest;
+import org.apache.asyncweb.codec.HttpRequest;
+import org.apache.asyncweb.codec.HttpResponse;
+import org.apache.asyncweb.codec.MutableHttpRequest;
+import org.apache.asyncweb.codec.DefaultHttpRequest;
+import org.apache.asyncweb.codec.HttpMethod;
 
 public class AsyncHttpClientTest extends AbstractTest {
 
@@ -117,7 +117,7 @@ public class AsyncHttpClientTest extends AbstractTest {
         request.setRequestUri(new URI(url));
         request.setParameter("TEST1", "Test One");
         request.setParameter("TEST2", "Test Two");
-        request.setMethod(HttpMethod.POST);
+        request.setMethod( HttpMethod.POST);
         doConnection(callback, url, request, testForException);
     }
 

@@ -19,8 +19,8 @@
  */
 package org.safehaus.asyncweb.service.session;
 
-import org.apache.mina.filter.codec.http.HttpRequest;
-import org.apache.mina.filter.codec.http.MutableHttpResponse;
+import org.apache.asyncweb.codec.HttpRequest;
+import org.apache.asyncweb.codec.MutableHttpResponse;
 
 /**
  * A strategy for encoding / decoding session keys information to / from

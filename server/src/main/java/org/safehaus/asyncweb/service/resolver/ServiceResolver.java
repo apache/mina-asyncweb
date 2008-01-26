@@ -19,7 +19,7 @@
  */
 package org.safehaus.asyncweb.service.resolver;
 
-import org.apache.mina.filter.codec.http.HttpRequest;
+import org.apache.asyncweb.codec.HttpRequest;
 
 /**
  * Resolves the name of the <code>HttpService</code> to be used to

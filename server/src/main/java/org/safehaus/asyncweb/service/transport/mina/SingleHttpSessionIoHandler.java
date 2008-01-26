@@ -31,15 +31,15 @@ import org.apache.mina.common.WriteFuture;
 import org.apache.mina.common.WriteRequest;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.ProtocolDecoderException;
-import org.apache.mina.filter.codec.http.DefaultHttpRequest;
-import org.apache.mina.filter.codec.http.DefaultHttpResponse;
-import org.apache.mina.filter.codec.http.HttpCodecFactory;
-import org.apache.mina.filter.codec.http.HttpRequest;
-import org.apache.mina.filter.codec.http.HttpRequestDecoderException;
-import org.apache.mina.filter.codec.http.HttpResponseStatus;
-import org.apache.mina.filter.codec.http.HttpVersion;
-import org.apache.mina.filter.codec.http.MutableHttpResponse;
+import org.apache.asyncweb.codec.HttpRequest;
+import org.apache.asyncweb.codec.HttpRequestDecoderException;
+import org.apache.asyncweb.codec.HttpResponseStatus;
+import org.apache.asyncweb.codec.HttpVersion;
+import org.apache.asyncweb.codec.MutableHttpResponse;
 import org.apache.mina.handler.multiton.SingleSessionIoHandler;
+import org.apache.asyncweb.codec.DefaultHttpRequest;
+import org.apache.asyncweb.codec.DefaultHttpResponse;
+import org.apache.asyncweb.codec.*;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 import org.safehaus.asyncweb.service.HttpServiceFilter;
 import org.safehaus.asyncweb.service.ServiceContainer;
@@ -237,7 +237,7 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler {
         @Override
         public void messageReceived(NextFilter nextFilter, IoSession session,
                 Object message) throws Exception {
-            HttpRequest request = (HttpRequest) message;
+            HttpRequest request = ( HttpRequest ) message;
             HttpServiceContext context = createContext(request);
             currentContext = context;
             nextFilter.messageReceived(session, context);

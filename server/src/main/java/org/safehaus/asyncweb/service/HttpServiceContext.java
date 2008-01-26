@@ -21,9 +21,9 @@ package org.safehaus.asyncweb.service;
 
 import java.net.InetSocketAddress;
 
-import org.apache.mina.filter.codec.http.HttpRequest;
-import org.apache.mina.filter.codec.http.HttpResponse;
-import org.apache.mina.filter.codec.http.HttpResponseStatus;
+import org.apache.asyncweb.codec.HttpRequest;
+import org.apache.asyncweb.codec.HttpResponse;
+import org.apache.asyncweb.codec.HttpResponseStatus;
 
 /**
  * Provides conversational context between a HTTP client and a {@link HttpService}.

@@ -24,8 +24,8 @@ import java.io.StringWriter;
 import java.nio.charset.Charset;
 
 import org.apache.mina.common.IoBuffer;
-import org.apache.mina.filter.codec.http.DefaultHttpResponse;
-import org.apache.mina.filter.codec.http.MutableHttpResponse;
+import org.apache.asyncweb.codec.DefaultHttpResponse;
+import org.apache.asyncweb.codec.MutableHttpResponse;
 import org.safehaus.asyncweb.service.HttpService;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 import org.safehaus.asyncweb.service.HttpSession;

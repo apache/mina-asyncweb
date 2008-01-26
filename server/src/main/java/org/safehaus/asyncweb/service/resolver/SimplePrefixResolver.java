@@ -19,7 +19,7 @@
  */
 package org.safehaus.asyncweb.service.resolver;
 
-import org.apache.mina.filter.codec.http.HttpRequest;
+import org.apache.asyncweb.codec.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,7 +84,7 @@ public class SimplePrefixResolver implements ServiceResolver {
      * @return        The resolved service name, or <code>null</code> if
      *                the request is un-resolved
      */
-    public String resolveService(HttpRequest request) {
+    public String resolveService( HttpRequest request) {
         if (request.getRequestUri() == null
                 || request.getRequestUri().isAbsolute()) {
             return null;

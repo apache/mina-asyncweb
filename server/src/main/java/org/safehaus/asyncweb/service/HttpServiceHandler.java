@@ -24,10 +24,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.mina.common.IoFilter;
-import org.apache.mina.filter.codec.http.DefaultHttpResponse;
-import org.apache.mina.filter.codec.http.HttpRequest;
-import org.apache.mina.filter.codec.http.HttpResponseStatus;
-import org.apache.mina.filter.codec.http.MutableHttpResponse;
+import org.apache.asyncweb.codec.HttpResponseStatus;
+import org.apache.asyncweb.codec.MutableHttpResponse;
+import org.apache.asyncweb.codec.DefaultHttpResponse;
+import org.apache.asyncweb.codec.HttpRequest;
 import org.safehaus.asyncweb.service.resolver.ServiceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,7 +160,7 @@ public class HttpServiceHandler implements HttpServiceFilter {
                     + "a resource");
         }
         MutableHttpResponse response = new DefaultHttpResponse();
-        response.setStatus(HttpResponseStatus.NOT_FOUND);
+        response.setStatus( HttpResponseStatus.NOT_FOUND);
         response.setStatusReasonPhrase(request.getRequestUri().toString());
         context.commitResponse(response);
     }

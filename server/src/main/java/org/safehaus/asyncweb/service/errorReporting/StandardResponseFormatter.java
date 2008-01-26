@@ -22,10 +22,10 @@ package org.safehaus.asyncweb.service.errorReporting;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.mina.common.IoBuffer;
-import org.apache.mina.filter.codec.http.HttpRequest;
-import org.apache.mina.filter.codec.http.HttpResponseStatus;
-import org.apache.mina.filter.codec.http.MutableHttpResponse;
-import org.apache.mina.filter.codec.http.HttpResponseStatus.Category;
+import org.apache.asyncweb.codec.MutableHttpResponse;
+import org.apache.asyncweb.codec.HttpResponseStatus.Category;
+import org.apache.asyncweb.codec.HttpRequest;
+import org.apache.asyncweb.codec.HttpResponseStatus;
 import org.safehaus.asyncweb.util.StringBundle;
 
 public class StandardResponseFormatter implements ErrorResponseFormatter {
@@ -52,7 +52,7 @@ public class StandardResponseFormatter implements ErrorResponseFormatter {
         return shouldFormat;
     }
 
-    private void doFormat(HttpRequest request, MutableHttpResponse response) {
+    private void doFormat( HttpRequest request, MutableHttpResponse response) {
         StringBuilder html = new StringBuilder(1024);
         html.append("<html><head><title>");
         html.append("AsyncWeb Server - ");
@@ -99,7 +99,7 @@ public class StandardResponseFormatter implements ErrorResponseFormatter {
         html.append("<td>").append(info).append("</td>");
     }
 
-    private String getErrorMessage(MutableHttpResponse response) {
+    private String getErrorMessage( MutableHttpResponse response) {
         int responseCode = response.getStatus().getCode();
         String errorMessage = response.getStatusReasonPhrase();
         if (errorMessage == null) {
