@@ -26,7 +26,7 @@
   </parent>
   <artifactId>asyncweb-examples</artifactId>
   <packaging>jar</packaging>
-  <name>Apache AsyncWeb Examples</name>
+  <name>Apache Asyncweb Examples</name>
 
   <build>
     <plugins>

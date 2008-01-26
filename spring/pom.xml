@@ -26,7 +26,7 @@
   </parent>
   <artifactId>asyncweb-spring</artifactId>
   <packaging>jar</packaging>
-  <name>Apache AsyncWeb Spring</name>
+  <name>Apache Asyncweb Spring</name>
 
   <dependencies>
     <dependency>
