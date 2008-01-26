@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.integration.spring;
+package org.apache.asyncweb.spring;
 
 import java.util.Iterator;
 import java.util.Map;
