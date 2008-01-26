@@ -19,7 +19,7 @@
  */
 package org.safehaus.asyncweb.service.resolver;
 
-import org.apache.asyncweb.codec.HttpRequest;
+import org.apache.asyncweb.common.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

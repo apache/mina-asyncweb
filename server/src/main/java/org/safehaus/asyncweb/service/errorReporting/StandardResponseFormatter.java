@@ -22,10 +22,10 @@ package org.safehaus.asyncweb.service.errorReporting;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.mina.common.IoBuffer;
-import org.apache.asyncweb.codec.MutableHttpResponse;
-import org.apache.asyncweb.codec.HttpResponseStatus.Category;
-import org.apache.asyncweb.codec.HttpRequest;
-import org.apache.asyncweb.codec.HttpResponseStatus;
+import org.apache.asyncweb.common.MutableHttpResponse;
+import org.apache.asyncweb.common.HttpResponseStatus.Category;
+import org.apache.asyncweb.common.HttpRequest;
+import org.apache.asyncweb.common.HttpResponseStatus;
 import org.safehaus.asyncweb.util.StringBundle;
 
 public class StandardResponseFormatter implements ErrorResponseFormatter {

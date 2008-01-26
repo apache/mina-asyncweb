@@ -32,11 +32,11 @@ import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.common.IoSessionLogger;
 import org.apache.mina.common.WriteFuture;
-import org.apache.asyncweb.codec.HttpRequest;
-import org.apache.asyncweb.codec.HttpResponseStatus;
-import org.apache.asyncweb.codec.MutableHttpResponse;
-import org.apache.asyncweb.codec.DefaultHttpResponse;
-import org.apache.asyncweb.codec.HttpHeaderConstants;
+import org.apache.asyncweb.common.HttpRequest;
+import org.apache.asyncweb.common.HttpResponseStatus;
+import org.apache.asyncweb.common.MutableHttpResponse;
+import org.apache.asyncweb.common.DefaultHttpResponse;
+import org.apache.asyncweb.common.HttpHeaderConstants;
 
 public class HttpProtocolHandler implements IoHandler {
     private static final int CONTENT_PADDING = 0; // 101

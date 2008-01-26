@@ -21,12 +21,12 @@ package org.safehaus.asyncweb.service.context;
 
 import java.net.InetSocketAddress;
 
-import org.apache.asyncweb.codec.HttpHeaderConstants;
-import org.apache.asyncweb.codec.HttpRequest;
-import org.apache.asyncweb.codec.*;
-import org.apache.asyncweb.codec.HttpResponse;
-import org.apache.asyncweb.codec.HttpResponseStatus;
-import org.apache.asyncweb.codec.MutableHttpResponse;
+import org.apache.asyncweb.common.HttpHeaderConstants;
+import org.apache.asyncweb.common.HttpRequest;
+import org.apache.asyncweb.common.*;
+import org.apache.asyncweb.common.HttpResponse;
+import org.apache.asyncweb.common.HttpResponseStatus;
+import org.apache.asyncweb.common.MutableHttpResponse;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 import org.safehaus.asyncweb.service.HttpSession;
 import org.safehaus.asyncweb.service.ServiceContainer;

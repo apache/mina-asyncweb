@@ -22,7 +22,7 @@ package org.safehaus.asyncweb.example.lightweight;
 import java.net.InetSocketAddress;
 
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.asyncweb.codec.HttpCodecFactory;
+import org.apache.asyncweb.common.HttpCodecFactory;
 import org.apache.mina.transport.socket.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 

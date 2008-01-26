@@ -29,9 +29,9 @@ import javax.net.ssl.SSLContext;
 import org.apache.mina.common.ConnectFuture;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.asyncweb.codec.HttpCodecFactory;
-import org.apache.asyncweb.codec.HttpRequest;
-import org.apache.asyncweb.codec.MutableHttpRequest;
+import org.apache.asyncweb.common.HttpCodecFactory;
+import org.apache.asyncweb.common.HttpRequest;
+import org.apache.asyncweb.common.MutableHttpRequest;
 import org.apache.mina.filter.ssl.SslFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 

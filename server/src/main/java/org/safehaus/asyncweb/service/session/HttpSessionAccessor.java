@@ -19,7 +19,7 @@
  */
 package org.safehaus.asyncweb.service.session;
 
-import org.apache.asyncweb.codec.MutableHttpResponse;
+import org.apache.asyncweb.common.MutableHttpResponse;
 import org.safehaus.asyncweb.service.HttpServiceContext;
 import org.safehaus.asyncweb.service.HttpSession;
 

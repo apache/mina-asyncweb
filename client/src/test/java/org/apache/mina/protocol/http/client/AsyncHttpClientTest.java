@@ -25,11 +25,11 @@ import java.net.URI;
 import java.nio.charset.Charset;
 
 import org.apache.mina.common.IoBuffer;
-import org.apache.asyncweb.codec.HttpRequest;
-import org.apache.asyncweb.codec.HttpResponse;
-import org.apache.asyncweb.codec.MutableHttpRequest;
-import org.apache.asyncweb.codec.DefaultHttpRequest;
-import org.apache.asyncweb.codec.HttpMethod;
+import org.apache.asyncweb.common.HttpRequest;
+import org.apache.asyncweb.common.HttpResponse;
+import org.apache.asyncweb.common.MutableHttpRequest;
+import org.apache.asyncweb.common.DefaultHttpRequest;
+import org.apache.asyncweb.common.HttpMethod;
 
 public class AsyncHttpClientTest extends AbstractTest {
 

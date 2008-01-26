@@ -24,10 +24,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.mina.common.IoFilter;
-import org.apache.asyncweb.codec.HttpResponseStatus;
-import org.apache.asyncweb.codec.MutableHttpResponse;
-import org.apache.asyncweb.codec.DefaultHttpResponse;
-import org.apache.asyncweb.codec.HttpRequest;
+import org.apache.asyncweb.common.HttpResponseStatus;
+import org.apache.asyncweb.common.MutableHttpResponse;
+import org.apache.asyncweb.common.DefaultHttpResponse;
+import org.apache.asyncweb.common.HttpRequest;
 import org.safehaus.asyncweb.service.resolver.ServiceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
