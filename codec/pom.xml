@@ -19,7 +19,7 @@
 -->
 <project>
   <parent>
-    <artifactId>build</artifactId>
+    <artifactId>asyncweb-parent</artifactId>
     <groupId>org.apache.asyncweb</groupId>
     <version>0.9.0-SNAPSHOT</version>
   </parent>

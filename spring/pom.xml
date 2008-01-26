@@ -21,7 +21,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.asyncweb</groupId>
-    <artifactId>build</artifactId>
+    <artifactId>asyncweb-parent</artifactId>
     <version>0.9.0-SNAPSHOT</version>
   </parent>
   <artifactId>asyncweb-spring</artifactId>
