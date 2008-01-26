@@ -1,6 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<?xml version="1.0"?>
+<project>
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache</groupId>
@@ -67,7 +66,6 @@
     <symbolicName>${exportedPackage}</symbolicName>
   </properties>
 
-  
   <developers>
       <developer>
           <id>akarasulu</id>
@@ -136,24 +134,81 @@
   </modules>
 
   <build>
-      <plugins>
-          <plugin>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <configuration>
-                  <source>1.5</source>
-                  <target>1.5</target>
-              </configuration>
-          </plugin>
-          <plugin>
-              <artifactId>maven-release-plugin</artifactId>
-              <configuration>
-                  <tagBase>
-                      https://svn.safehaus.org/repos/asyncweb/tags
-                  </tagBase>
-              </configuration>
-          </plugin>
-      </plugins>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <encoding>UTF-8</encoding>
+          <source>1.5</source>
+          <target>1.5</target>
+          <debug>true</debug>
+          <optimize>true</optimize>
+          <showDeprecations>true</showDeprecations>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/Abstract*</exclude>
+            <exclude>**/*RegressionTest*</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+
+     <plugin>
+       <groupId>org.apache.maven.plugins</groupId>
+       <artifactId>maven-source-plugin</artifactId>
+       <executions>
+         <execution>
+           <id>attach-source</id>
+           <goals>
+             <goal>jar</goal>
+           </goals>
+         </execution>
+       </executions>
+     </plugin>
+
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+            <descriptor>release.xml</descriptor>
+          </descriptors>
+          <finalName>asyncweb-${pom.version}</finalName>
+          <appendAssemblyId>false</appendAssemblyId>
+          <tarLongFileMode>gnu</tarLongFileMode>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <tagBase>
+            https://svn.apache.org/repos/asf/mina/asyncweb/tags
+          </tagBase>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>1.0.0</version>
+        <inherited>true</inherited>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Bundle-SymbolicName>${symbolicName}</Bundle-SymbolicName>
+            <Export-Package>${exportedPackage}.*</Export-Package>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
+
 
   <dependencyManagement>
     <dependencies>
@@ -163,31 +218,31 @@
       <!-- ======= -->
 
       <dependency>
-        <groupId>org.safehaus.asyncweb</groupId>
+        <groupId>${groupId}</groupId>
         <artifactId>asyncweb-server</artifactId>
         <version>${pom.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.safehaus.asyncweb</groupId>
+        <groupId>${groupId}</groupId>
         <artifactId>asyncweb-spring</artifactId>
         <version>${pom.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.safehaus.asyncweb</groupId>
+        <groupId>${groupId}</groupId>
         <artifactId>asyncweb-examples</artifactId>
         <version>${pom.version}</version>
       </dependency>
 
        <dependency>
-        <groupId>org.apache.asyncweb</groupId>
+        <groupId>${groupId}</groupId>
         <artifactId>asyncweb-codec</artifactId>
         <version>${pom.version}</version>
       </dependency>
 
        <dependency>
-        <groupId>org.apache.asyncweb</groupId>
+        <groupId>${groupId}</groupId>
         <artifactId>asyncweb-client</artifactId>
         <version>${pom.version}</version>
       </dependency>

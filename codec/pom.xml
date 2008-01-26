@@ -1,22 +1,44 @@
 <?xml version="1.0"?>
+<!--
+        Licensed to the Apache Software Foundation (ASF) under one
+        or more contributor license agreements.  See the NOTICE file
+        distributed with this work for additional information
+        regarding copyright ownership.  The ASF licenses this file
+        to you under the Apache License, Version 2.0 (the
+        "License"); you may not use this file except in compliance
+        with the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+        Unless required by applicable law or agreed to in writing,
+        software distributed under the License is distributed on an
+        "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+        KIND, either express or implied.  See the License for the
+        specific language governing permissions and limitations
+        under the License.
+-->
 <project>
   <parent>
     <artifactId>build</artifactId>
-    <groupId>org.apache.mina</groupId>
-    <version>2.0.0-M1-SNAPSHOT</version>
+    <groupId>org.apache.asyncweb</groupId>
+    <version>0.9.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>mina-filter-codec-http</artifactId>
-  <name>Apache MINA HTTP Codec</name>
+  <artifactId>asyncweb-codec</artifactId>
+  <name>Apache Asyncweb Codec</name>
   <packaging>bundle</packaging>
+
   <properties>
-    <exportedPackage>${groupId}.filter.codec.http</exportedPackage>
+    <!-- exportedPackage>${groupId}.filter.codec.http</exportedPackage -->
+    <exportedPackage>org.apache.mina.filter.codec.http</exportedPackage>
   </properties>
+
   <dependencies>
     <dependency>
-      <groupId>${groupId}</groupId>
+      <groupId>org.apache.mina</groupId>
       <artifactId>mina-core</artifactId>
     </dependency>
+
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
