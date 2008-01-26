@@ -175,7 +175,7 @@
 		context with the HttpServiceHandler.
 	-->
 	<bean id="httpServiceAutoload"
-		class="org.safehaus.asyncweb.integration.spring.HttpServiceLoader">
+		class="org.apache.asyncweb.spring.HttpServiceLoader">
 
 		<property name="handler">
 			<ref bean="httpServiceHandler" />

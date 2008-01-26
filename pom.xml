@@ -13,7 +13,7 @@
   <groupId>org.apache.asyncweb</groupId>
   <version>0.9.0-SNAPSHOT</version>
   <artifactId>asyncweb-parent</artifactId>
-  <name>Apache Asyncweb Parent POM</name>
+  <name>Apache Asyncweb Parent</name>
   <packaging>pom</packaging>
 
   <url>http://mina.apache.org/asyncweb</url>
