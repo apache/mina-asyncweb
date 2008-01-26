@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.common;
+package org.apache.asyncweb.common;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
