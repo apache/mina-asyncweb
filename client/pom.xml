@@ -30,9 +30,7 @@
   <packaging>bundle</packaging>  
 
   <properties>
-    <!-- correct this after refactoring package names -->
-    <!-- exportedPackage>${groupId}.protocol.http.client</exportedPackage -->
-    <exportedPackage>org.apache.mina.protocol.http.client</exportedPackage>
+    <exportedPackage>${groupId}.client</exportedPackage>
   </properties>
 
   <dependencies>

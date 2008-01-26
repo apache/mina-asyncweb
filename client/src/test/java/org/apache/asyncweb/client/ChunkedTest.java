@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.mina.protocol.http.client;
+package org.apache.asyncweb.client;
 
 import junit.framework.TestCase;
 

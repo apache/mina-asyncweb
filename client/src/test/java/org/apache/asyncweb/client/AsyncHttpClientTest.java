@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.mina.protocol.http.client;
+package org.apache.asyncweb.client;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,6 +30,8 @@ import org.apache.asyncweb.common.HttpResponse;
 import org.apache.asyncweb.common.MutableHttpRequest;
 import org.apache.asyncweb.common.DefaultHttpRequest;
 import org.apache.asyncweb.common.HttpMethod;
+import org.apache.asyncweb.client.AsyncHttpClient;
+import org.apache.asyncweb.client.AsyncHttpClientCallback;
 
 public class AsyncHttpClientTest extends AbstractTest {
 
@@ -146,7 +148,8 @@ public class AsyncHttpClientTest extends AbstractTest {
 
     }
 
-    class TestCallback implements AsyncHttpClientCallback {
+    class TestCallback implements AsyncHttpClientCallback
+    {
 
         private boolean closed = false;
 
