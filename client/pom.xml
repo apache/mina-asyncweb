@@ -38,7 +38,7 @@
   <dependencies>
     <dependency>
       <groupId>${groupId}</groupId>
-      <artifactId>asyncweb-codec</artifactId>
+      <artifactId>asyncweb-common</artifactId>
     </dependency>
 
     <dependency>

@@ -24,12 +24,12 @@
     <version>0.9.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>asyncweb-codec</artifactId>
-  <name>Apache Asyncweb Codec</name>
+  <artifactId>asyncweb-common</artifactId>
+  <name>Apache Asyncweb Common</name>
   <packaging>bundle</packaging>
 
   <properties>
-    <exportedPackage>${groupId}.codec</exportedPackage>
+    <exportedPackage>${groupId}.common</exportedPackage>
   </properties>
 
   <dependencies>
