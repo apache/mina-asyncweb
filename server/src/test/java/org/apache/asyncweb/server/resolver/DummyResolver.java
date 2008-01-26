@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.service.filter.resolver;
+package org.apache.asyncweb.server.resolver;
 
 import java.util.HashMap;
 import java.util.Map;
