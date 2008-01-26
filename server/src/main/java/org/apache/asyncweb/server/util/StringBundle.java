@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.util;
+package org.apache.asyncweb.server.util;
 
 import java.text.MessageFormat;
 import java.util.HashMap;

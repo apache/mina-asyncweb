@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.asyncweb.server.HttpSession;
-import org.safehaus.asyncweb.util.TimedPermit;
+import org.apache.asyncweb.server.util.TimedPermit;
 
 /**
  * A basic <code>Session</code> implementation which holds session values

@@ -17,7 +17,9 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.util;
+package org.apache.asyncweb.server.util;
+
+import org.apache.asyncweb.server.util.PermitExpirationListener;
 
 /**
  * Issues permits for accessing objects for a limited period of time.
@@ -50,6 +52,6 @@ public interface TimedPermitIssuer {
      *
      * @param listener  The listener
      */
-    public void addPermitExpirationListener(PermitExpirationListener listener);
+    public void addPermitExpirationListener( PermitExpirationListener listener);
 
 }

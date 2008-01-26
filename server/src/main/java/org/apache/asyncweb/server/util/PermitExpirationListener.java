@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.util;
+package org.apache.asyncweb.server.util;
 
 /**
  * Something interested in receiving notifications when permits issued by a

@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.util;
+package org.apache.asyncweb.server.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +25,9 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.asyncweb.server.util.TimedPermitIssuer;
+import org.apache.asyncweb.server.util.PermitExpirationListener;
+import org.apache.asyncweb.server.util.TimedPermit;
 
 /**
  * A <code>TimedPermitIssuer</code> which stores all issued permits in a linked
@@ -38,7 +41,8 @@ import org.slf4j.LoggerFactory;
  * @author irvingd
  *
  */
-public class LinkedPermitIssuer implements TimedPermitIssuer {
+public class LinkedPermitIssuer implements TimedPermitIssuer
+{
 
     private static final Logger LOG = LoggerFactory
             .getLogger(LinkedPermitIssuer.class);

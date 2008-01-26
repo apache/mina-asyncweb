@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.asyncweb.server.HttpSession;
-import org.safehaus.asyncweb.util.LinkedPermitIssuer;
-import org.safehaus.asyncweb.util.PermitExpirationListener;
-import org.safehaus.asyncweb.util.TimedPermit;
-import org.safehaus.asyncweb.util.TimedPermitIssuer;
+import org.apache.asyncweb.server.util.LinkedPermitIssuer;
+import org.apache.asyncweb.server.util.TimedPermit;
+import org.apache.asyncweb.server.util.PermitExpirationListener;
+import org.apache.asyncweb.server.util.TimedPermitIssuer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -268,7 +268,8 @@ public class BasicSessionStore implements HttpSessionStore {
      * @author irvingd
      *
      */
-    private class TimeoutListener implements PermitExpirationListener {
+    private class TimeoutListener implements PermitExpirationListener
+    {
 
         /**
          * Invoked when a permit issued for a session expires

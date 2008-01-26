@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
+import org.apache.asyncweb.server.util.LinkedPermitIssuer;
+import org.apache.asyncweb.server.util.TimedPermit;
+import org.apache.asyncweb.server.util.PermitExpirationListener;
 
 /**
  * Tests <code>LinkedPermitIssuer</code>
@@ -148,7 +151,8 @@ public class LinkedPermitIssuerTest extends TestCase {
      *
      * @author irvingd
      */
-    private class MockListener implements PermitExpirationListener {
+    private class MockListener implements PermitExpirationListener
+    {
 
         private List<Object> expectedToExpire = new ArrayList<Object>();
 
