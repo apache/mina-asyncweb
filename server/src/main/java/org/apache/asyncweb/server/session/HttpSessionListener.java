@@ -17,39 +17,37 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.util;
+package org.apache.asyncweb.server.session;
 
-import junit.framework.Assert;
-
-import org.apache.asyncweb.server.HttpServiceFilter.NextFilter;
+import org.apache.asyncweb.server.HttpSession;
 
 /**
- * A simple <code>InvocationChain</code> which counts the
- * number of invocations made
+ * Receives notifications of session lifecycle events
  *
  * @author irvingd
  *
  */
-public class MockNextFilter implements NextFilter {
-
-    private int invokeCount;
+public interface HttpSessionListener {
 
     /**
-     * Simply updates the invoke count for this chain
-     */
-    public void invoke() {
-        ++invokeCount;
-    }
-
-    /**
-     * Asserts that a specified number of invocations have
-     * been made
+     * Invoked when a new session is created
      *
-     * @param expected  The expected invocation count
+     * @param session  The created session
      */
-    public void assertInvocationCount(int expected) {
-        Assert.assertEquals("Unexpected invocation count", expected,
-                invokeCount);
-    }
+    public void sessionCreated( HttpSession session);
+
+    /**
+     * Invoked when a session is destroyed before it expires
+     *
+     * @param session  The destroyed session
+     */
+    public void sessionDestroyed(HttpSession session);
+
+    /**
+     * Invoked when a session expires before being manually destroyed
+     *
+     * @param session  The expired session
+     */
+    public void sessionExpired(HttpSession session);
 
 }

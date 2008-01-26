@@ -17,39 +17,37 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.util;
+package org.apache.asyncweb.server.resolver;
 
-import junit.framework.Assert;
-
-import org.apache.asyncweb.server.HttpServiceFilter.NextFilter;
+import org.apache.asyncweb.common.HttpRequest;
 
 /**
- * A simple <code>InvocationChain</code> which counts the
- * number of invocations made
+ * A simple <code>ServiceResolver</code> which passes the full
+ * request URI as the service name, optionally removing any leading
+ * "/"
  *
  * @author irvingd
  *
  */
-public class MockNextFilter implements NextFilter {
+public class PassThruResolver implements ServiceResolver {
 
-    private int invokeCount;
+    private boolean removeLeadingSlash = true;
 
-    /**
-     * Simply updates the invoke count for this chain
-     */
-    public void invoke() {
-        ++invokeCount;
+    public String resolveService(HttpRequest request) {
+        if (request.getRequestUri().isAbsolute()) {
+            return null;
+        }
+
+        String path = request.getRequestUri().getPath();
+        int length = path.length();
+        if (removeLeadingSlash && length > 0 && path.charAt(0) == '/') {
+            path = length > 1 ? path.substring(1) : "";
+        }
+        return path;
     }
 
-    /**
-     * Asserts that a specified number of invocations have
-     * been made
-     *
-     * @param expected  The expected invocation count
-     */
-    public void assertInvocationCount(int expected) {
-        Assert.assertEquals("Unexpected invocation count", expected,
-                invokeCount);
+    public void setRemoveLeadingSlash(boolean removeLeadingSlash) {
+        this.removeLeadingSlash = removeLeadingSlash;
     }
 
 }

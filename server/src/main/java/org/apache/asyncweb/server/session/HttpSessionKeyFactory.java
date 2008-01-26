@@ -17,39 +17,29 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.util;
-
-import junit.framework.Assert;
-
-import org.apache.asyncweb.server.HttpServiceFilter.NextFilter;
+package org.apache.asyncweb.server.session;
 
 /**
- * A simple <code>InvocationChain</code> which counts the
- * number of invocations made
+ * A factory for creating Session keys.
+ * <code>SessionKeyFactory</code> implementations should make a best effort to:
+ * <ul>
+ *   <li>Avoid the generation of two keys <i>k(1), k(2)</i>
+ *       such that <i>k(1) == k(2)</i></li>
+ *   <li>Avoid the generation of a key <i>k</i> such that an adversary can
+ *       make an informed guess of the content of any other key created by this factory
+ *       at any time in the future</li>
+ * </ul>
  *
  * @author irvingd
  *
  */
-public class MockNextFilter implements NextFilter {
-
-    private int invokeCount;
+public interface HttpSessionKeyFactory {
 
     /**
-     * Simply updates the invoke count for this chain
-     */
-    public void invoke() {
-        ++invokeCount;
-    }
-
-    /**
-     * Asserts that a specified number of invocations have
-     * been made
+     * Returns a new session key String
      *
-     * @param expected  The expected invocation count
+     * @return  The session key
      */
-    public void assertInvocationCount(int expected) {
-        Assert.assertEquals("Unexpected invocation count", expected,
-                invokeCount);
-    }
+    public String createSessionKey();
 
 }

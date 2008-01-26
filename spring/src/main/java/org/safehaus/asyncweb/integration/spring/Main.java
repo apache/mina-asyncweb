@@ -23,8 +23,8 @@ import java.io.File;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.safehaus.asyncweb.service.ContainerLifecycleException;
-import org.safehaus.asyncweb.service.ServiceContainer;
+import org.apache.asyncweb.server.ContainerLifecycleException;
+import org.apache.asyncweb.server.ServiceContainer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
@@ -85,7 +85,7 @@ public class Main {
         String[] configs = new String[] { configDir + "conf/AsyncWeb.xml",
                 configDir + "conf/" + serviceConfigName + "/*.xml" };
         ApplicationContext ctx = new FileSystemXmlApplicationContext(configs);
-        ServiceContainer container = (ServiceContainer) ctx
+        ServiceContainer container = ( ServiceContainer ) ctx
                 .getBean("container");
         try {
             container.start();

@@ -17,39 +17,36 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.util;
-
-import junit.framework.Assert;
-
-import org.apache.asyncweb.server.HttpServiceFilter.NextFilter;
+package org.apache.asyncweb.server;
 
 /**
- * A simple <code>InvocationChain</code> which counts the
- * number of invocations made
+ * Exception thrown when a problem is encountered whilst transitioning
+ * a <code>ServiceContainer</code> through its lifecycle
  *
  * @author irvingd
  *
  */
-public class MockNextFilter implements NextFilter {
+public class ContainerLifecycleException extends Exception {
 
-    private int invokeCount;
+    private static final long serialVersionUID = 3257564018624574256L;
 
     /**
-     * Simply updates the invoke count for this chain
+     * Constructs with a description of the problem
+     *
+     * @param desc  description of the problem
      */
-    public void invoke() {
-        ++invokeCount;
+    public ContainerLifecycleException(String desc) {
+        super(desc);
     }
 
     /**
-     * Asserts that a specified number of invocations have
-     * been made
+     * Constructs with a description and a root cause
      *
-     * @param expected  The expected invocation count
+     * @param desc   description of the problem
+     * @param cause  the root cause
      */
-    public void assertInvocationCount(int expected) {
-        Assert.assertEquals("Unexpected invocation count", expected,
-                invokeCount);
+    public ContainerLifecycleException(String desc, Throwable cause) {
+        super(desc, cause);
     }
 
 }

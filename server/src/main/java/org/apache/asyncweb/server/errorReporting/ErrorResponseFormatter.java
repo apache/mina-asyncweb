@@ -17,39 +17,25 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.util;
+package org.apache.asyncweb.server.errorReporting;
 
-import junit.framework.Assert;
-
-import org.apache.asyncweb.server.HttpServiceFilter.NextFilter;
+import org.apache.asyncweb.common.HttpRequest;
+import org.apache.asyncweb.common.MutableHttpResponse;
 
 /**
- * A simple <code>InvocationChain</code> which counts the
- * number of invocations made
+ * Formats error responses to include a descriptive body where appropriate
  *
  * @author irvingd
  *
  */
-public class MockNextFilter implements NextFilter {
-
-    private int invokeCount;
+public interface ErrorResponseFormatter {
 
     /**
-     * Simply updates the invoke count for this chain
-     */
-    public void invoke() {
-        ++invokeCount;
-    }
-
-    /**
-     * Asserts that a specified number of invocations have
-     * been made
+     * Applies any appropriate formatting to a <code>Response</code> based on its
+     * response status code
      *
-     * @param expected  The expected invocation count
+     * @param response  The response to format
      */
-    public void assertInvocationCount(int expected) {
-        Assert.assertEquals("Unexpected invocation count", expected,
-                invokeCount);
-    }
+    public void formatResponse(HttpRequest request, MutableHttpResponse response);
 
 }

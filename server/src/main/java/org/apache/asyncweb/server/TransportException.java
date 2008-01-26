@@ -17,39 +17,18 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.util;
+package org.apache.asyncweb.server;
 
-import junit.framework.Assert;
+public class TransportException extends Exception {
 
-import org.apache.asyncweb.server.HttpServiceFilter.NextFilter;
+    private static final long serialVersionUID = 3258132466186270517L;
 
-/**
- * A simple <code>InvocationChain</code> which counts the
- * number of invocations made
- *
- * @author irvingd
- *
- */
-public class MockNextFilter implements NextFilter {
-
-    private int invokeCount;
-
-    /**
-     * Simply updates the invoke count for this chain
-     */
-    public void invoke() {
-        ++invokeCount;
+    public TransportException(String description) {
+        super(description);
     }
 
-    /**
-     * Asserts that a specified number of invocations have
-     * been made
-     *
-     * @param expected  The expected invocation count
-     */
-    public void assertInvocationCount(int expected) {
-        Assert.assertEquals("Unexpected invocation count", expected,
-                invokeCount);
+    public TransportException(String description, Throwable cause) {
+        super(description, cause);
     }
 
 }

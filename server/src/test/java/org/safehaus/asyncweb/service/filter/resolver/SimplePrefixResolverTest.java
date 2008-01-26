@@ -27,7 +27,7 @@ import junit.framework.TestCase;
 import org.apache.asyncweb.common.DefaultHttpRequest;
 import org.apache.asyncweb.common.HttpRequest;
 import org.apache.asyncweb.common.MutableHttpRequest;
-import org.safehaus.asyncweb.service.resolver.SimplePrefixResolver;
+import org.apache.asyncweb.server.resolver.SimplePrefixResolver;
 
 /**
  * Tests <code>SimplePrefixResolver</code>

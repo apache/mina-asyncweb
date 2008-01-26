@@ -17,39 +17,10 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.util;
+package org.apache.asyncweb.server.pipeline;
 
-import junit.framework.Assert;
+import org.apache.asyncweb.server.HttpServiceContext;
 
-import org.apache.asyncweb.server.HttpServiceFilter.NextFilter;
-
-/**
- * A simple <code>InvocationChain</code> which counts the
- * number of invocations made
- *
- * @author irvingd
- *
- */
-public class MockNextFilter implements NextFilter {
-
-    private int invokeCount;
-
-    /**
-     * Simply updates the invoke count for this chain
-     */
-    public void invoke() {
-        ++invokeCount;
-    }
-
-    /**
-     * Asserts that a specified number of invocations have
-     * been made
-     *
-     * @param expected  The expected invocation count
-     */
-    public void assertInvocationCount(int expected) {
-        Assert.assertEquals("Unexpected invocation count", expected,
-                invokeCount);
-    }
-
+public interface RequestPipelineListener {
+    public void responseReleased( HttpServiceContext context);
 }

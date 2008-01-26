@@ -17,39 +17,32 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.util;
+package org.apache.asyncweb.server.resolver;
 
-import junit.framework.Assert;
-
-import org.apache.asyncweb.server.HttpServiceFilter.NextFilter;
+import org.apache.asyncweb.common.HttpRequest;
 
 /**
- * A simple <code>InvocationChain</code> which counts the
- * number of invocations made
+ * Resolves the name of the <code>HttpService</code> to be used to
+ * service a request.
  *
  * @author irvingd
  *
  */
-public class MockNextFilter implements NextFilter {
-
-    private int invokeCount;
+public interface ServiceResolver {
 
     /**
-     * Simply updates the invoke count for this chain
-     */
-    public void invoke() {
-        ++invokeCount;
-    }
-
-    /**
-     * Asserts that a specified number of invocations have
-     * been made
+     * Determines the name of the <code>HttpService</code> to be employed
+     * to service a given <code>HttpRequest</code>.<br/>
      *
-     * @param expected  The expected invocation count
+     * If no service can be resolved for the specified request, this method
+     * should return <code>null</code>.
+     *
+     * @param request  The request for which a service name is required
+     * @return         The name of the <code>HttpService</code> which
+     *                 should be used to service the request, or
+     *                 <code>null</code> if no appropriate service can be
+     *                 found
      */
-    public void assertInvocationCount(int expected) {
-        Assert.assertEquals("Unexpected invocation count", expected,
-                invokeCount);
-    }
+    public String resolveService(HttpRequest request);
 
 }

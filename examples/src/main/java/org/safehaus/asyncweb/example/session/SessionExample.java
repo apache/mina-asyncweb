@@ -26,9 +26,9 @@ import java.nio.charset.Charset;
 import org.apache.mina.common.IoBuffer;
 import org.apache.asyncweb.common.DefaultHttpResponse;
 import org.apache.asyncweb.common.MutableHttpResponse;
-import org.safehaus.asyncweb.service.HttpService;
-import org.safehaus.asyncweb.service.HttpServiceContext;
-import org.safehaus.asyncweb.service.HttpSession;
+import org.apache.asyncweb.server.HttpService;
+import org.apache.asyncweb.server.HttpServiceContext;
+import org.apache.asyncweb.server.HttpSession;
 
 /**
  * A very simple example which demonstrates session usage
@@ -36,7 +36,8 @@ import org.safehaus.asyncweb.service.HttpSession;
  * @author irvingd
  *
  */
-public class SessionExample implements HttpService {
+public class SessionExample implements HttpService
+{
 
     private static final String COUNT_PROPERTY = "accessCount";
 
@@ -105,7 +106,7 @@ public class SessionExample implements HttpService {
         }
     }
 
-    private boolean checkDestroy(HttpServiceContext context, PrintWriter writer) {
+    private boolean checkDestroy( HttpServiceContext context, PrintWriter writer) {
         boolean foundParam = false;
         if (context.getRequest().containsParameter(DESTROY_PARAM)) {
             foundParam = true;

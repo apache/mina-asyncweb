@@ -17,39 +17,29 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.util;
+package org.apache.asyncweb.server.context;
 
-import junit.framework.Assert;
-
-import org.apache.asyncweb.server.HttpServiceFilter.NextFilter;
+import org.apache.asyncweb.common.HttpResponse;
+import org.apache.asyncweb.server.HttpServiceContext;
 
 /**
- * A simple <code>InvocationChain</code> which counts the
- * number of invocations made
+ * Defines a strategy for deciding whether a connection should
+ * remain open after a response has been handled
  *
  * @author irvingd
  *
  */
-public class MockNextFilter implements NextFilter {
-
-    private int invokeCount;
+public interface KeepAliveStrategy {
 
     /**
-     * Simply updates the invoke count for this chain
-     */
-    public void invoke() {
-        ++invokeCount;
-    }
-
-    /**
-     * Asserts that a specified number of invocations have
-     * been made
+     * Determines whether a connection should remain open after a
+     * response has been handled
      *
-     * @param expected  The expected invocation count
+     * @param context   The context to check
+     * @param response  The response to check
+     * @return          <code>true</code> iff a connection should
+     *                  remain open after processing the specified response
      */
-    public void assertInvocationCount(int expected) {
-        Assert.assertEquals("Unexpected invocation count", expected,
-                invokeCount);
-    }
+    public boolean keepAlive( HttpServiceContext context, HttpResponse response);
 
 }

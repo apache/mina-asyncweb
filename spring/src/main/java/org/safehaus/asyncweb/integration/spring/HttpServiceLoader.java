@@ -22,8 +22,8 @@ package org.safehaus.asyncweb.integration.spring;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.safehaus.asyncweb.service.HttpService;
-import org.safehaus.asyncweb.service.HttpServiceHandler;
+import org.apache.asyncweb.server.HttpService;
+import org.apache.asyncweb.server.HttpServiceHandler;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -38,7 +38,7 @@ public class HttpServiceLoader implements ApplicationContextAware {
 
     private HttpServiceHandler handler;
 
-    public void setHandler(HttpServiceHandler httpServiceHandler) {
+    public void setHandler( HttpServiceHandler httpServiceHandler) {
         this.handler = httpServiceHandler;
     }
 

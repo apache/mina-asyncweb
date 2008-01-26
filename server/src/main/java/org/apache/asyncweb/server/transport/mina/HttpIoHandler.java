@@ -17,39 +17,18 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.util;
+package org.apache.asyncweb.server.transport.mina;
 
-import junit.framework.Assert;
+import org.apache.mina.common.IoHandler;
+import org.apache.asyncweb.server.ServiceContainer;
 
-import org.apache.asyncweb.server.HttpServiceFilter.NextFilter;
-
-/**
- * A simple <code>InvocationChain</code> which counts the
- * number of invocations made
- *
- * @author irvingd
- *
- */
-public class MockNextFilter implements NextFilter {
-
-    private int invokeCount;
+public interface HttpIoHandler extends IoHandler {
 
     /**
-     * Simply updates the invoke count for this chain
-     */
-    public void invoke() {
-        ++invokeCount;
-    }
-
-    /**
-     * Asserts that a specified number of invocations have
-     * been made
+     * Associates this handler with the container it should dispatch requests
+     * to
      *
-     * @param expected  The expected invocation count
+     * @param container  The associated container
      */
-    public void assertInvocationCount(int expected) {
-        Assert.assertEquals("Unexpected invocation count", expected,
-                invokeCount);
-    }
-
+    void setContainer( ServiceContainer container);
 }

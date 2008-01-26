@@ -17,39 +17,34 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.util;
+package org.apache.asyncweb.server.session;
 
-import junit.framework.Assert;
-
-import org.apache.asyncweb.server.HttpServiceFilter.NextFilter;
+import org.apache.asyncweb.common.HttpRequest;
+import org.apache.asyncweb.common.MutableHttpResponse;
 
 /**
- * A simple <code>InvocationChain</code> which counts the
- * number of invocations made
+ * A strategy for encoding / decoding session keys information to / from
+ * requests.
  *
  * @author irvingd
  *
  */
-public class MockNextFilter implements NextFilter {
-
-    private int invokeCount;
+public interface HttpSessionIdentifier {
 
     /**
-     * Simply updates the invoke count for this chain
-     */
-    public void invoke() {
-        ++invokeCount;
-    }
-
-    /**
-     * Asserts that a specified number of invocations have
-     * been made
+     * Attempts to extract a session key from a specified request.
      *
-     * @param expected  The expected invocation count
+     * @param request  The request from which to extract a session key
+     * @return         The extracted key, or <code>null</code> if the request
+     *                 does not contain a session key
      */
-    public void assertInvocationCount(int expected) {
-        Assert.assertEquals("Unexpected invocation count", expected,
-                invokeCount);
-    }
+    public String getSessionKey(HttpRequest request);
 
+    /**
+     * Adds a session key to the specified response
+     *
+     * @param key      The session key
+     * @param response  The response
+     */
+    public void addSessionKey(String key, MutableHttpResponse response);
 }

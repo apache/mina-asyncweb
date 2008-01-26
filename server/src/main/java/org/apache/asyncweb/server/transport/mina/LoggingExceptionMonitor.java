@@ -17,39 +17,27 @@
  *  under the License.
  *
  */
-package org.safehaus.asyncweb.util;
+package org.apache.asyncweb.server.transport.mina;
 
-import junit.framework.Assert;
-
-import org.apache.asyncweb.server.HttpServiceFilter.NextFilter;
+import org.apache.mina.common.ExceptionMonitor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * A simple <code>InvocationChain</code> which counts the
- * number of invocations made
+ * An <code>ExceptionMonitor</code> which simply logs exceptions.
  *
  * @author irvingd
  *
  */
-public class MockNextFilter implements NextFilter {
+class LoggingExceptionMonitor extends ExceptionMonitor {
 
-    private int invokeCount;
+    private static final Logger LOG = LoggerFactory
+            .getLogger(LoggingExceptionMonitor.class);
 
-    /**
-     * Simply updates the invoke count for this chain
-     */
-    public void invoke() {
-        ++invokeCount;
+    @Override
+    public void exceptionCaught(Throwable e) {
+        if (LOG.isWarnEnabled()) {
+            LOG.warn("NIOTransport encountered exception.", e);
+        }
     }
-
-    /**
-     * Asserts that a specified number of invocations have
-     * been made
-     *
-     * @param expected  The expected invocation count
-     */
-    public void assertInvocationCount(int expected) {
-        Assert.assertEquals("Unexpected invocation count", expected,
-                invokeCount);
-    }
-
 }

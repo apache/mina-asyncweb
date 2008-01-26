@@ -29,10 +29,11 @@ import org.apache.asyncweb.common.MutableHttpResponse;
 import org.apache.asyncweb.common.DefaultCookie;
 import org.apache.asyncweb.common.DefaultHttpResponse;
 import org.apache.asyncweb.common.*;
-import org.safehaus.asyncweb.service.HttpService;
-import org.safehaus.asyncweb.service.HttpServiceContext;
+import org.apache.asyncweb.server.HttpService;
+import org.apache.asyncweb.server.HttpServiceContext;
 
-public class CookieExample implements HttpService {
+public class CookieExample implements HttpService
+{
 
     private static final String ADD_COOKIE_NAME = "cookieName";
 

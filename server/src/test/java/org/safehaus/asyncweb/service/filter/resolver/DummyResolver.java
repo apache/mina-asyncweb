@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.asyncweb.common.HttpRequest;
-import org.safehaus.asyncweb.service.resolver.ServiceResolver;
+import org.apache.asyncweb.server.resolver.ServiceResolver;
 
 /**
  * A simple <code>ServiceResolver</code> which allows mappings

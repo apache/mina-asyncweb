@@ -24,7 +24,7 @@
 	<!-- A NIO based HTTP Transport -->
 
 	<bean id="mina-transport"
-		class="org.safehaus.asyncweb.service.transport.mina.MinaTransport">
+		class="org.apache.asyncweb.server.transport.mina.MinaTransport">
 
 		<!--
 			This property sets the port listened on for new connections
@@ -51,7 +51,7 @@
 		-->
 		<property name="ioHandler">
 			<bean
-				class="org.safehaus.asyncweb.service.transport.mina.DefaultHttpIoHandler" />
+				class="org.apache.asyncweb.server.transport.mina.DefaultHttpIoHandler" />
 		</property>
 
 	</bean>
@@ -59,7 +59,7 @@
 	<!-- The service container -->
 
 	<bean id="container"
-		class="org.safehaus.asyncweb.service.BasicServiceContainer">
+		class="org.apache.asyncweb.server.BasicServiceContainer">
 
 		<!--
 			This property lists the service handlers to be employed by this
@@ -102,13 +102,13 @@
 				cookie session identification and a session store
 			-->
 			<bean
-				class="org.safehaus.asyncweb.service.session.DefaultSessionAccessor">
+				class="org.apache.asyncweb.server.session.DefaultSessionAccessor">
 				<!--
 					Employ a basic (in memory) session store with a 15 minute timeout
 				-->
 				<property name="sessionStore">
 					<bean
-						class="org.safehaus.asyncweb.service.session.BasicSessionStore">
+						class="org.apache.asyncweb.server.session.BasicSessionStore">
 						<constructor-arg type="long">
 							<value>900000</value>
 						</constructor-arg>
@@ -120,7 +120,7 @@
 							<list>
 								<!-- An example listener which logs lifecyle events. This can be removed if required -->
 								<bean
-									class="org.safehaus.asyncweb.service.session.LoggingSessionListener" />
+									class="org.apache.asyncweb.server.session.LoggingSessionListener" />
 							</list>
 						</property>
 
@@ -136,7 +136,7 @@
 	<!-- The HTTP Service Resolver -->
 
 	<bean id="httpServiceHandler"
-		class="org.safehaus.asyncweb.service.HttpServiceHandler">
+		class="org.apache.asyncweb.server.HttpServiceHandler">
 
 		<!-- 
 			This property controls the service resolver employed by the 
@@ -148,17 +148,17 @@
 		-->
 		<property name="serviceResolver">
 			<bean
-				class="org.safehaus.asyncweb.service.resolver.CompositeResolver">
+				class="org.apache.asyncweb.server.resolver.CompositeResolver">
 				<property name="resolvers">
 					<list>
 						<bean
-							class="org.safehaus.asyncweb.service.resolver.SimplePrefixResolver">
+							class="org.apache.asyncweb.server.resolver.SimplePrefixResolver">
 							<property name="uriPrefix">
 								<value>/service/</value>
 							</property>
 						</bean>
 						<bean
-							class="org.safehaus.asyncweb.service.resolver.PassThruResolver" />
+							class="org.apache.asyncweb.server.resolver.PassThruResolver" />
 					</list>
 				</property>
 			</bean>

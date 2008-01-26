@@ -33,8 +33,8 @@ import org.apache.asyncweb.common.HttpResponseStatus;
 import org.apache.asyncweb.common.MutableHttpResponse;
 import org.apache.asyncweb.common.Cookie;
 import org.apache.asyncweb.common.DefaultHttpResponse;
-import org.safehaus.asyncweb.service.HttpService;
-import org.safehaus.asyncweb.service.HttpServiceContext;
+import org.apache.asyncweb.server.HttpService;
+import org.apache.asyncweb.server.HttpServiceContext;
 
 /**
  * A simple <code>HttpService</code> which sends "hello world"
@@ -52,7 +52,7 @@ public class HelloWorldHttpService implements HttpService {
     /**
      * Sends the configured message as an HTTP response
      */
-    public void handleRequest(HttpServiceContext context) throws Exception {
+    public void handleRequest( HttpServiceContext context) throws Exception {
         MutableHttpResponse response = new DefaultHttpResponse();
 
         StringWriter buf = new StringWriter();
