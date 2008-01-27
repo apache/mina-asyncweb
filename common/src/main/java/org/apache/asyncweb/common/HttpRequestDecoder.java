@@ -19,24 +19,33 @@
  */
 package org.apache.asyncweb.common;
 
+
 import java.util.List;
 
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.apache.mina.filter.codec.statemachine.DecodingState;
 import org.apache.mina.filter.codec.statemachine.DecodingStateProtocolDecoder;
 
+
 /**
+ * An HttpRequest decoder.
+ *
  * @author The Apache MINA Project (dev@mina.apache.org)
  * @version $Rev$, $Date$
  */
-public class HttpRequestDecoder extends DecodingStateProtocolDecoder {
-    public HttpRequestDecoder() {
-        super(new HttpRequestDecodingState() {
+public class HttpRequestDecoder extends DecodingStateProtocolDecoder
+{
+    public HttpRequestDecoder()
+    {
+        super( new HttpRequestDecodingState()
+        {
             @Override
             protected DecodingState finishDecode(List<Object> childProducts,
-                    ProtocolDecoderOutput out) throws Exception {
-                for (Object m: childProducts) {
-                    out.write(m);
+                    ProtocolDecoderOutput out) throws Exception
+            {
+                for ( Object m: childProducts )
+                {
+                    out.write( m );
                 }
                 return null;
             }

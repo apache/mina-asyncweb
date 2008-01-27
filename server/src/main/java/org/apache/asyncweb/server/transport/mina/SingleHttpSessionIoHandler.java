@@ -19,6 +19,7 @@
  */
 package org.apache.asyncweb.server.transport.mina;
 
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
@@ -50,86 +51,91 @@ import org.apache.asyncweb.server.HttpServiceFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SingleHttpSessionIoHandler implements SingleSessionIoHandler {
 
-    private static final Logger LOG = LoggerFactory
-            .getLogger(SingleHttpSessionIoHandler.class);
+public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
+{
+    private static final Logger LOG = LoggerFactory.getLogger( SingleHttpSessionIoHandler.class );
 
-    /**
-     * The number of parsers we pre-allocate
-     */
-    //  private static final int DEFAULT_PARSERS = 5;
-    /**
-     * The default idle time
-     */
+    /** the default idle time */
     private static final int DEFAULT_IDLE_TIME = 30000;
 
-    /**
-     * Out default pipeline
-     */
+    /** out default pipeline */
     private static final int DEFAULT_PIPELINE = 100;
 
+    /** the HttpService container **/
     private final ServiceContainer container;
 
+    /** the session bound to this single session handler */
     protected final IoSession session;
 
+    /** the request pipeline */
     private final RequestPipeline pipeline;
 
+    /** the current context being processed */
     private HttpServiceContext currentContext;
 
+    /** idle time for request reads */
     private int readIdleTime = DEFAULT_IDLE_TIME;
 
-    public SingleHttpSessionIoHandler( ServiceContainer container, IoSession session) {
+
+    public SingleHttpSessionIoHandler( ServiceContainer container, IoSession session )
+    {
         this.container = container;
         this.session = session;
-        this.pipeline = new StandardRequestPipeline(DEFAULT_PIPELINE);
+        this.pipeline = new StandardRequestPipeline( DEFAULT_PIPELINE );
 
-        session.getConfig().setIdleTime(IdleStatus.READER_IDLE, readIdleTime);
-
-        session.getFilterChain().addLast("codec",
-                new ProtocolCodecFilter(new HttpCodecFactory()));
-
-        session.getFilterChain().addLast("converter", new ContextConverter());
-
-        session.getFilterChain().addLast("pipeline",
-                new RequestPipelineAdapter(pipeline));
+        session.getConfig().setIdleTime( IdleStatus.READER_IDLE, readIdleTime );
+        session.getFilterChain().addLast( "codec", new ProtocolCodecFilter( new HttpCodecFactory() ) );
+        session.getFilterChain().addLast( "converter", new ContextConverter() );
+        session.getFilterChain().addLast( "pipeline", new RequestPipelineAdapter( pipeline ) );
 
         int i = 0;
-        for (HttpServiceFilter serviceFilter : container.getServiceFilters()) {
-            session.getFilterChain().addLast("serviceFilter." + i++,
-                    new ServiceFilterAdapter(serviceFilter));
+        for ( HttpServiceFilter serviceFilter : container.getServiceFilters() )
+        {
+            session.getFilterChain().addLast( "serviceFilter." + i++, new ServiceFilterAdapter( serviceFilter ) );
         }
     }
 
-    public void sessionCreated() {
+
+    public void sessionCreated()
+    {
+        LOG.info( "Session created" );
     }
 
-    public void sessionOpened() {
-        LOG.info("Connection opened");
+
+    public void sessionOpened()
+    {
+        LOG.info( "Connection opened" );
     }
 
-    public void sessionClosed() {
-        LOG.info("Connection closed");
+
+    public void sessionClosed()
+    {
+        LOG.info( "Connection closed" );
     }
+
 
     /**
      * Invoked when this connection idles out.
      * If we are in the process of parsing a request, the current request
      * is rejected with a {@link HttpResponseStatus#REQUEST_TIMEOUT} response status.
-     *
      */
-    public void sessionIdle(IdleStatus idleType) {
-        if (session.getIdleCount(idleType) == 1) {
+    public void sessionIdle( IdleStatus idleType )
+    {
+        if ( session.getIdleCount( idleType ) == 1 )
+        {
             //      // FIXME currentRequest is always null now; we need to cooperate with a decoder.
             //      if (currentContext != null) {
             //        LOG.info("Read idled out while parsing request. Scheduling timeout response");
             //        handleReadFailure(currentContext, HttpResponseStatus.REQUEST_TIMEOUT, "Timeout while reading request");
             //      } else {
-            LOG
-                    .info("Idled with no current request. Scheduling closure when pipeline empties");
-            pipeline.runWhenEmpty(new Runnable() {
-                public void run() {
-                    LOG.info("Pipeline empty after idle. Closing session");
+            LOG.info( "Idled with no current request. Scheduling closure when pipeline empties" );
+
+            pipeline.runWhenEmpty( new Runnable()
+            {
+                public void run()
+                {
+                    LOG.info( "Pipeline empty after idle. Closing session" );
                     session.close();
                 }
             });
@@ -137,40 +143,57 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler {
         }
     }
 
-    public void exceptionCaught(Throwable cause) {
+
+    public void exceptionCaught( Throwable cause )
+    {
         MutableHttpResponse response = null;
-        if (cause instanceof ProtocolDecoderException) {
+
+        if ( cause instanceof ProtocolDecoderException )
+        {
             HttpResponseStatus status;
-            if (cause instanceof HttpRequestDecoderException) {
-                status = ((HttpRequestDecoderException) cause).getResponseStatus();
-            } else {
+
+            if ( cause instanceof HttpRequestDecoderException )
+            {
+                status = ( ( HttpRequestDecoderException ) cause ).getResponseStatus();
+            }
+            else
+            {
                 status = HttpResponseStatus.BAD_REQUEST;
             }
 
-            LOG.warn("Bad request:", cause);
+            LOG.warn( "Bad request:", cause );
 
             response = new DefaultHttpResponse();
-            response.setProtocolVersion(HttpVersion.HTTP_1_1);
-            response.setStatus(status);
-        } else if (cause instanceof IOException) {
-            LOG.warn("IOException on HTTP connection", cause);
-            session.close();
-        } else {
-            response = new DefaultHttpResponse();
-            response.setProtocolVersion(HttpVersion.HTTP_1_1);
-            response.setStatus(HttpResponseStatus.INTERNAL_SERVER_ERROR);
-            LOG.warn("Unexpected exception from a service.", cause);
+            response.setProtocolVersion( HttpVersion.HTTP_1_1 );
+            response.setStatus( status );
         }
-        if (response != null) {
+        else if ( cause instanceof IOException )
+        {
+            LOG.warn( "IOException on HTTP connection", cause );
+            session.close();
+        }
+        else
+        {
+            response = new DefaultHttpResponse();
+            response.setProtocolVersion( HttpVersion.HTTP_1_1 );
+            response.setStatus( HttpResponseStatus.INTERNAL_SERVER_ERROR );
+            LOG.error( "Unexpected exception from a service.", cause );
+        }
+
+        if ( response != null )
+        {
             HttpServiceContext context = this.currentContext;
-            if (context == null) {
-                context = createContext(new DefaultHttpRequest());
+            if ( context == null )
+            {
+                context = createContext( new DefaultHttpRequest() );
             }
-            context.commitResponse(response);
+            context.commitResponse( response );
         }
     }
 
-    public void messageReceived(Object message) {
+
+    public void messageReceived( Object message )
+    {
         // FIXME messageReceived invoked only when whole message is built.
 
         // When headers were built
@@ -179,25 +202,30 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler {
         // When body has been built
     }
 
+
     /**
      * Invoked when we fail to parse an incoming request.
      * We configure our parser to discard any further data received from the client,
      * and schedule a response with the appropriate failure code for the
      * current request
      *
-     * @param status  The status
-     * @param message Failure message
+     * @param context the service context
+     * @param status  the status
+     * @param message failure message
      */
-    private void handleReadFailure(HttpServiceContext context,
-            HttpResponseStatus status, String message) {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Failed to handle client request. Reason: " + status);
+    private void handleReadFailure( HttpServiceContext context, HttpResponseStatus status, String message )
+    {
+        if ( LOG.isInfoEnabled() )
+        {
+            LOG.info( "Failed to handle client request. Reason: " + status );
         }
+
         MutableHttpResponse response = new DefaultHttpResponse();
-        response.setStatusReasonPhrase(message);
-        response.setStatus(status);
-        context.commitResponse(response);
+        response.setStatusReasonPhrase( message );
+        response.setStatus( status );
+        context.commitResponse( response );
     }
+
 
     /**
      * Invoked when data wrote has been fully written.
@@ -208,83 +236,96 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler {
      * @param message   The marker provided when writing data. If this is
      *                 our closure marker, we schedule closure of the connection
      */
-    public void messageSent(Object message) {
+    public void messageSent( Object message )
+    {
     }
+
 
     /**
      * Sets the read idle time for all connections
      *
      * @param readIdleTime  The read idle time (seconds)
      */
-    public void setReadIdleTime(int readIdleTime) {
+    public void setReadIdleTime( int readIdleTime )
+    {
         this.readIdleTime = readIdleTime;
     }
 
-    protected HttpServiceContext createContext(HttpRequest request) {
-        return new DefaultHttpServiceContext(request);
+
+    protected HttpServiceContext createContext( HttpRequest request )
+    {
+        return new DefaultHttpServiceContext( request );
     }
 
-    private class ContextConverter extends IoFilterAdapter {
 
+    private class ContextConverter extends IoFilterAdapter
+    {
         @Override
-        public void filterWrite(NextFilter nextFilter, IoSession session,
-                WriteRequest writeRequest) throws Exception {
-            nextFilter.filterWrite(session, new DefaultWriteRequest(
-                    ((HttpServiceContext) writeRequest.getMessage())
+        public void filterWrite( NextFilter nextFilter, IoSession session, WriteRequest writeRequest ) throws Exception
+        {
+            nextFilter.filterWrite( session, new DefaultWriteRequest(
+                    ( ( HttpServiceContext ) writeRequest.getMessage() )
                             .getCommittedResponse(), writeRequest.getFuture()));
         }
 
         @Override
-        public void messageReceived(NextFilter nextFilter, IoSession session,
-                Object message) throws Exception {
+        public void messageReceived( NextFilter nextFilter, IoSession session, Object message ) throws Exception
+        {
             HttpRequest request = ( HttpRequest ) message;
-            HttpServiceContext context = createContext(request);
+            HttpServiceContext context = createContext( request );
             currentContext = context;
-            nextFilter.messageReceived(session, context);
+            nextFilter.messageReceived( session, context );
         }
     }
 
-    private class ServiceFilterAdapter extends IoFilterAdapter {
+
+    private class ServiceFilterAdapter extends IoFilterAdapter
+    {
         private final HttpServiceFilter filter;
 
-        public ServiceFilterAdapter(HttpServiceFilter filter) {
+        public ServiceFilterAdapter( HttpServiceFilter filter )
+        {
             this.filter = filter;
         }
 
         @Override
-        public void messageReceived(final NextFilter nextFilter,
-                final IoSession session, final Object message) throws Exception {
-            HttpServiceFilter.NextFilter nextFilterAdapter = new HttpServiceFilter.NextFilter() {
-                public void invoke() {
+        public void messageReceived( final NextFilter nextFilter,
+                                     final IoSession session, final Object message ) throws Exception
+        {
+            HttpServiceFilter.NextFilter nextFilterAdapter = new HttpServiceFilter.NextFilter()
+            {
+                public void invoke()
+                {
                     nextFilter.messageReceived(session, message);
                 }
             };
-            filter.handleRequest(nextFilterAdapter,
-                    (HttpServiceContext) message);
+            filter.handleRequest( nextFilterAdapter, ( HttpServiceContext ) message );
         }
 
         @Override
-        public void filterWrite(final NextFilter nextFilter,
-                final IoSession session, final WriteRequest writeRequest)
-                throws Exception {
-            HttpServiceFilter.NextFilter nextFilterAdapter = new HttpServiceFilter.NextFilter() {
-                public void invoke() {
-                    nextFilter.filterWrite(session, writeRequest);
+        public void filterWrite( final NextFilter nextFilter, final IoSession session, final WriteRequest writeRequest )
+                throws Exception
+        {
+            HttpServiceFilter.NextFilter nextFilterAdapter = new HttpServiceFilter.NextFilter()
+            {
+                public void invoke()
+                {
+                    nextFilter.filterWrite( session, writeRequest );
                 }
             };
 
-            HttpServiceContext context = (HttpServiceContext) writeRequest
-                    .getMessage();
-
-            filter.handleResponse(nextFilterAdapter, context);
+            HttpServiceContext context = ( HttpServiceContext ) writeRequest.getMessage();
+            filter.handleResponse( nextFilterAdapter, context );
         }
     }
 
-    private class RequestPipelineAdapter extends IoFilterAdapter {
 
+    private class RequestPipelineAdapter extends IoFilterAdapter
+    {
         private final RequestPipeline pipeline;
 
-        public RequestPipelineAdapter(final RequestPipeline pipeline) {
+        public RequestPipelineAdapter( final RequestPipeline pipeline )
+        {
             this.pipeline = pipeline;
         }
 
@@ -330,32 +371,39 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler {
         }
     }
 
-    private class DefaultHttpServiceContext extends AbstractHttpServiceContext {
+
+    private class DefaultHttpServiceContext extends AbstractHttpServiceContext
+    {
         private WriteFuture writeFuture;
 
-        private DefaultHttpServiceContext(HttpRequest request) {
-            super((InetSocketAddress) session.getRemoteAddress(), request,
-                    container);
+        private DefaultHttpServiceContext( HttpRequest request )
+        {
+            super( ( InetSocketAddress ) session.getRemoteAddress(), request, container );
         }
 
-        private WriteFuture getWriteFuture() {
+        private WriteFuture getWriteFuture()
+        {
             return writeFuture;
         }
 
-        private void setWriteFuture(WriteFuture writeFuture) {
-            if (!isResponseCommitted()) {
+        private void setWriteFuture( WriteFuture writeFuture )
+        {
+            if ( ! isResponseCommitted() )
+            {
                 throw new IllegalStateException();
             }
             this.writeFuture = writeFuture;
         }
 
         @Override
-        protected void doWrite(boolean requiresClosure) {
+        protected void doWrite( boolean requiresClosure )
+        {
             currentContext = null;
-            WriteFuture future = session.write(this);
-            if (requiresClosure) {
-                LOG.debug("Added CLOSE future listener.");
-                future.addListener(IoFutureListener.CLOSE);
+            WriteFuture future = session.write( this );
+            if ( requiresClosure )
+            {
+                LOG.debug( "Added CLOSE future listener." );
+                future.addListener( IoFutureListener.CLOSE );
             }
         }
     }

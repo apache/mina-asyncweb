@@ -19,16 +19,24 @@
  */
 package org.apache.asyncweb.server.transport.mina;
 
+
 import org.apache.mina.common.IoHandler;
 import org.apache.asyncweb.server.ServiceContainer;
 
-public interface HttpIoHandler extends IoHandler {
 
+/**
+ * IO handler extension for HTTP.
+ *
+ * @author The Apache MINA Project (dev@mina.apache.org)
+ * @version $Rev$, $Date$
+ */
+public interface HttpIoHandler extends IoHandler 
+{
     /**
      * Associates this handler with the container it should dispatch requests
-     * to
+     * to.
      *
-     * @param container  The associated container
+     * @param container the associated container
      */
-    void setContainer( ServiceContainer container);
+    void setContainer( ServiceContainer container );
 }

@@ -19,43 +19,57 @@
  */
 package org.apache.asyncweb.server.transport.mina;
 
+
 import org.apache.mina.common.IoSession;
 import org.apache.mina.handler.multiton.SingleSessionIoHandler;
 import org.apache.mina.handler.multiton.SingleSessionIoHandlerDelegate;
 import org.apache.mina.handler.multiton.SingleSessionIoHandlerFactory;
 import org.apache.asyncweb.server.ServiceContainer;
 
+
 /**
- * @author trustin
+ * The default HttpIoHandler used when one is not provided.
+ *
+ * @author The Apache MINA Project (dev@mina.apache.org)
+ * @version $Rev$, $Date$
  */
-public class DefaultHttpIoHandler extends SingleSessionIoHandlerDelegate
-        implements HttpIoHandler {
-
-    public DefaultHttpIoHandler() {
-        super(new Factory());
+public class DefaultHttpIoHandler extends SingleSessionIoHandlerDelegate implements HttpIoHandler
+{
+    public DefaultHttpIoHandler()
+    {
+        super( new Factory() );
     }
 
-    public ServiceContainer getContainer() {
-        return ((Factory) getFactory()).getContainer();
+
+    public ServiceContainer getContainer()
+    {
+        return ( ( Factory ) getFactory() ).getContainer();
     }
 
-    public void setContainer(ServiceContainer container) {
-        ((Factory) getFactory()).setContainer(container);
+
+    public void setContainer( ServiceContainer container )
+    {
+        ( ( Factory ) getFactory() ).setContainer( container );
     }
 
-    private static class Factory implements SingleSessionIoHandlerFactory {
+
+    private static class Factory implements SingleSessionIoHandlerFactory
+    {
         private ServiceContainer container;
 
-        public ServiceContainer getContainer() {
+        public ServiceContainer getContainer()
+        {
             return container;
         }
 
-        public void setContainer(ServiceContainer container) {
+        public void setContainer( ServiceContainer container )
+        {
             this.container = container;
         }
 
-        public SingleSessionIoHandler getHandler(IoSession session) {
-            return new SingleHttpSessionIoHandler(container, session);
+        public SingleSessionIoHandler getHandler( IoSession session )
+        {
+            return new SingleHttpSessionIoHandler( container, session );
         }
     }
 }

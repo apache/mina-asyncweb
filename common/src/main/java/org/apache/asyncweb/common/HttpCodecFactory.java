@@ -19,35 +19,58 @@
  */
 package org.apache.asyncweb.common;
 
+
 import org.apache.mina.common.IoAcceptor;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;
 import org.apache.mina.filter.codec.ProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolEncoder;
 
+
 /**
- * TODO HttpProtocolCodecFactory.
+ * A codec factory which creates new encoders and decoders for HTTP requests
+ * and responses, depending on the type of the IoService.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
  * @version $Rev$, $Date$
  */
-public class HttpCodecFactory implements ProtocolCodecFactory {
-
-    public HttpCodecFactory() {
-    }
-
-    public ProtocolEncoder getEncoder(IoSession session) throws Exception {
-        if (session.getService() instanceof IoAcceptor) {
+public class HttpCodecFactory implements ProtocolCodecFactory
+{
+    /**
+     * Gets an HttpResponseEncoder if the IoService is an acceptor for a
+     * server, or an HttpRequestEncoder if the IoService is a connector for a
+     * client.
+     *
+     * @see ProtocolCodecFactory#getEncoder(IoSession)
+     */
+    public ProtocolEncoder getEncoder( IoSession session ) throws Exception
+    {
+        if ( session.getService() instanceof IoAcceptor )
+        {
             return new HttpResponseEncoder();
-        } else {
+        }
+        else
+        {
             return new HttpRequestEncoder();
         }
     }
 
-    public ProtocolDecoder getDecoder(IoSession session) throws Exception {
-        if (session.getService() instanceof IoAcceptor) {
+
+    /**
+     * Gets an HttpRequestDecoder if the IoService is an acceptor for a
+     * server, or an HttpResponseDecoder if the IoService is a connector for a
+     * client.
+     *
+     * @see ProtocolCodecFactory#getDecoder(IoSession)
+     */
+    public ProtocolDecoder getDecoder( IoSession session ) throws Exception
+    {
+        if ( session.getService() instanceof IoAcceptor )
+        {
             return new HttpRequestDecoder();
-        } else {
+        }
+        else
+        {
             return new HttpResponseDecoder();
         }
     }
