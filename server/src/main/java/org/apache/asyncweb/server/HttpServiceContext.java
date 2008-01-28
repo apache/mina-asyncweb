@@ -19,39 +19,52 @@
  */
 package org.apache.asyncweb.server;
 
+
 import java.net.InetSocketAddress;
 
 import org.apache.asyncweb.common.HttpRequest;
 import org.apache.asyncweb.common.HttpResponse;
 import org.apache.asyncweb.common.HttpResponseStatus;
 
+
 /**
  * Provides conversational context between a HTTP client and a {@link HttpService}.
  *
- * @author trustin
+ * @author The Apache MINA Project (dev@mina.apache.org)
+ * @version $Rev$, $Date$
  */
-public interface HttpServiceContext {
-
+public interface HttpServiceContext
+{
     /**
      * Returns the socket address of the client (or last proxy).
+     *
+     * @return the socket address of the client (or last proxy)
      */
     InetSocketAddress getRemoteAddress();
 
+
     /**
      * Returns the request which is received from the client.
+     *
+     * @return the request from the client
      */
     HttpRequest getRequest();
 
+
     /**
      * Returns <tt>true</tt> if a response for the request is committed.
+     *
+     * @return true if the response has been committed, false otherwise
      */
     boolean isResponseCommitted();
+
 
     /**
      * @return  The <code>Response</code> committed to this <code>Request</code>,
      *          or <code>null</code> if no response has been comitted
      */
     HttpResponse getCommittedResponse();
+
 
     /**
      * Writes the specified response back to the client.
@@ -71,14 +84,17 @@ public interface HttpServiceContext {
      * @param  response  The response to provide
      * @return <code>true</code> if the response was accepted
      */
-    boolean commitResponse(HttpResponse response);
+    boolean commitResponse( HttpResponse response );
+
 
     /**
      * Commits a default response with a specified {@link HttpResponseStatus}.
      *
-     * @return        <code>true</code> if the response was accepted
+     * @param status the status to return
+     * @return <code>true</code> if the response was accepted
      */
-    boolean commitResponse(HttpResponseStatus status);
+    boolean commitResponse( HttpResponseStatus status );
+
 
     /**
      * Returns the {@link HttpSession} which is associated with the client.
@@ -87,6 +103,7 @@ public interface HttpServiceContext {
      * @return  The session associated with the client
      */
     HttpSession getSession();
+
 
     /**
      * Returns the <code>Session</code> associated with this request.
@@ -97,5 +114,11 @@ public interface HttpServiceContext {
      *                is associated with the client and <code>create</code> is
      *                <code>false</code>
      */
-    HttpSession getSession(boolean create);
+    HttpSession getSession( boolean create );
+
+
+    boolean addClientListener( HttpClientListener listener );
+
+
+    boolean removeClientListener( HttpClientListener listener );
 }

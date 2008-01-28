@@ -35,6 +35,10 @@ import org.apache.asyncweb.server.ServiceContainer;
  */
 public class DefaultHttpIoHandler extends SingleSessionIoHandlerDelegate implements HttpIoHandler
 {
+    /** the default idle time in seconds - 5 minutes */
+    public static final int DEFAULT_IDLE_TIME = 300;
+
+
     public DefaultHttpIoHandler()
     {
         super( new Factory() );
@@ -53,9 +57,16 @@ public class DefaultHttpIoHandler extends SingleSessionIoHandlerDelegate impleme
     }
 
 
+    public void setReadIdle( int idleTime )
+    {
+        ( ( Factory ) getFactory() ).setReadIdle( idleTime );
+    }
+
+
     private static class Factory implements SingleSessionIoHandlerFactory
     {
         private ServiceContainer container;
+        private int readIdleTime = DEFAULT_IDLE_TIME;
 
         public ServiceContainer getContainer()
         {
@@ -67,9 +78,17 @@ public class DefaultHttpIoHandler extends SingleSessionIoHandlerDelegate impleme
             this.container = container;
         }
 
+        public void setReadIdle( int idleTime )
+        {
+            this.readIdleTime = idleTime;
+        }
+
+
         public SingleSessionIoHandler getHandler( IoSession session )
         {
-            return new SingleHttpSessionIoHandler( container, session );
+            SingleHttpSessionIoHandler handler = new SingleHttpSessionIoHandler( container, session );
+            handler.setReadIdleTime( readIdleTime );
+            return handler;
         }
     }
 }

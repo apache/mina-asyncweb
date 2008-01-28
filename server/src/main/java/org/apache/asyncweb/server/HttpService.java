@@ -19,18 +19,18 @@
  */
 package org.apache.asyncweb.server;
 
+
 /**
  * An application-level HTTP request processor.
  *
- * @author irvingd
- *
+ * @author The Apache MINA Project (dev@mina.apache.org)
+ * @version $Rev$, $Date$
  */
-public interface HttpService {
+public interface HttpService
+{
+    void handleRequest( HttpServiceContext context ) throws Exception;
 
-    public void handleRequest(HttpServiceContext context) throws Exception;
+    void start();
 
-    public void start();
-
-    public void stop();
-
+    void stop();
 }

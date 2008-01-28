@@ -19,7 +19,9 @@
  */
 package org.apache.asyncweb.server.context;
 
+
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 
 import org.apache.asyncweb.common.HttpHeaderConstants;
 import org.apache.asyncweb.common.HttpRequest;
@@ -30,20 +32,21 @@ import org.apache.asyncweb.common.MutableHttpResponse;
 import org.apache.asyncweb.server.HttpServiceContext;
 import org.apache.asyncweb.server.HttpSession;
 import org.apache.asyncweb.server.ServiceContainer;
+import org.apache.asyncweb.server.HttpClientListener;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * A default implementation of {@link HttpServiceContext}.
  *
- * @author trustin
- * @version $Rev:167 $, $Date:2006-11-15 11:10:05 +0000 (수, 15 11월 2006) $
+ * @author The Apache MINA Project (dev@mina.apache.org)
+ * @version $Rev$, $Date$
  */
 public abstract class AbstractHttpServiceContext implements HttpServiceContext
 {
-
-    private final Logger log = LoggerFactory
-            .getLogger(AbstractHttpServiceContext.class);
+    private final Logger log = LoggerFactory.getLogger( AbstractHttpServiceContext.class );
 
     private final InetSocketAddress remoteAddress;
 
@@ -57,27 +60,40 @@ public abstract class AbstractHttpServiceContext implements HttpServiceContext
 
     private final ServiceContainer container;
 
-    public AbstractHttpServiceContext(InetSocketAddress remoteAddress,
-            HttpRequest request, ServiceContainer container) {
-        if (remoteAddress == null) {
-            throw new NullPointerException("remoteAddress");
+    private final ArrayList<HttpClientListener> listeners = new ArrayList<HttpClientListener>( 2 );
+
+
+
+    public AbstractHttpServiceContext( InetSocketAddress remoteAddress,
+                                       HttpRequest request, ServiceContainer container )
+    {
+        if ( remoteAddress == null )
+        {
+            throw new NullPointerException( "remoteAddress" );
         }
-        if (request == null) {
-            throw new NullPointerException("request");
+
+        if ( request == null )
+        {
+            throw new NullPointerException( "request" );
         }
-        if (container == null) {
-            throw new NullPointerException("container");
+
+        if ( container == null )
+        {
+            throw new NullPointerException( "container" );
         }
 
         this.remoteAddress = remoteAddress;
         this.request = request;
         this.container = container;
-        this.session = container.getSessionAccessor().getSession(this, false);
+        this.session = container.getSessionAccessor().getSession( this, false );
     }
 
-    public synchronized boolean isResponseCommitted() {
+
+    public synchronized boolean isResponseCommitted()
+    {
         return committedResponse != null;
     }
+
 
     /**
      * Commits a <code>HttpResponse</code> to this <code>Request</code>.
@@ -85,13 +101,13 @@ public abstract class AbstractHttpServiceContext implements HttpServiceContext
      * @param response  The response to commit
      * @return <code>true</code> iff the response was committed
      */
-    public boolean commitResponse(HttpResponse response) {
-        synchronized (this) {
-            if (isResponseCommitted()) {
-                if (log.isDebugEnabled()) {
-                    log
-                            .info("Request already comitted to a response. Disposing response");
-                }
+    public boolean commitResponse( HttpResponse response )
+    {
+        synchronized ( this )
+        {
+            if ( isResponseCommitted() )
+            {
+                log.info( "Request already comitted to a response. Disposing response" );
                 return false;
             }
 
@@ -99,83 +115,98 @@ public abstract class AbstractHttpServiceContext implements HttpServiceContext
         }
 
         // Add the session identifier if the session was newly created.
-        if (createdSession) {
-            container.getSessionAccessor().addSessionIdentifier(this,
-                    (MutableHttpResponse) response);
+        if ( createdSession )
+        {
+            container.getSessionAccessor().addSessionIdentifier( this, ( MutableHttpResponse ) response );
         }
 
         // Only parsed requests can be formatted.
-        if (getRequest().getMethod() != null) {
-            container.getErrorResponseFormatter().formatResponse(getRequest(),
-                    (MutableHttpResponse) response);
+        if ( getRequest().getMethod() != null )
+        {
+            container.getErrorResponseFormatter().formatResponse( getRequest(), ( MutableHttpResponse ) response );
         }
 
-        if (container.isSendServerHeader()) {
-            ((MutableHttpResponse) response).setHeader(
-                    HttpHeaderConstants.KEY_SERVER, "AsyncWeb");
+        if ( container.isSendServerHeader() )
+        {
+            ( ( MutableHttpResponse ) response ).setHeader( HttpHeaderConstants.KEY_SERVER, "AsyncWeb" );
         }
 
         // Normalize the response.
-        ((MutableHttpResponse) response).normalize(getRequest());
+        ( ( MutableHttpResponse ) response ).normalize( getRequest() );
 
         // Override connection header if needed.
-        if (!container.getKeepAliveStrategy().keepAlive(this, response)) {
-            ((MutableHttpResponse) response).setHeader(
-                    HttpHeaderConstants.KEY_CONNECTION,
-                    HttpHeaderConstants.VALUE_CLOSE);
+        if ( ! container.getKeepAliveStrategy().keepAlive( this, response ) )
+        {
+            ( ( MutableHttpResponse ) response ).setHeader( HttpHeaderConstants.KEY_CONNECTION,
+                    HttpHeaderConstants.VALUE_CLOSE );
         }
 
-        boolean requiresClosure = !HttpHeaderConstants.VALUE_KEEP_ALIVE
-                .equalsIgnoreCase(response
-                        .getHeader(HttpHeaderConstants.KEY_CONNECTION));
+        boolean requiresClosure = ! HttpHeaderConstants.VALUE_KEEP_ALIVE
+                .equalsIgnoreCase( response.getHeader(HttpHeaderConstants.KEY_CONNECTION ) );
 
-        if (requiresClosure && log.isDebugEnabled()) {
+        if ( requiresClosure && log.isDebugEnabled() )
+        {
             log.debug("Response status: " + response.getStatus());
             log.debug("Keep-alive strategy requires closure of "
                     + getRemoteAddress());
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Committing a response:");
-            log.debug("Status: " + response.getStatus() + ' '
-                    + response.getStatusReasonPhrase());
-            log.debug("Headers: " + response.getHeaders());
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Committing a response:" );
+            log.debug( "Status: " + response.getStatus() + ' ' + response.getStatusReasonPhrase() );
+            log.debug( "Headers: " + response.getHeaders() );
         }
 
-        doWrite(requiresClosure);
-
+        doWrite( requiresClosure );
         return true;
     }
 
-    public boolean commitResponse(HttpResponseStatus status) {
+
+    public boolean commitResponse( HttpResponseStatus status )
+    {
         MutableHttpResponse response = new DefaultHttpResponse();
-        response.setStatus(status);
-        return commitResponse(response);
+        response.setStatus( status );
+        return commitResponse( response );
     }
 
-    public synchronized HttpResponse getCommittedResponse() {
+
+    public synchronized HttpResponse getCommittedResponse()
+    {
         return committedResponse;
     }
 
-    public InetSocketAddress getRemoteAddress() {
+
+    public InetSocketAddress getRemoteAddress()
+    {
         return remoteAddress;
     }
 
-    public HttpRequest getRequest() {
+
+    public HttpRequest getRequest()
+    {
         return request;
     }
 
-    public HttpSession getSession() {
-        return getSession(true);
+
+    public HttpSession getSession()
+    {
+        return getSession( true );
     }
 
-    public synchronized HttpSession getSession(boolean create) {
-        if (session != null && !session.isValid()) {
+    
+    public synchronized HttpSession getSession( boolean create )
+    {
+        if ( session != null && ! session.isValid() )
+        {
             session = null;
         }
-        if (session == null) {
-            session = container.getSessionAccessor().getSession(this, create);
-            if (create) {
+
+        if ( session == null )
+        {
+            session = container.getSessionAccessor().getSession( this, create );
+            if ( create )
+            {
                 createdSession = true;
             }
         }
@@ -183,5 +214,50 @@ public abstract class AbstractHttpServiceContext implements HttpServiceContext
         return session;
     }
 
-    protected abstract void doWrite(boolean requiresClosure);
+
+    protected void fireClientDisconnected()
+    {
+        ArrayList<HttpClientListener> cloned;
+        synchronized( listeners )
+        {
+            //noinspection unchecked
+            cloned = ( ArrayList<HttpClientListener> ) listeners.clone();
+        }
+
+        for ( HttpClientListener listener : cloned )
+        {
+            listener.clientDisconnected( this );
+        }
+    }
+
+
+    protected void fireClientIdle( long idleTime, int idleCount )
+    {
+        ArrayList<HttpClientListener> cloned;
+        synchronized( listeners )
+        {
+            //noinspection unchecked
+            cloned = ( ArrayList<HttpClientListener> ) listeners.clone();
+        }
+
+        for ( HttpClientListener listener : cloned )
+        {
+            listener.clientIdle( this, idleTime, idleCount );
+        }
+    }
+
+
+    public boolean addClientListener( HttpClientListener listener )
+    {
+        return listeners.add( listener );
+    }
+
+
+    public boolean removeClientListener( HttpClientListener listener )
+    {
+        return listeners != null && listeners.remove( listener );
+    }
+
+
+    protected abstract void doWrite( boolean requiresClosure );
 }

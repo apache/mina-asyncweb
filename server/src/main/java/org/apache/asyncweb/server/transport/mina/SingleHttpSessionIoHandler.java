@@ -52,6 +52,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * The single session handler implementation.
+ *
+ * @author The Apache MINA Project (dev@mina.apache.org)
+ * @version $Rev$, $Date$
+ */
 public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
 {
     private static final Logger LOG = LoggerFactory.getLogger( SingleHttpSessionIoHandler.class );
@@ -72,7 +78,7 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
     private final RequestPipeline pipeline;
 
     /** the current context being processed */
-    private HttpServiceContext currentContext;
+    private DefaultHttpServiceContext currentContext;
 
     /** idle time for request reads */
     private int readIdleTime = DEFAULT_IDLE_TIME;
@@ -112,6 +118,11 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
     public void sessionClosed()
     {
         LOG.info( "Connection closed" );
+
+        if ( currentContext != null )
+        {
+            currentContext.fireClientDisconnected();
+        }
     }
 
 
@@ -129,8 +140,17 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
             //        LOG.info("Read idled out while parsing request. Scheduling timeout response");
             //        handleReadFailure(currentContext, HttpResponseStatus.REQUEST_TIMEOUT, "Timeout while reading request");
             //      } else {
-            LOG.info( "Idled with no current request. Scheduling closure when pipeline empties" );
 
+            if ( currentContext != null )
+            {
+                if ( IdleStatus.BOTH_IDLE == idleType || IdleStatus.READER_IDLE == idleType )
+                {
+                    currentContext.fireClientIdle( session.getLastReaderIdleTime(), session.getReaderIdleCount() );
+                }
+            }
+
+            // TODO - look further into this - it may present serious issues when dealing with HTTP/1.1 
+            LOG.info( "Idled with no current request. Scheduling closure when pipeline empties" );
             pipeline.runWhenEmpty( new Runnable()
             {
                 public void run()
@@ -249,10 +269,11 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
     public void setReadIdleTime( int readIdleTime )
     {
         this.readIdleTime = readIdleTime;
+        session.getConfig().setReaderIdleTime( readIdleTime );
     }
 
 
-    protected HttpServiceContext createContext( HttpRequest request )
+    protected DefaultHttpServiceContext createContext( HttpRequest request )
     {
         return new DefaultHttpServiceContext( request );
     }
@@ -272,9 +293,8 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
         public void messageReceived( NextFilter nextFilter, IoSession session, Object message ) throws Exception
         {
             HttpRequest request = ( HttpRequest ) message;
-            HttpServiceContext context = createContext( request );
-            currentContext = context;
-            nextFilter.messageReceived( session, context );
+            currentContext = createContext( request );
+            nextFilter.messageReceived( session, currentContext );
         }
     }
 
@@ -405,6 +425,18 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
                 LOG.debug( "Added CLOSE future listener." );
                 future.addListener( IoFutureListener.CLOSE );
             }
+        }
+
+
+        public void fireClientIdle( long idleTime, int idleCount )
+        {
+            super.fireClientIdle( idleTime, idleCount );
+        }
+        
+
+        public void fireClientDisconnected()
+        {
+            super.fireClientDisconnected();
         }
     }
 }

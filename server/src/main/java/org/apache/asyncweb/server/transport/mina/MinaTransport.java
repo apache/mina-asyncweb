@@ -46,14 +46,11 @@ import org.slf4j.LoggerFactory;
  */
 public class MinaTransport implements Transport
 {
-
-    private static final Logger LOG = LoggerFactory
-            .getLogger(MinaTransport.class);
+    private static final Logger LOG = LoggerFactory.getLogger( MinaTransport.class );
 
     private static final int DEFAULT_PORT = 9012;
 
-    private static final int DEFAULT_IO_THREADS = Runtime.getRuntime()
-            .availableProcessors();
+    private static final int DEFAULT_IO_THREADS = Runtime.getRuntime().availableProcessors();
 
     private static final int DEFAULT_EVENT_THREADS = 16;
 
@@ -216,7 +213,7 @@ public class MinaTransport implements Transport
         }
         finally
         {
-            if ( !success )
+            if ( ! success )
             {
                 acceptor.dispose();
                 acceptor = null;
