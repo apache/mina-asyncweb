@@ -49,10 +49,10 @@ import org.slf4j.LoggerFactory;
  * @author The Apache MINA Project (dev@mina.apache.org)
  * @version $Rev$, $Date$
  */
-abstract class HttpRequestDecodingState extends DecodingStateMachine {
+abstract class HttpRequestDecodingStateMachine extends DecodingStateMachine {
 
     private static final Logger LOG = LoggerFactory
-            .getLogger(HttpRequestDecodingState.class);
+            .getLogger(HttpRequestDecodingStateMachine.class);
 
     /**
      * The request we are building

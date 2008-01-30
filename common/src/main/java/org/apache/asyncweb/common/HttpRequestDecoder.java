@@ -37,7 +37,7 @@ public class HttpRequestDecoder extends DecodingStateProtocolDecoder
 {
     public HttpRequestDecoder()
     {
-        super( new HttpRequestDecodingState()
+        super( new HttpRequestDecodingStateMachine()
         {
             @Override
             protected DecodingState finishDecode(List<Object> childProducts,
