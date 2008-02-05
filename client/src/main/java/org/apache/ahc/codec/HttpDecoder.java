@@ -22,10 +22,12 @@ package org.apache.ahc.codec;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
-import java.util.Date;
 
 import org.apache.ahc.util.DateUtil;
 import org.apache.ahc.util.NameValuePair;
+import org.apache.asyncweb.common.Cookie;
+import org.apache.asyncweb.common.DefaultCookie;
+import org.apache.asyncweb.common.MutableCookie;
 import org.apache.mina.common.IoBuffer;
 
 /**
@@ -272,7 +274,7 @@ public class HttpDecoder {
      */
     public Cookie decodeCookie(String cookieStr) throws Exception {
 
-        Cookie cookie = null;
+        MutableCookie cookie = null;
 
         String pairs[] = cookieStr.split(";");
         for (int i = 0; i < pairs.length; i++) {
@@ -281,7 +283,7 @@ public class HttpDecoder {
 
             //First one is the cookie name/value pair
             if (i == 0) {
-                cookie = new Cookie(name, nameValue[1].trim());
+                cookie = new DefaultCookie(name, nameValue[1].trim());
                 continue;
             }
 
@@ -304,11 +306,14 @@ public class HttpDecoder {
 
             if (name.equalsIgnoreCase(COOKIE_MAX_AGE)) {
                 int age = Integer.parseInt(nameValue[1]);
-                cookie.setExpires(new Date(System.currentTimeMillis() + age * 1000L));
+                cookie.setMaxAge(age);
             }
 
             if (name.equalsIgnoreCase(COOKIE_EXPIRES)) {
-                cookie.setExpires(DateUtil.parseDate(nameValue[1]));
+            	long createdDate = System.currentTimeMillis();
+            	int age = (int)(DateUtil.parseDate(nameValue[1]).getTime() - createdDate) / 1000;
+            	cookie.setCreatedDate(createdDate);
+                cookie.setMaxAge(age);
             }
 
             if (name.equalsIgnoreCase(COOKIE_DOMAIN)) {

@@ -19,6 +19,7 @@
  */
 package org.apache.asyncweb.common;
 
+
 /**
  * A mutable {@link Cookie}.
  *
@@ -80,4 +81,12 @@ public interface MutableCookie extends Cookie {
      * Sets the comment of this cookie.  Comments are not supported by version 0 cookies.
      */
     void setComment(String comment);
+    
+    /**
+     * Sets the date the cookie was created.  This value is never sent over HTTP
+     * but is used by clients to calculate the expiration date of the cookie.
+     * 
+     * @param date  the date the cookie was created in milliseconds after Jan. 1, 1970.
+     */
+    void setCreatedDate(long date);
 }

@@ -81,4 +81,22 @@ public interface Cookie extends Serializable, Comparable<Cookie> {
      * @return <tt>null</tt> if no comment is specified
      */
     String getComment();
+    
+    /**
+     * Returns the date the cookie was create.  This value is not included in the HTTP
+     * header.  This is a convenience method for clients to determine when the cookie
+     * will expire.
+     * 
+     * @return  the date the cookie was created in milliseconds after Jan. 1, 1970
+     */
+    long getCreatedDate();
+    
+    /**
+     * Returns the date the expiration date of the cookie.  This value is calculated
+     * based on the the values returned by {@link #getMaxAge()} and
+     * {@link #getCreatedDate()}.
+     * 
+     * @return  the expiration date of the cookie in milliseconds after Jan. 1, 1970.
+     */
+    long getExpirationDate();
 }

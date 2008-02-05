@@ -210,12 +210,12 @@ public class ParameterFormatter {
     }
 
     /**
-     * Produces textual representaion of the attribute/value pair using
+     * Produces textual representation of the attribute/value pair using
      * formatting rules defined in RFC 2616
      *
      * @param param the parameter to be formatted
      *
-     * @return RFC 2616 conformant textual representaion of the
+     * @return RFC 2616 conformant textual representation of the
      * attribute/value pair
      */
     public String format(final NameValuePair param) {

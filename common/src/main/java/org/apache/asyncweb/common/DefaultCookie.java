@@ -19,6 +19,8 @@
  */
 package org.apache.asyncweb.common;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Default cookie implementation.
  *
@@ -44,19 +46,37 @@ public class DefaultCookie implements MutableCookie {
     private int version = 0;
 
     private int maxAge = -1;
+    
+    private long createdDate = System.currentTimeMillis();
 
     /**
-     * Constructor used to allow users to create new cookies to be sent
-     * back to the client.
+     * Creates a new cookie with a specified name.
      *
-     * @param name the name of the new cookie.
+     * @param name the name of the new cookie
      */
     public DefaultCookie(String name) {
         if (name == null) {
-            throw new NullPointerException("name");
+    		throw new IllegalArgumentException("name can NOT be null");
         }
 
         this.name = name;
+    }
+    
+    /**
+     * Creates a new cookie with a specified name and value.
+     * 
+     * @param name  the name of the new cookie
+     * @param value  the default value of the new cookie
+     */
+    public DefaultCookie(String name, String value) {
+    	if (name == null) {
+    		throw new IllegalArgumentException("name can NOT be null");
+    	}
+    	if (value == null) {
+    		throw new IllegalArgumentException("name can NOT be null");
+    	}
+    	this.name = name;
+    	this.value = value;
     }
 
     public String getComment() {
@@ -118,12 +138,36 @@ public class DefaultCookie implements MutableCookie {
     public String getName() {
         return name;
     }
-
-    @Override
-    public int hashCode() {
-        return getName().hashCode();
+    
+    public long getCreatedDate() {
+    	return createdDate;
     }
+    
+    public void setCreatedDate(long createdDate) {
+		this.createdDate = createdDate;
+	}
 
+    public long getExpirationDate() {
+    	return createdDate + TimeUnit.SECONDS.toMillis(maxAge);
+    }
+    
+    /**
+     * Builds the hash code of this object based on the <em>name</em>, <em>path</em>, and <em>domain</em> fields.
+     */
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((domain == null) ? 0 : domain.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((path == null) ? 0 : path.hashCode());
+		return result;
+	}
+
+    /**
+     * Determines the equality of this cookie to another Cookie object based on the <em>name</em>, <em>path</em>, and
+     * <em>domain</em> fields of the cookies. 
+     */
     @Override
     public boolean equals(Object o) {
         if (o == this) {

@@ -32,6 +32,7 @@ import org.apache.ahc.auth.AuthScope;
 import org.apache.ahc.auth.AuthState;
 import org.apache.ahc.util.EncodingUtil;
 import org.apache.ahc.util.NameValuePair;
+import org.apache.asyncweb.common.Cookie;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolEncoderAdapter;

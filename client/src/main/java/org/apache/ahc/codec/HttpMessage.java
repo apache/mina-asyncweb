@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.ahc.util.NameValuePair;
+import org.apache.asyncweb.common.Cookie;
 
 /**
  * The Class HttpMessage.  The base class for {@link HttpRequestMessage} and {@link HttpResponseMessage}.
