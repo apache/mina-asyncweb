@@ -111,11 +111,6 @@ public class HttpRequestMessage extends HttpMessage {
     private boolean followRedirects = true;
 
     /**
-     * The timeout handle.
-     */
-    private ScheduledFuture<?> timeoutHandle;
-
-    /**
      * The response future.
      */
     private volatile ResponseFuture responseFuture;
@@ -190,24 +185,6 @@ public class HttpRequestMessage extends HttpMessage {
      */
     public void setTimeOut(int timeOut) {
         this.timeOut = timeOut;
-    }
-
-    /**
-     * Gets the timeout handle.
-     *
-     * @return the timeout <code>ScheduledFuture</code> handle
-     */
-    protected ScheduledFuture<?> getTimeoutHandle() {
-        return timeoutHandle;
-    }
-
-    /**
-     * Sets the timeout handle.
-     *
-     * @param timeoutHandle the new <code>ScheduledFuture</code> timeout handle
-     */
-    protected void setTimeoutHandle(ScheduledFuture<?> timeoutHandle) {
-        this.timeoutHandle = timeoutHandle;
     }
 
     /**

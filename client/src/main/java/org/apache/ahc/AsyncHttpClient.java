@@ -26,7 +26,6 @@ import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ScheduledExecutorService;
 
 import javax.net.ssl.SSLContext;
 
@@ -336,7 +335,7 @@ public class AsyncHttpClient {
      * use in one-off connections.
      */
     public AsyncHttpClient() {
-        this(DEFAULT_CONNECTION_TIMEOUT, null, null);
+        this(DEFAULT_CONNECTION_TIMEOUT, null);
     }
 
     /**
@@ -344,10 +343,9 @@ public class AsyncHttpClient {
      * for processing connections.
      *
      * @param executor  the executor
-     * @param scheduler the scheduler to use to track timeouts
      */
-    public AsyncHttpClient(Executor executor, ScheduledExecutorService scheduler) {
-        this(DEFAULT_CONNECTION_TIMEOUT, executor, scheduler);
+    public AsyncHttpClient(Executor executor) {
+        this(DEFAULT_CONNECTION_TIMEOUT, executor);
     }
 
     /**
@@ -357,7 +355,7 @@ public class AsyncHttpClient {
      * @param connectionTimeout the connection timeout in milliseconds.
      */
     public AsyncHttpClient(int connectionTimeout) {
-        this(connectionTimeout, null, null);
+        this(connectionTimeout, null);
     }
 
     /**
@@ -365,19 +363,13 @@ public class AsyncHttpClient {
      *
      * @param connectionTimeout the connection timeout in milliseconds.
      * @param executor          the ExceutorService to use to process connections.
-     * @param scheduler         the scheduler to use to track timeouts
      */
-    public AsyncHttpClient(int connectionTimeout, Executor executor, ScheduledExecutorService scheduler) {
+    public AsyncHttpClient(int connectionTimeout, Executor executor) {
         this.connectionTimeout = connectionTimeout;
 
         threadPool = executor;
 
-        if (scheduler == null) {
-            handler = new HttpIoHandler();
-        }
-        else {
-            handler = new HttpIoHandler(scheduler);
-        }
+        handler = new HttpIoHandler();
 
         if (threadPool == null) {
             connector = new NioSocketConnector();
@@ -588,8 +580,6 @@ public class AsyncHttpClient {
      * done using the object or a hang can occur.
      */
     public void destroyAll() {
-        handler.destroy();
-
         if (connector != null) {
             connector.dispose();
             //connector.setWorkerTimeout(0);

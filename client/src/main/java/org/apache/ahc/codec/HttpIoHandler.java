@@ -20,10 +20,6 @@
 package org.apache.ahc.codec;
 
 import java.net.URL;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.ahc.AsyncHttpClient;
@@ -34,6 +30,7 @@ import org.apache.ahc.auth.AuthScheme;
 import org.apache.ahc.auth.AuthState;
 import org.apache.ahc.util.MonitoringEvent;
 import org.apache.ahc.util.NameValuePair;
+import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandlerAdapter;
 import org.apache.mina.common.IoSession;
 
@@ -60,30 +57,9 @@ public class HttpIoHandler extends IoHandlerAdapter {
     public static final String CONNECTION_CLOSE = "close";
 
     /**
-     * The scheduler service to handle timeouts.
-     */
-    private final ScheduledExecutorService scheduler;
-
-    /**
      * The session cache used for reusable connections 
      */
     private SessionCache sessionCache; 
-
-    /**
-     * Instantiates a new HttpIoHandler with a new a single-threaded executor.
-     */
-    public HttpIoHandler() {
-        this(Executors.newSingleThreadScheduledExecutor());
-    }
-
-    /**
-     * Instantiates a new HttpIoHandler with the supplied scheduler.
-     *
-     * @param scheduler the scheduler to use to track timeouts
-     */
-    public HttpIoHandler(ScheduledExecutorService scheduler) {
-        this.scheduler = scheduler;
-    }
 
     /**
      * Set the session cache that should be used for 
@@ -104,13 +80,6 @@ public class HttpIoHandler extends IoHandlerAdapter {
      */
     public SessionCache getSessionCache() {
         return sessionCache; 
-    }
-
-    /**
-     * Destroys the handler and shuts down the scheduler.
-     */
-    public void destroy() {
-        scheduler.shutdownNow();
     }
 
     /**
@@ -201,8 +170,6 @@ public class HttpIoHandler extends IoHandlerAdapter {
             }
         }
 
-        cancelTasks(request);
-
         // notify any interesting parties that this is starting 
         client.notifyMonitoringListeners(MonitoringEvent.REQUEST_COMPLETED, request); 
         // complete the future which will also fire the callback
@@ -230,7 +197,6 @@ public class HttpIoHandler extends IoHandlerAdapter {
         ioSession.removeAttribute(CURRENT_RESPONSE);
 
         HttpRequestMessage request = (HttpRequestMessage) ioSession.getAttribute(CURRENT_REQUEST);
-        cancelTasks(request);
 
         AsyncHttpClient client = (AsyncHttpClient) ioSession.getAttachment();
 
@@ -262,7 +228,6 @@ public class HttpIoHandler extends IoHandlerAdapter {
             cache.removeSession(ioSession);
         }
         HttpRequestMessage request = (HttpRequestMessage) ioSession.getAttribute(CURRENT_REQUEST);
-        cancelTasks(request);
         AsyncHttpClient client = (AsyncHttpClient) ioSession.getAttachment();
         // notify any interesting parties that this is starting 
         client.notifyMonitoringListeners(MonitoringEvent.CONNECTION_CLOSED_BY_SERVER, request); 
@@ -284,73 +249,24 @@ public class HttpIoHandler extends IoHandlerAdapter {
     public void messageSent(IoSession ioSession, Object object) throws Exception {
         HttpRequestMessage msg = (HttpRequestMessage) object;
 
-        //Start the timeout timer now if a timeout is needed and there is not one already in effect for this request
-        if (msg.getTimeOut() > 0 && msg.getTimeoutHandle() == null) {
-            TimeoutTask task = new TimeoutTask(ioSession);
-            ScheduledFuture<?> handle = scheduler.schedule(task, msg.getTimeOut(), TimeUnit.MILLISECONDS);
-            msg.setTimeoutHandle(handle);
+        if (msg.getTimeOut() > 0) {
+        	ioSession.getConfig().setReaderIdleTime(msg.getTimeOut() / 1000);
         }
     }
 
-    /**
-     * Utility function to cancel a request timeout task.
-     *
-     * @param request the {@link HttpRequestMessage} request
-     */
-    private void cancelTasks(HttpRequestMessage request) {
-        ScheduledFuture<?> handle = request.getTimeoutHandle();
-        if (handle != null) {
-            boolean canceled = handle.cancel(true);
-            //See if it canceled
-            if (!canceled) {
-                //Couldn't cancel it and it ran, so too late :-(
-                return;
-            }
-            request.setTimeoutHandle(null);
-        }
-    }
+	@Override
+	public void sessionIdle(IoSession session, IdleStatus status) {
+        // complete the future which will also fire the callback
+        HttpRequestMessage request = (HttpRequestMessage)session.getAttribute(CURRENT_REQUEST);
 
-    /**
-     * The Class TimeoutTask.  Subclass that encapsulates handler for timeouts for the scheduler.
-     */
-    class TimeoutTask implements Runnable {
+        // notify any interesting parties that this is starting 
+        AsyncHttpClient client = (AsyncHttpClient) session.getAttachment();
+        client.notifyMonitoringListeners(MonitoringEvent.REQUEST_TIMEOUT, request);
+        
+        ResponseFuture result = request.getResponseFuture();
+        result.setException(new TimeoutException());
 
-        /**
-         * The session object.
-         */
-        private IoSession sess;
-
-        /**
-         * Instantiates a new timeout task.
-         *
-         * @param sess the {@link org.apache.mina.common.IoSession} representing the connection to the server.
-         */
-        public TimeoutTask(IoSession sess) {
-            this.sess = sess;
-        }
-
-        /**
-         * The running task which handles timing out the connection.
-         *
-         * @see java.lang.Runnable#run()
-         */
-        public void run() {
-            // complete the future which will also fire the callback
-            HttpRequestMessage request = (HttpRequestMessage)sess.getAttribute(CURRENT_REQUEST);
-            
-            AsyncHttpClient client = (AsyncHttpClient) sess.getAttachment();
-
-            // notify any interesting parties that this is starting 
-            client.notifyMonitoringListeners(MonitoringEvent.REQUEST_TIMEOUT, request); 
-            
-            ResponseFuture result = request.getResponseFuture();
-            result.setException(new TimeoutException());
-            
-            //Close the session, its no good since the server is timing out
-            sess.close();
-        }
-
-    }
-
+        session.close();
+	}
 
 }
