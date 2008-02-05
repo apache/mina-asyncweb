@@ -19,10 +19,9 @@
  */
 package org.apache.asyncweb.client;
 
-import org.apache.mina.common.IoConnector;
+import org.apache.asyncweb.common.HttpResponse;
 import org.apache.mina.common.IoHandlerAdapter;
 import org.apache.mina.common.IoSession;
-import org.apache.asyncweb.common.HttpResponse;
 
 public class HttpIoHandler extends IoHandlerAdapter {
     private AsyncHttpClientCallback callback;

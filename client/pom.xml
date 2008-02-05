@@ -103,6 +103,10 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <forkMode>pertest</forkMode>
+          <excludes>
+            <exclude>**/ProxyTest.java</exclude>
+          </excludes>
+
         </configuration>
       </plugin>
     </plugins>
