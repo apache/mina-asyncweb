@@ -30,7 +30,6 @@ import org.apache.mina.common.IoBuffer;
 import org.apache.mina.common.IoFutureListener;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoSession;
-import org.apache.mina.common.IoSessionLogger;
 import org.apache.mina.common.WriteFuture;
 import org.apache.asyncweb.common.HttpRequest;
 import org.apache.asyncweb.common.HttpResponseStatus;
@@ -52,7 +51,7 @@ public class HttpProtocolHandler implements IoHandler {
     public void exceptionCaught(IoSession session, Throwable cause)
             throws Exception {
         if (!(cause instanceof IOException)) {
-            IoSessionLogger.getLogger(session).warn(cause);
+	        cause.printStackTrace();
         }
         session.close();
     }
