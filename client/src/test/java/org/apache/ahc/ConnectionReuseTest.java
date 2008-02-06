@@ -25,13 +25,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.ahc.codec.HttpRequestMessage;
 import org.apache.ahc.codec.HttpResponseMessage;
-import org.apache.ahc.codec.SessionCache;        
+import org.apache.ahc.codec.ConnectionPool;        
 
 public class ConnectionReuseTest extends AbstractTest {
     // variable that keeps count of session close's
     private final AtomicInteger closeCount = new AtomicInteger(0);
     
-    private final SessionCache cache = new SessionCache(); 
+    private final ConnectionPool connectionPool = new ConnectionPool(); 
     
     // It is important that this test case contains these methods in this order.
     // It is because to test connection reuse we need to keep the embedded 
@@ -111,7 +111,7 @@ public class ConnectionReuseTest extends AbstractTest {
         request.setParameter("TEST2", "Test Two");
         AsyncHttpClient ahc = new AsyncHttpClient();
         if (reuseConnection) {
-            ahc.setSessionCache(cache);  
+            ahc.setConnectionPool(connectionPool);  
         }
         ahc.setTcpNoDelay(true);
         return ahc.sendRequest(request);

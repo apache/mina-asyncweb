@@ -28,14 +28,17 @@ import java.util.concurrent.ConcurrentMap;
 import org.apache.mina.common.IoSession;
 
 /**
- * Class that provides access to cached sessions.  IoSessions are cached using
- * the host and the port.  This class is thread safe.
+ * Facilitates support for connection pooling by storing IoSession instances
+ * that have keepAlive enabled.  Connection pooling is based on the
+ * IoSession's remote host and port.
+ * 
+ * <p>This class is thread safe.
  */
-public final class SessionCache {
-    private final ConcurrentMap<String,Queue<IoSession>> cachedSessions = 
+public final class ConnectionPool {
+    private final ConcurrentMap<String,Queue<IoSession>> pooledSessions = 
             new ConcurrentHashMap<String,Queue<IoSession>>();
     
-    public SessionCache() {}
+    public ConnectionPool() {}
 
     /**
      * Returns an IoSession that is connected and considered usable.  Note that
@@ -52,35 +55,35 @@ public final class SessionCache {
             throw new IllegalArgumentException("null request was passed in");
         }
         
-        Queue<IoSession> queue = cachedSessions.get(getKey(msg));
+        Queue<IoSession> queue = pooledSessions.get(getKey(msg));
         if (queue == null) {
             return null;
         }
         
-        IoSession cached = null;
-        while ((cached = queue.poll()) != null) {
+        IoSession pooled = null;
+        while ((pooled = queue.poll()) != null) {
         	// see if the session is usable
-            if (cached.isConnected() && !cached.isClosing()) {
-                return cached;
+            if (pooled.isConnected() && !pooled.isClosing()) {
+                return pooled;
             }
         }
         return null;
     }
     
     /**
-     * Caches the given session using its remote host and port information.
+     * Places the given session in the pool of available connections based on the session's remote host and port.
      * 
-     * @param session IoSession to cache
+     * @param session IoSession to pool
      * @throws IllegalArgumentException if a null session was passed in.
      */
-    void cacheSession(IoSession session) {
+    void poolConnection(IoSession session) {
         if (session == null) {
             throw new IllegalArgumentException("null session was passed in");
         }
         
         String key = getKey((InetSocketAddress)session.getRemoteAddress());
         Queue<IoSession> newQueue = new ConcurrentLinkedQueue<IoSession>();
-        Queue<IoSession> queue = cachedSessions.putIfAbsent(key, newQueue);
+        Queue<IoSession> queue = pooledSessions.putIfAbsent(key, newQueue);
         if (queue == null) {
             // the value was previously empty
             queue = newQueue;
@@ -90,9 +93,9 @@ public final class SessionCache {
     }
     
     /**
-     * Removes the given session from the cache if it is in the cache.
+     * Removes the given session from the pool if it is in the pool.
      * 
-     * @param session IoSession to remove from the cache
+     * @param session IoSession to remove from the pool
      * @throws IllegalArgumentException if a null session was passed in
      */
     void removeSession(IoSession session) {
@@ -101,7 +104,7 @@ public final class SessionCache {
         }
         
         String key = getKey((InetSocketAddress)session.getRemoteAddress());
-        Queue<IoSession> queue = cachedSessions.get(key);
+        Queue<IoSession> queue = pooledSessions.get(key);
         if (queue != null) {
             queue.remove(session);
         }

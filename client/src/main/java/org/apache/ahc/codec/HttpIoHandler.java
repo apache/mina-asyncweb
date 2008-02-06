@@ -57,29 +57,29 @@ public class HttpIoHandler extends IoHandlerAdapter {
     public static final String CONNECTION_CLOSE = "close";
 
     /**
-     * The session cache used for reusable connections 
+     * The connection pool used for reusable IoSessions 
      */
-    private SessionCache sessionCache; 
+    private ConnectionPool connectionPool; 
 
     /**
-     * Set the session cache that should be used for 
+     * Set the connection pool that should be used for 
      * connection reuse.
      * 
-     * @param cache  The new session cache.  If null, this will disable
-     *               future connection reuse.
+     * @param connectionPool  The new connection pool.  If null, this will disable
+     *               future IoSession instance reuse.
      */
-    public void setSessionCache(SessionCache cache) {
-        sessionCache = cache; 
+    public void setConnectionPool(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool; 
     }
     
     /**
-     * Retrieve the session cache used for storing 
-     * connections for reuse. 
+     * Retrieve the connection pool used for storing 
+     * IoSession instances for reuse. 
      * 
-     * @return The current session cache for the client. 
+     * @return The current connection pool for the client. 
      */
-    public SessionCache getSessionCache() {
-        return sessionCache; 
+    public ConnectionPool getConnectionPool() {
+        return connectionPool; 
     }
 
     /**
@@ -126,13 +126,7 @@ public class HttpIoHandler extends IoHandlerAdapter {
             //Send the redirect
             client.sendRequest(request);
 
-            // if we've been provided with a cache, put this session into 
-            // the cache. 
-            SessionCache cache = getSessionCache(); 
-            if (cache != null) {
-            // cache the session before we return
-                cache.cacheSession(ioSession);
-            }
+            poolSession(ioSession);
             return;
         }
 
@@ -155,13 +149,7 @@ public class HttpIoHandler extends IoHandlerAdapter {
             //Authenticate
             int authCount = request.getAuthCount() + 1;
             if (authCount <= 3) {
-                // if we've been provided with a cache, put this session into 
-                // the cache. 
-                SessionCache cache = getSessionCache(); 
-                if (cache != null) {
-                    // cache the session before we return
-                    cache.cacheSession(ioSession);
-                }
+                poolSession(ioSession);
                 
                 request.setAuthCount(authCount);
                 client.sendRequest(request);
@@ -176,15 +164,20 @@ public class HttpIoHandler extends IoHandlerAdapter {
         ResponseFuture result = request.getResponseFuture();
         result.set(response);
 
-        // if we've been provided with a cache, put this session into 
-        // the cache. 
-        SessionCache cache = getSessionCache(); 
-        if (cache != null) {
-        // cache the session before we return
-            cache.cacheSession(ioSession);
-        }
+        poolSession(ioSession);
     }
 
+    /**
+     * Place the IoSession instance in the pool if the pool is available.
+     * @param session
+     */
+    private void poolSession(IoSession session) {
+        ConnectionPool pool = getConnectionPool();
+        if (pool != null) {
+            pool.poolConnection(session);
+        }
+    }
+    
     /**
      * Handler for receiving a notification that an Exception occurred in the communication with the server
      *
@@ -219,13 +212,11 @@ public class HttpIoHandler extends IoHandlerAdapter {
     public void sessionClosed(IoSession ioSession) throws Exception {
         //Clean up if any in-proccess decoding was occurring
         ioSession.removeAttribute(CURRENT_RESPONSE);
-        
-        // if we've been provided with a cache, remove this session from 
-        // the cache. 
-        SessionCache cache = getSessionCache(); 
-        if (cache != null) {
-            // cache the session before we return
-            cache.removeSession(ioSession);
+
+        // Remove ioSession from connection pool if the conneciton pool is available
+        ConnectionPool connectionPool = getConnectionPool(); 
+        if (connectionPool != null) {
+            connectionPool.removeSession(ioSession);
         }
         HttpRequestMessage request = (HttpRequestMessage) ioSession.getAttribute(CURRENT_REQUEST);
         AsyncHttpClient client = (AsyncHttpClient) ioSession.getAttachment();

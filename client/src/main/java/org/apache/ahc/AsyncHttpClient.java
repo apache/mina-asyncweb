@@ -34,7 +34,7 @@ import org.apache.ahc.codec.HttpIoHandler;
 import org.apache.ahc.codec.HttpProtocolCodecFactory;
 import org.apache.ahc.codec.HttpRequestMessage;
 import org.apache.ahc.codec.ResponseFuture;
-import org.apache.ahc.codec.SessionCache;
+import org.apache.ahc.codec.ConnectionPool;
 import org.apache.ahc.proxy.ProxyFilter;
 import org.apache.ahc.ssl.TrustManagerFactoryImpl;
 import org.apache.ahc.util.AsyncHttpClientException;
@@ -118,8 +118,8 @@ public class AsyncHttpClient {
     /** The HttpIoHandler handler. */
     private final HttpIoHandler handler;
 
-    /** The cache for session reuse */
-    private SessionCache sessionCache; 
+    /** The connection pool for session reuse */
+    private ConnectionPool connectionPool; 
 
     /** The Reuse Address Socket Parameter. */
     private boolean reuseAddress = DEFAULT_REUSE_ADDRESS;
@@ -383,27 +383,27 @@ public class AsyncHttpClient {
 
     
     /**
-     * Set the session cache that should be used for 
-     * connection reuse.
+     * Set the connection pool that should be used for 
+     * session reuse.
      * 
-     * @param cache  The new session cache.  If null, this will disable
-     *               future connection reuse.
+     * @param connectionPool  The new session connection pool.  If null, this will disable
+     *               future connection pooling.
      */
-    public void setSessionCache(SessionCache cache) {
-        sessionCache = cache; 
+    public void setConnectionPool(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool; 
         // our I/O Handler instance needs to be fitted with the same 
-        // cache
-        handler.setSessionCache(cache); 
+        // connection pool
+        handler.setConnectionPool(connectionPool); 
     }
     
     /**
-     * Retrieve the session cache used for storing 
+     * Retrieve the connection pool used for storing 
      * connections for reuse. 
      * 
-     * @return The current session cache for the client. 
+     * @return The current connection pool
      */
-    public SessionCache getSessionCache() {
-        return sessionCache; 
+    public ConnectionPool getConnectionPool() {
+        return connectionPool; 
     }
     
     /**
@@ -457,20 +457,20 @@ public class AsyncHttpClient {
             message.setResponseFuture(new ResponseFuture(message, queue));
         }
         
-        // *IF* connection reuse is enabled, we should see if we have a cached 
+        // *IF* connection reuse is enabled, we should see if we have a pooled 
         // connection first; if not, always open a new one
         ConnectFuture future = null;
         if (!message.isProxyEnabled()) {
-            SessionCache cache = getSessionCache(); 
-            if (cache != null) {
-            future = getCachedConnection(message);
-        } else {
-            // add the Connection close header explicitly
-            message.setHeader(HttpDecoder.CONNECTION, HttpDecoder.CLOSE);
-        }
+        	ConnectionPool connectionPool = getConnectionPool(); 
+        	if (connectionPool != null) {
+        		future = getPooledConnection(message);
+        	} else {
+        		// add the Connection close header explicitly
+        		message.setHeader(HttpDecoder.CONNECTION, HttpDecoder.CLOSE);
+        	}
         }
         
-        // if no cached connection is found or keep-alive is disabled, force a
+        // if no pooled connection is found or keep-alive is disabled, force a
         // new connection
         if (future == null) {
             // set the connect start time
@@ -527,16 +527,16 @@ public class AsyncHttpClient {
     }
     
     /**
-     * Attempt to get a connection from the session cache.
+     * Attempt to get a connection from the connection pool.
      * 
      * @param message The message we're sending.
      * 
-     * @return A cached connection.  This returns null if there's
+     * @return A pooled connection.  This returns null if there's
      *         no available connection for the target location.
      */
-    private ConnectFuture getCachedConnection(HttpRequestMessage message) {
-        IoSession cached = sessionCache.getActiveSession(message);
-        if (cached == null) {
+    private ConnectFuture getPooledConnection(HttpRequestMessage message) {
+        IoSession pooledSession = connectionPool.getActiveSession(message);
+        if (pooledSession == null) {
             return null;
         }
 
@@ -545,7 +545,7 @@ public class AsyncHttpClient {
         notifyMonitoringListeners(MonitoringEvent.CONNECTION_REUSED, message); 
         // create a containing future object and set the session right away
         ConnectFuture future = new DefaultConnectFuture();
-        future.setSession(cached);
+        future.setSession(pooledSession);
         return future;
     }
 
