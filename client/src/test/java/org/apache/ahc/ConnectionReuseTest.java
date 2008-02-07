@@ -25,7 +25,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.ahc.codec.HttpRequestMessage;
 import org.apache.ahc.codec.HttpResponseMessage;
-import org.apache.ahc.codec.ConnectionPool;        
 
 public class ConnectionReuseTest extends AbstractTest {
     // variable that keeps count of session close's

@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.ahc.codec;
+package org.apache.ahc;
 
 import java.net.InetSocketAddress;
 import java.util.Queue;
@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 
+import org.apache.ahc.codec.HttpRequestMessage;
 import org.apache.mina.common.IoSession;
 
 /**

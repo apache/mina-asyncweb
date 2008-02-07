@@ -37,7 +37,7 @@ public class TimeoutTest extends AbstractTest {
         HttpRequestMessage request = new HttpRequestMessage(new URL("http://localhost:8282/timeout.jsp"), callback);
 
         //Create a client with a one second timeout
-        request.setTimeOut(1000);
+        ahc.setTimeout(1);
 
         ahc.sendRequest(request);
 

@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.ahc.codec;
+package org.apache.ahc;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
@@ -25,7 +25,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.ahc.AsyncHttpClientCallback;
+import org.apache.ahc.codec.HttpRequestMessage;
+import org.apache.ahc.codec.HttpResponseMessage;
 
 /**
  * Future that wraps the response of an asynchronous HTTP request.  It simply

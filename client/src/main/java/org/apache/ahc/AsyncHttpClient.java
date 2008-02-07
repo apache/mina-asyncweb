@@ -30,17 +30,15 @@ import java.util.concurrent.Executor;
 import javax.net.ssl.SSLContext;
 
 import org.apache.ahc.codec.HttpDecoder;
-import org.apache.ahc.codec.HttpIoHandler;
 import org.apache.ahc.codec.HttpProtocolCodecFactory;
 import org.apache.ahc.codec.HttpRequestMessage;
-import org.apache.ahc.codec.ResponseFuture;
-import org.apache.ahc.codec.ConnectionPool;
 import org.apache.ahc.proxy.ProxyFilter;
 import org.apache.ahc.ssl.TrustManagerFactoryImpl;
 import org.apache.ahc.util.AsyncHttpClientException;
 import org.apache.ahc.util.EventDispatcher;
 import org.apache.ahc.util.MonitoringEvent;
 import org.apache.ahc.util.MonitoringListener;
+import org.apache.asyncweb.common.HttpMethod;
 import org.apache.mina.common.ConnectFuture;
 import org.apache.mina.common.DefaultConnectFuture;
 import org.apache.mina.common.IoFutureListener;
@@ -147,6 +145,11 @@ public class AsyncHttpClient {
     
     /** flag to make this as having been disposed of */
     private boolean destroyed = false; 
+    
+    /**
+     * The timeout in seconds
+     */
+    private int timeout = 0;
 
     /** a dispatcher for dispatching monitoring events */
     private EventDispatcher eventDispatcher; 
@@ -329,7 +332,22 @@ public class AsyncHttpClient {
         connectionRetries = retries; 
     }
     
-    
+    /**
+     * Get the timeout time
+     * @return  the timeout time in seconds, 0 means no timeout.
+     */
+    public int getTimeout() {
+        return timeout;
+    }
+
+    /**
+     * Sets the timeout time
+     * @param timeout  the timeout time in seconds, 0 means no timeout.
+     */
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
+
     /**
      * Instantiates a new AsyncHttpClient.  It will use a single threaded model and is good for
      * use in one-off connections.
@@ -670,6 +688,7 @@ public class AsyncHttpClient {
                 notifyMonitoringListeners(MonitoringEvent.CONNECTION_SUCCESSFUL, request); 
                 IoSession sess = future.getSession();
 
+                sess.getConfig().setReaderIdleTime(timeout);
                 // see if we need to add the SSL filter
                 addSSLFilter(sess);
                 // add the protocol filter (if it's not there already like in a
@@ -879,7 +898,7 @@ public class AsyncHttpClient {
         private HttpRequestMessage createConnectRequest() {
             try {
                 HttpRequestMessage req = new HttpRequestMessage(new URL("http", request.getHost(), request.getPort(), ""), null);
-                req.setRequestMethod(HttpRequestMessage.REQUEST_CONNECT);
+                req.setRequestMethod(HttpMethod.CONNECT);
                 return req;
             } catch (MalformedURLException e) {
                 // ignored, shouldn't happen

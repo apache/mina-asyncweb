@@ -17,19 +17,20 @@
  *  under the License.
  *
  */
-package org.apache.ahc.codec;
+package org.apache.ahc;
 
 import java.net.URL;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.ahc.AsyncHttpClient;
-import org.apache.ahc.AsyncHttpClientCallback;
 import org.apache.ahc.auth.AuthChallengeParser;
 import org.apache.ahc.auth.AuthPolicy;
 import org.apache.ahc.auth.AuthScheme;
 import org.apache.ahc.auth.AuthState;
+import org.apache.ahc.codec.HttpRequestMessage;
+import org.apache.ahc.codec.HttpResponseMessage;
 import org.apache.ahc.util.MonitoringEvent;
 import org.apache.ahc.util.NameValuePair;
+import org.apache.asyncweb.common.HttpMethod;
 import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandlerAdapter;
 import org.apache.mina.common.IoSession;
@@ -117,8 +118,8 @@ public class HttpIoHandler extends IoHandlerAdapter {
             //Change the request url to the redirect
             request.setUrl(new URL(response.getLocation()));
             // if we're redirected via 30x, the request method should be reset to GET
-            if (!request.getRequestMethod().equals(HttpRequestMessage.REQUEST_GET)) {
-                request.setRequestMethod(HttpRequestMessage.REQUEST_GET);
+            if (HttpMethod.GET != request.getRequestMethod()) {
+                request.setRequestMethod(HttpMethod.GET);
             }
             // we also need to clear out the parameters
             request.clearAllParameters();
@@ -229,35 +230,19 @@ public class HttpIoHandler extends IoHandlerAdapter {
         }
     }
 
-    /**
-     * Handler for notifying that a message was sent to a remote server.  It is responsible for setting up the
-     * timeout for a response from the remote server.
-     *
-     * @param ioSession the {@link org.apache.mina.common.IoSession} representing the connection to the server.
-     * @param object    the {@link HttpRequestMessage} object
-     * @see org.apache.mina.common.IoHandlerAdapter#messageSent(org.apache.mina.common.IoSession,java.lang.Object)
-     */
-    public void messageSent(IoSession ioSession, Object object) throws Exception {
-        HttpRequestMessage msg = (HttpRequestMessage) object;
-
-        if (msg.getTimeOut() > 0) {
-        	ioSession.getConfig().setReaderIdleTime(msg.getTimeOut() / 1000);
-        }
-    }
-
-	@Override
-	public void sessionIdle(IoSession session, IdleStatus status) {
+    @Override
+    public void sessionIdle(IoSession session, IdleStatus status) {
         // complete the future which will also fire the callback
         HttpRequestMessage request = (HttpRequestMessage)session.getAttribute(CURRENT_REQUEST);
 
         // notify any interesting parties that this is starting 
         AsyncHttpClient client = (AsyncHttpClient) session.getAttachment();
         client.notifyMonitoringListeners(MonitoringEvent.REQUEST_TIMEOUT, request);
-        
+
         ResponseFuture result = request.getResponseFuture();
         result.setException(new TimeoutException());
 
         session.close();
-	}
+    }
 
 }

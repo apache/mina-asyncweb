@@ -1,8 +1,8 @@
 package org.apache.ahc.proxy;
 
 import org.apache.ahc.AsyncHttpClient;
+import org.apache.ahc.HttpIoHandler;
 import org.apache.ahc.auth.UsernamePasswordCredentials;
-import org.apache.ahc.codec.HttpIoHandler;
 import org.apache.ahc.codec.HttpRequestMessage;
 import org.apache.ahc.codec.HttpResponseMessage;
 import org.apache.mina.common.IoFilterAdapter;

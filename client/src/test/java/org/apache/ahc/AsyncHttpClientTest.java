@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.ahc.codec.HttpRequestMessage;
 import org.apache.ahc.codec.HttpResponseMessage;
+import org.apache.asyncweb.common.HttpMethod;
 
 public class AsyncHttpClientTest extends AbstractTest {
 
@@ -129,7 +130,7 @@ public class AsyncHttpClientTest extends AbstractTest {
         HttpRequestMessage request = new HttpRequestMessage(new URL(url), callback);
         request.setParameter("TEST1", "Test One");
         request.setParameter("TEST2", "Test Two");
-        request.setRequestMethod(HttpRequestMessage.REQUEST_POST);
+        request.setRequestMethod(HttpMethod.POST);
         doConnection(request, false, callback);
     }
 

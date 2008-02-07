@@ -33,6 +33,7 @@ import org.apache.ahc.auth.AuthState;
 import org.apache.ahc.util.EncodingUtil;
 import org.apache.ahc.util.NameValuePair;
 import org.apache.asyncweb.common.Cookie;
+import org.apache.asyncweb.common.HttpMethod;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.common.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolEncoderAdapter;
@@ -105,9 +106,9 @@ public class HttpRequestEncoder extends ProtocolEncoderAdapter {
             }
 
             CharsetEncoder encoder = Charset.forName(HttpMessage.HTTP_ELEMENT_CHARSET).newEncoder();
-            buf.putString(msg.getRequestMethod(), encoder);
+            buf.putString(msg.getRequestMethod().name(), encoder);
             buf.putString(" ", encoder);
-            if (msg.getRequestMethod().equals(HttpRequestMessage.REQUEST_CONNECT)) {
+            if (HttpMethod.CONNECT == msg.getRequestMethod()) {
                 buf.putString(msg.getHost(), encoder);
                 buf.putString(":", encoder);
                 buf.putString(msg.getPort() + "", encoder);
@@ -118,7 +119,7 @@ public class HttpRequestEncoder extends ProtocolEncoderAdapter {
                     buf.putString(msg.getUrl().getFile(), encoder);
                 }
             //If its a GET, append the attributes
-            if (msg.getRequestMethod().equals(HttpRequestMessage.REQUEST_GET) && attrCount > 0) {
+            if (HttpMethod.GET == msg.getRequestMethod() && attrCount > 0) {
                 //If there is not already a ? in the query, append one, otherwise append a &
                     if (!msg.getUrl().getFile().contains("?")) {
                     buf.putString("?", encoder);
@@ -158,7 +159,7 @@ public class HttpRequestEncoder extends ProtocolEncoderAdapter {
             processCookies(msg, buf, encoder);
 
             //If this is a POST, then we need a content length and type
-            if (msg.getRequestMethod().equals(HttpRequestMessage.REQUEST_POST)) {
+            if (HttpMethod.POST == msg.getRequestMethod()) {
                 byte content[] = urlAttrs.getBytes();
 
                 //Type

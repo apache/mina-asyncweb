@@ -63,7 +63,7 @@ public class RetryTest extends AbstractTest {
         CountingMonitor counter = new CountingMonitor(); 
         ahc.addMonitoringListener(counter); 
         // set a short timeout 
-        request.setTimeOut(200); 
+        ahc.setTimeout(1); 
 
         ahc.sendRequest(request);
 

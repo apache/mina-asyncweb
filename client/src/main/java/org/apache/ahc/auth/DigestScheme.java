@@ -186,7 +186,7 @@ public class DigestScheme extends RFC2617Scheme {
                     "Credentials cannot be used for digest authentication: "
                     + credentials.getClass().getName());
         }
-        getParameters().put("methodname", request.getRequestMethod());
+        getParameters().put("methodname", request.getRequestMethod().name());
         StringBuffer buffer = new StringBuffer(request.getPath());
         String query = request.getUrl().getQuery();
         if (query != null) {

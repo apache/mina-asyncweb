@@ -19,6 +19,7 @@
  */
 package org.apache.ahc.codec;
 
+import org.apache.ahc.HttpIoHandler;
 import org.apache.ahc.util.NeedMoreDataException;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.common.IoBuffer;

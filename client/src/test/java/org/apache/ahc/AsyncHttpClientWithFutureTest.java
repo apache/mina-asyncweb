@@ -26,7 +26,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.ahc.codec.HttpRequestMessage;
 import org.apache.ahc.codec.HttpResponseMessage;
-import org.apache.ahc.codec.ResponseFuture;
+import org.apache.asyncweb.common.HttpMethod;
 
 public class AsyncHttpClientWithFutureTest extends AbstractTest {
     public void testHtmlRequest() throws Exception {
@@ -115,7 +115,7 @@ public class AsyncHttpClientWithFutureTest extends AbstractTest {
         HttpRequestMessage request = new HttpRequestMessage(new URL(url), null);
         request.setParameter("TEST1", "Test One");
         request.setParameter("TEST2", "Test Two");
-        request.setRequestMethod(HttpRequestMessage.REQUEST_POST);
+        request.setRequestMethod(HttpMethod.POST);
         return submitRequest(request, queue);
     }
     

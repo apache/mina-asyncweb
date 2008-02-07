@@ -23,15 +23,16 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
 
 import javax.net.ssl.SSLContext;
 
 import org.apache.ahc.AsyncHttpClientCallback;
+import org.apache.ahc.ResponseFuture;
 import org.apache.ahc.auth.AuthScope;
 import org.apache.ahc.auth.AuthState;
 import org.apache.ahc.auth.Credentials;
 import org.apache.ahc.proxy.ProxyConfiguration;
+import org.apache.asyncweb.common.HttpMethod;
 
 /**
  * The Class HttpRequestMessage. This is an object representation of an HTTP request.
@@ -41,7 +42,7 @@ public class HttpRequestMessage extends HttpMessage {
     /**
      * The Constant DEFAULT_REQUEST_TIMEOUT.
      */
-    public static final int DEFAULT_REQUEST_TIMEOUT = 30000;
+//    public static final int DEFAULT_REQUEST_TIMEOUT = 30000;
 
     /**
      * The Constant DEFAULT_CREDENTIAL_CHARSET.
@@ -49,46 +50,9 @@ public class HttpRequestMessage extends HttpMessage {
     public static final String DEFAULT_CREDENTIAL_CHARSET = "US-ASCII";
 
     /**
-     * The Constant REQUEST_GET.
-     */
-    public static final String REQUEST_GET = "GET";
-
-    /**
-     * The Constant REQUEST_POST.
-     */
-    public static final String REQUEST_POST = "POST";
-
-    /**
-     * The Constant REQUEST_HEAD.
-     */
-    public static final String REQUEST_HEAD = "HEAD";
-
-    /**
-     * The Constant REQUEST_OPTIONS.
-     */
-    public static final String REQUEST_OPTIONS = "OPTIONS";
-
-    /**
-     * The Constant REQUEST_PUT.
-     */
-    public static final String REQUEST_PUT = "PUT";
-
-    /**
-     * The Constant REQUEST_DELETE.
-     */
-    public static final String REQUEST_DELETE = "DELETE";
-
-    /**
-     * The Constant REQUEST_TRACE.
-     */
-    public static final String REQUEST_TRACE = "TRACE";
-
-    public static final String REQUEST_CONNECT = "CONNECT";
-
-    /**
      * The request method.
      */
-    private String requestMethod = REQUEST_GET;
+    private HttpMethod requestMethod = HttpMethod.GET;
 
     /**
      * The request url.
@@ -123,7 +87,7 @@ public class HttpRequestMessage extends HttpMessage {
     /**
      * The time out.
      */
-    private int timeOut = DEFAULT_REQUEST_TIMEOUT;
+    //private int timeOut = DEFAULT_REQUEST_TIMEOUT;
 
     /**
      * The character credential charset *
@@ -170,29 +134,11 @@ public class HttpRequestMessage extends HttpMessage {
     }
 
     /**
-     * Gets the time out.
-     *
-     * @return the time out in milliseconds.  Defaults to {@link #DEFAULT_REQUEST_TIMEOUT} if not set.
-     */
-    public int getTimeOut() {
-        return timeOut;
-    }
-
-    /**
-     * Sets the time out.
-     *
-     * @param timeOut the new time out in milliseconds. Defaults to {@link #DEFAULT_REQUEST_TIMEOUT} if not set.
-     */
-    public void setTimeOut(int timeOut) {
-        this.timeOut = timeOut;
-    }
-
-    /**
      * Gets the request method.
      *
      * @return the request method.  Defaults to {@link #REQUEST_GET} if not set.
      */
-    public String getRequestMethod() {
+    public HttpMethod getRequestMethod() {
         return requestMethod;
     }
 
@@ -227,20 +173,8 @@ public class HttpRequestMessage extends HttpMessage {
      *                           {@link #REQUEST_POST},{@link #REQUEST_HEAD},{@link #REQUEST_OPTIONS},
      *                           {@link #REQUEST_PUT},{@link #REQUEST_DELETE}, or {@link #REQUEST_TRACE}
      */
-    public void setRequestMethod(String requestMethod) throws ProtocolException {
-        if (requestMethod.equals(REQUEST_GET)
-            || requestMethod.equals(REQUEST_POST)
-            || requestMethod.equals(REQUEST_HEAD)
-            || requestMethod.equals(REQUEST_OPTIONS)
-            || requestMethod.equals(REQUEST_PUT)
-            || requestMethod.equals(REQUEST_DELETE)
-            || requestMethod.equals(REQUEST_TRACE)
-            || requestMethod.equals(REQUEST_CONNECT)) {
-            this.requestMethod = requestMethod;
-            return;
-        }
-
-        throw new ProtocolException("Invalid request method type.");
+    public void setRequestMethod(HttpMethod requestMethod) throws ProtocolException {
+        this.requestMethod = requestMethod;
     }
 
     /**
