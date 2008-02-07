@@ -46,7 +46,7 @@ abstract class HttpVersionDecodingState implements DecodingState {
             HttpVersion version = null;
             try {
                 versionStr = product.getString(asciiDecoder);
-                version = HttpVersion.valueOf(versionStr);
+                version = HttpVersion.fromString(versionStr);
             } catch (CharacterCodingException e) {
                 // Will take care down the
             }
