@@ -22,6 +22,7 @@ package org.apache.asyncweb.examples.file.cache;
 import java.io.File;
 
 import org.apache.asyncweb.common.HttpRequest;
+import org.apache.asyncweb.common.MutableHttpResponse;
 /**
  * 
  * Caching strategies, under design class :)
@@ -42,5 +43,5 @@ public interface CachingPolicy {
      * @param request
      * @return
      */
-    public boolean testAndSetCacheHit(File requestedFile, HttpRequest request);
+    public boolean testAndSetCacheHit(File requestedFile, HttpRequest request, MutableHttpResponse response);
 }

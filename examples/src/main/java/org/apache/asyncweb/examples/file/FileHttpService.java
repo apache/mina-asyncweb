@@ -30,6 +30,8 @@ import org.apache.asyncweb.common.DefaultHttpResponse;
 import org.apache.asyncweb.common.HttpResponseStatus;
 import org.apache.asyncweb.common.MutableHttpResponse;
 import org.apache.asyncweb.examples.file.cache.CachingPolicy;
+import org.apache.asyncweb.examples.file.cache.SimpleCachingPolicy;
+import org.apache.asyncweb.examples.file.mimetype.MimeMap;
 import org.apache.asyncweb.server.HttpService;
 import org.apache.asyncweb.server.HttpServiceContext;
 import org.apache.mina.common.IoBuffer;
@@ -51,6 +53,8 @@ public class FileHttpService implements HttpService {
 
     private CachingPolicy cachingPolicy = null;
 
+    private MimeMap mimeMap = new MimeMap();
+
     public FileHttpService(String baseUrl, String basePath) {
         this.baseUrl = baseUrl;
         this.basePath = basePath;
@@ -60,6 +64,7 @@ public class FileHttpService implements HttpService {
         if (!(f.isDirectory() && f.exists()))
             throw new InvalidParameterException("The base path [ " + basePath
                     + " ] is not a valid path.");
+        cachingPolicy = new SimpleCachingPolicy();
     }
 
     public void handleRequest(HttpServiceContext context) throws Exception {
@@ -68,13 +73,12 @@ public class FileHttpService implements HttpService {
         LOG.info("handling file request : " + uri);
         if (!path.startsWith(baseUrl)) {
             // error the requested URL is not in the base URL
-          //TODO : find the good exception to throw
-            throw new InvalidParameterException("Wrong URL"); 
+            //TODO : find the good exception to throw
+            throw new InvalidParameterException("Wrong URL");
         }
 
         path = path.substring(baseUrl.length());
         File f = new File(basePath + File.separator + path);
-        System.err.println(f.getAbsolutePath());
 
         MutableHttpResponse response = new DefaultHttpResponse();
         if (f.exists() && (!f.isDirectory())) {
@@ -82,25 +86,38 @@ public class FileHttpService implements HttpService {
 
             // caching processing
             if (cachingPolicy == null
-                    || cachingPolicy.isCacheable(f, context.getRequest())) {
+                    || !cachingPolicy.isCacheable(f, context.getRequest())) {
                 response.setHeader("Pragma", "no-cache");
                 response.setHeader("Cache-Control", "no-cache");
             } else {
-                cachingPolicy.testAndSetCacheHit(f, context.getRequest());
+                cachingPolicy.testAndSetCacheHit(f, context.getRequest(),
+                        response);
             }
-            response.setStatus(HttpResponseStatus.OK);
 
-            // TODO : set mime-type
+            // setting mime-type based on the mime-map
+            
+            String contentType = mimeMap.getContentType(MimeMap.getExtension(f
+                    .getName()));
+
+            if (contentType != null)
+                response.setHeader("Content-Type", contentType);
+
+            response.setStatus(HttpResponseStatus.OK);
 
             FileChannel fileChannel = (new RandomAccessFile(f, "r"))
                     .getChannel();
 
             // TODO : well it's quite explosive on big files, need to change the API
-            IoBuffer buffer = IoBuffer.allocate((int) fileChannel.size());
-            fileChannel.read(buffer.buf());
-
-            buffer.flip();
-            response.setContent(buffer);
+            
+            int fileSize = (int) fileChannel.size();
+            IoBuffer responseBuffer = IoBuffer.allocate(fileSize);
+            
+            fileChannel.read(responseBuffer.buf());
+            fileChannel.close();
+            
+            responseBuffer.flip();
+            response.setContent(responseBuffer);
+            
         } else {
             // the file is not found, we send the famous 404 error
             response.setStatus(HttpResponseStatus.NOT_FOUND);
