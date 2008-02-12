@@ -221,11 +221,13 @@ public class BasicServiceContainer implements ServiceContainer {
 
     public void start() throws ContainerLifecycleException {
         if (!isStarted) {
-            LOG.info("BasicServiceContainer starting");
+            if (LOG.isDebugEnabled())
+                LOG.debug("BasicServiceContainer starting");
             startSessionAccessor();
             startHandlers();
             startTransports();
-            LOG.info("BasicServiceContainer started");
+            if (LOG.isDebugEnabled())
+                LOG.debug("BasicServiceContainer started");
             isStarted = true;
         }
     }
@@ -233,11 +235,13 @@ public class BasicServiceContainer implements ServiceContainer {
     public void stop() {
         if (isStarted) {
             isStarted = false;
-            LOG.info("BasicServiceContainer stopping");
+            if (LOG.isDebugEnabled())
+                LOG.debug("BasicServiceContainer stopping");
             stopHandlers();
             stopTransports();
             stopSessionAccessor();
-            LOG.info("BasicServiceContainer stopped");
+            if (LOG.isDebugEnabled())
+                LOG.debug("BasicServiceContainer stopped");
         }
     }
 
@@ -257,31 +261,37 @@ public class BasicServiceContainer implements ServiceContainer {
      * Starts all added handlers
      */
     private void startHandlers() {
-        LOG.info("Starting handlers");
+        if (LOG.isDebugEnabled())
+            LOG.debug("Starting handlers");
         synchronized (filters) {
             for (HttpServiceFilter handler : filters) {
-            handler.start();
-         }
+                handler.start();
+            }
         }
-        LOG.info("Handlers started");
+        if (LOG.isDebugEnabled())
+            LOG.debug("Handlers started");
     }
 
     private void stopHandlers() {
-        LOG.info("Stopping handlers");
+        if (LOG.isDebugEnabled())
+            LOG.debug("Stopping handlers");
         synchronized (filters) {
             for (HttpServiceFilter handler : filters) {
-            LOG.info("Stopping handler '" + handler + "'");
-            handler.stop();
-            LOG.info("Handler '" + handler + "' stopped");
-         }
+                LOG.info("Stopping handler '" + handler + "'");
+                handler.stop();
+                LOG.info("Handler '" + handler + "' stopped");
+            }
         }
-        LOG.info("Handlers stopped");
+        if (LOG.isDebugEnabled())
+            LOG.debug("Handlers stopped");
     }
 
     private void stopSessionAccessor() {
-        LOG.info("Disposing session accessor");
+        if (LOG.isDebugEnabled())
+            LOG.debug("Disposing session accessor");
         sessionAccessor.dispose();
-        LOG.info("Session accessor disposed");
+        if (LOG.isDebugEnabled())
+            LOG.debug("Session accessor disposed");
     }
 
     /**
@@ -290,38 +300,42 @@ public class BasicServiceContainer implements ServiceContainer {
      * @throws ContainerLifecycleException If we fail to start a transport
      */
     private void startTransports() throws ContainerLifecycleException {
-        LOG.info("Starting transports");
+        if (LOG.isDebugEnabled())
+            LOG.debug("Starting transports");
         synchronized (transports) {
             for (Transport transport : transports) {
-            LOG.info("Starting transport '" + transport + "'");
-            try {
-            transport.start();
-            } catch (TransportException e) {
-            LOG.info("Transport '" + transport + "' failed to start");
-            throw new ContainerLifecycleException(
-                    "Failed to start transport ' " + transport + "'", e);
+                LOG.info("Starting transport '" + transport + "'");
+                try {
+                    transport.start();
+                } catch (TransportException e) {
+                    LOG.info("Transport '" + transport + "' failed to start");
+                    throw new ContainerLifecycleException(
+                            "Failed to start transport ' " + transport + "'", e);
+                }
             }
-         }
         }
-        LOG.info("Transports started");
+        if (LOG.isDebugEnabled())
+            LOG.debug("Transports started");
     }
 
     private void stopTransports() {
-        LOG.info("Stopping transports");
+        if (LOG.isDebugEnabled())
+            LOG.debug("Stopping transports");
         boolean isError = false;
         synchronized (transports) {
             for (Transport transport : transports) {
-            LOG.info("Stopping transport '" + transport + "'");
-            try {
-            transport.stop();
-            LOG.info("Transport '" + transport + "' stopped");
-            } catch (TransportException e) {
-            LOG.warn("Failed to stop transport '" + transport + "'", e);
-            isError = true;
+                LOG.info("Stopping transport '" + transport + "'");
+                try {
+                    transport.stop();
+                    LOG.info("Transport '" + transport + "' stopped");
+                } catch (TransportException e) {
+                    LOG.warn("Failed to stop transport '" + transport + "'", e);
+                    isError = true;
+                }
             }
-         }
         }
         String errorString = isError ? " (One or more errors encountered)" : "";
-        LOG.info("Transports stopped" + errorString);
+        if (LOG.isDebugEnabled())
+            LOG.debug("Transports stopped" + errorString);
     }
 }

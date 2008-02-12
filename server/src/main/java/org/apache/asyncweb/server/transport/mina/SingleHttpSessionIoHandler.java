@@ -105,19 +105,22 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
 
     public void sessionCreated()
     {
-        LOG.info( "Session created" );
+        if (LOG.isDebugEnabled())
+            LOG.debug( "Session created" );
     }
 
 
     public void sessionOpened()
     {
-        LOG.info( "Connection opened" );
+        if (LOG.isDebugEnabled())
+            LOG.debug( "Connection opened" );
     }
 
 
     public void sessionClosed()
     {
-        LOG.info( "Connection closed" );
+        if (LOG.isDebugEnabled())
+            LOG.debug( "Connection closed" );
 
         if ( currentContext != null )
         {
@@ -140,8 +143,8 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
             //        LOG.info("Read idled out while parsing request. Scheduling timeout response");
             //        handleReadFailure(currentContext, HttpResponseStatus.REQUEST_TIMEOUT, "Timeout while reading request");
             //      } else {
-
-        	LOG.debug( "Session idle detected on context {} with idleType {}", currentContext, idleType );
+            if (LOG.isDebugEnabled())
+                LOG.debug( "Session idle detected on context {} with idleType {}", currentContext, idleType );
         	
             if ( currentContext != null )
             {
@@ -152,13 +155,15 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
             }
             else
             {
-	            // TODO - look further into this - it may present serious issues when dealing with HTTP/1.1 
-	            LOG.info( "Idled with no current request. Scheduling closure when pipeline empties" );
+	            // TODO - look further into this - it may present serious issues when dealing with HTTP/1.1
+                if (LOG.isDebugEnabled())
+                    LOG.debug( "Idled with no current request. Scheduling closure when pipeline empties" );
 	            pipeline.runWhenEmpty( new Runnable()
 	            {
 	                public void run()
 	                {
-	                    LOG.info( "Pipeline empty after idle. Closing session" );
+	                    if (LOG.isDebugEnabled())
+	                        LOG.debug( "Pipeline empty after idle. Closing session" );
 	                    session.close();
 	                }
 	            });
@@ -371,7 +376,8 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
                 Object message) throws Exception {
             HttpServiceContext context = (HttpServiceContext) message;
             if (pipeline.addRequest(context)) {
-                LOG.debug("Allocated slot in request pipeline");
+                if (LOG.isDebugEnabled())
+                    LOG.debug("Allocated slot in request pipeline");
                 nextFilter.messageReceived(session, message);
             } else {
                 // The client has filled their pipeline. Currently, this
@@ -425,7 +431,8 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
             WriteFuture future = session.write( this );
             if ( requiresClosure )
             {
-                LOG.debug( "Added CLOSE future listener." );
+                if (LOG.isDebugEnabled())
+                    LOG.debug( "Added CLOSE future listener." );
                 future.addListener( IoFutureListener.CLOSE );
             }
         }

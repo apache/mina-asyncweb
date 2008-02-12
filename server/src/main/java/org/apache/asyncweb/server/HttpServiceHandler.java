@@ -101,8 +101,8 @@ public class HttpServiceHandler implements HttpServiceFilter {
         if (service == null) {
             handleUnmappedRequest(context);
         } else {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Mapped request [" + request.getRequestUri() + "] to "
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Mapped request [" + request.getRequestUri() + "] to "
                         + "service '" + serviceName + "'");
             }
             service.handleRequest(context);
@@ -123,7 +123,8 @@ public class HttpServiceHandler implements HttpServiceFilter {
      * Starts this handler.
      */
     public void start() {
-        LOG.info("HttpServiceHandler starting");
+        if (LOG.isDebugEnabled())
+            LOG.debug("HttpServiceHandler starting");
         for (Entry<String, HttpService> entry : serviceMap
                 .entrySet()) {
          String serviceName = entry.getKey();

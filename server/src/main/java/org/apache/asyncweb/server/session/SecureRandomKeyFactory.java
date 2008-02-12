@@ -100,13 +100,14 @@ public class SecureRandomKeyFactory implements HttpSessionKeyFactory {
      */
     public void start() {
         isStarted = true;
-        LOG.info("Attempting to obtain SecureRandom using algorithim: "
-                + algorithm);
+        if (LOG.isDebugEnabled())
+            LOG.debug("Attempting to obtain SecureRandom using algorithim: "
+                    + algorithm);
         try {
             secureRandom = SecureRandom.getInstance(algorithm);
-            LOG.info("Ok - using algorithm: " + algorithm);
+            LOG.info("Using algorithm: " + algorithm);
         } catch (NoSuchAlgorithmException e) {
-            LOG.info("Failed to obtain secure random with algorithm: "
+            LOG.warn("Failed to obtain secure random with algorithm: "
                     + algorithm + ". Resorting to default");
         }
         secureRandom = new SecureRandom();

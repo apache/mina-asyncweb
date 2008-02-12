@@ -98,8 +98,8 @@ public class SimplePrefixResolver implements ServiceResolver {
                 path = null;
             }
         }
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Resolved request to service name: " + path);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Resolved request to service name: " + path);
         }
         return path;
     }

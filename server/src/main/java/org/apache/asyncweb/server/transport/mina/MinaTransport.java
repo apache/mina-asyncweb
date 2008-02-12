@@ -186,7 +186,7 @@ public class MinaTransport implements Transport
 
             if ( isLoggingTraffic )
             {
-                LOG.info( "Configuring traffic logging filter" );
+                LOG.debug( "Configuring traffic logging filter" );
                 IoFilter filter = new LoggingFilter();
                 acceptor.getFilterChain().addFirst( "LoggingFilter", filter );
             }
@@ -205,7 +205,7 @@ public class MinaTransport implements Transport
             }
             
             success = true;
-            LOG.info( "NIO HTTP Transport bound on port " + port );
+            LOG.debug( "NIO HTTP Transport bound on port " + port );
         }
         catch ( IOException e )
         {
