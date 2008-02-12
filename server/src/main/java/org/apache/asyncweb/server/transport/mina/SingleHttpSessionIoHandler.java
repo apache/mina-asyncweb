@@ -133,7 +133,7 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
      */
     public void sessionIdle( IdleStatus idleType )
     {
-        if ( session.getIdleCount( idleType ) == 1 )
+        if ( session.getIdleCount( idleType ) >= 1 )
         {
             //      // FIXME currentRequest is always null now; we need to cooperate with a decoder.
             //      if (currentContext != null) {
@@ -141,6 +141,8 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
             //        handleReadFailure(currentContext, HttpResponseStatus.REQUEST_TIMEOUT, "Timeout while reading request");
             //      } else {
 
+        	LOG.debug( "Session idle detected on context {} with idleType {}", currentContext, idleType );
+        	
             if ( currentContext != null )
             {
                 if ( IdleStatus.BOTH_IDLE == idleType || IdleStatus.READER_IDLE == idleType )
@@ -148,18 +150,19 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
                     currentContext.fireClientIdle( session.getLastReaderIdleTime(), session.getReaderIdleCount() );
                 }
             }
-
-            // TODO - look further into this - it may present serious issues when dealing with HTTP/1.1 
-            LOG.info( "Idled with no current request. Scheduling closure when pipeline empties" );
-            pipeline.runWhenEmpty( new Runnable()
+            else
             {
-                public void run()
-                {
-                    LOG.info( "Pipeline empty after idle. Closing session" );
-                    session.close();
-                }
-            });
-            //      }
+	            // TODO - look further into this - it may present serious issues when dealing with HTTP/1.1 
+	            LOG.info( "Idled with no current request. Scheduling closure when pipeline empties" );
+	            pipeline.runWhenEmpty( new Runnable()
+	            {
+	                public void run()
+	                {
+	                    LOG.info( "Pipeline empty after idle. Closing session" );
+	                    session.close();
+	                }
+	            });
+            }
         }
     }
 
