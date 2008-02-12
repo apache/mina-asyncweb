@@ -52,9 +52,7 @@ public class SimpleCachingPolicy implements CachingPolicy {
         long last=requestedFile.lastModified();
         long maxAge=System.currentTimeMillis()-last;
         response.setHeader("Cache-Control", "max-age="+maxAge);
-
         response.setHeader("Last-Modified",sdf.format(new Date(last)));
-        System.err.println(response.getHeader("Last-Modified"));
         return true;
     }
 

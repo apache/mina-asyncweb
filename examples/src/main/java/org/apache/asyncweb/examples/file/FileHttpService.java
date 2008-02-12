@@ -21,16 +21,20 @@
 package org.apache.asyncweb.examples.file;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.RandomAccessFile;
 import java.net.URI;
 import java.nio.channels.FileChannel;
 import java.security.InvalidParameterException;
+import java.util.regex.Pattern;
 
 import org.apache.asyncweb.common.DefaultHttpResponse;
 import org.apache.asyncweb.common.HttpResponseStatus;
 import org.apache.asyncweb.common.MutableHttpResponse;
 import org.apache.asyncweb.examples.file.cache.CachingPolicy;
 import org.apache.asyncweb.examples.file.cache.SimpleCachingPolicy;
+import org.apache.asyncweb.examples.file.index.DefaultDirectoryIndexGenerator;
+import org.apache.asyncweb.examples.file.index.DirectoryIndexGenerator;
 import org.apache.asyncweb.examples.file.mimetype.MimeMap;
 import org.apache.asyncweb.server.HttpService;
 import org.apache.asyncweb.server.HttpServiceContext;
@@ -55,9 +59,15 @@ public class FileHttpService implements HttpService {
 
     private MimeMap mimeMap = new MimeMap();
 
-    public FileHttpService(String baseUrl, String basePath) {
+    private FilenameFilter indexFileFilter;
+    
+    private DirectoryIndexGenerator indexGenerator = new DefaultDirectoryIndexGenerator();
+    
+    public FileHttpService(String baseUrl, String basePath, String directoryIndexPattern) {
         this.baseUrl = baseUrl;
         this.basePath = basePath;
+        this.indexFileFilter = new RegExpFilenameFilter( Pattern.compile(directoryIndexPattern));
+        
         if (baseUrl == null || basePath == null)
             throw new InvalidParameterException("Null parameters");
         File f = new File(basePath);
@@ -66,22 +76,45 @@ public class FileHttpService implements HttpService {
                     + " ] is not a valid path.");
         cachingPolicy = new SimpleCachingPolicy();
     }
+    
+    public FileHttpService(String baseUrl, String basePath) {
+        this(baseUrl, basePath, "index.html");
+    }
 
     public void handleRequest(HttpServiceContext context) throws Exception {
         URI uri = context.getRequest().getRequestUri();
         String path = uri.getPath();
-        LOG.info("handling file request : " + uri);
+        LOG.info("Handling file request : [ " + uri+" ] from [ "+context.getRemoteAddress()+" ]");
         if (!path.startsWith(baseUrl)) {
             // error the requested URL is not in the base URL
             //TODO : find the good exception to throw
             throw new InvalidParameterException("Wrong URL");
         }
 
+        MutableHttpResponse response = new DefaultHttpResponse();
+
         path = path.substring(baseUrl.length());
         File f = new File(basePath + File.separator + path);
 
-        MutableHttpResponse response = new DefaultHttpResponse();
-        if (f.exists() && (!f.isDirectory())) {
+        if (f.exists() && ( indexGenerator!=null ||!f.isDirectory() ) ) {
+            
+            if (f.isDirectory()) {
+                // search for index file
+                String[] indexes=f.list(indexFileFilter);
+                if(indexes.length==0) {
+                    if(indexGenerator!=null) {
+                        IoBuffer indexResponse = indexGenerator.generateIndex(f); 
+                        indexResponse.flip();
+                        response.setContent(indexResponse);
+                        response.setHeader("Content-Type","text/html");
+                        response.setStatus(HttpResponseStatus.OK);
+                        context.commitResponse(response);
+                        return;
+                    }
+                } else
+                    f=new File(f.getAbsolutePath()+File.separator+indexes[0]);
+            }
+            
             LOG.info("Serving file [ " + f.getAbsolutePath() + " ]");
 
             // caching processing
@@ -144,4 +177,16 @@ public class FileHttpService implements HttpService {
         // nothing to do there
     }
 
+    private class RegExpFilenameFilter implements FilenameFilter {
+        private Pattern pattern;
+        
+        public RegExpFilenameFilter(Pattern pattern) {
+            this.pattern=pattern;
+        }
+
+        public boolean accept(File dir, String name) {
+            return pattern.matcher(name).matches();
+        }
+        
+    }
 }
