@@ -59,7 +59,7 @@ public class StandardResponseFormatter implements ErrorResponseFormatter {
         html.append(bundle.getString("errorMessage"));
         html.append("</title><style><!--");
         CSS.appendTo(html).append("--></style>");
-        html.append("</head></body>");
+        html.append("</head>");
         html.append("<h1>");
         html.append(bundle.getString("errorTitle"));
         html.append("</h1>");
@@ -78,7 +78,7 @@ public class StandardResponseFormatter implements ErrorResponseFormatter {
         html.append("</table></p>");
 
         html.append("<HR size=\"1\" noshade=\"noshade\">");
-        html.append("<H2>AsyncWeb Server</H2>");
+        html.append("<H2>AsyncWeb Server</H2></body></html>");
 
         IoBuffer out = IoBuffer.allocate(html.length());
 
