@@ -25,9 +25,18 @@ import java.util.Date;
 
 import org.apache.asyncweb.examples.file.mimetype.MimeMap;
 import org.apache.asyncweb.server.errorReporting.CSS;
+import org.apache.asyncweb.server.util.StringBundle;
 import org.apache.mina.common.IoBuffer;
 
+/**
+ * A simply directory index page generator, generating page in the error page style.
+ * @author The Apache MINA Project (dev@mina.apache.org)
+ */
 public class DefaultDirectoryIndexGenerator implements DirectoryIndexGenerator {
+
+    private static final StringBundle bundle = StringBundle
+            .getBundle(DefaultDirectoryIndexGenerator.class.getPackage()
+                    .getName());
 
     public IoBuffer generateIndex(File directory) {
         File[] files = directory.listFiles();
@@ -38,19 +47,28 @@ public class DefaultDirectoryIndexGenerator implements DirectoryIndexGenerator {
         html.append(directory.getName());
         html.append("</title><style><!--");
         CSS.appendTo(html).append("--></style>");
-        html.append("</head></body>");
+        html.append("</head></body>\n");
         html.append("<H1>Index of : ").append(directory.getName()).append(
                 "</H1>\n");
-        html
-                .append("<table cellpadding=\"5\"><tr><th>Name</th><th>Type</th><th>Size</th><th>Last-modified</th></tr>");
+        html.append("<table cellpadding=\"5\"><tr><th>");
+        html.append(bundle.getString("nameHeader")).append("</th><th>");
+        html.append(bundle.getString("typeHeader")).append("</th><th>");
+        html.append(bundle.getString("sizeHeader")).append("</th><th>");
+        html.append(bundle.getString("lastModifiedHeader"))
+                .append("</th></tr>\n");
+
+        // back to parent directory
+        html.append("<tr><td><a href=\"..\">").append(
+                bundle.getString("parentDirectory"));
+        html.append("</a></td><td>DIR</td><td></td><td></td></tr>\n");
 
         for (File file : files) {
             html.append("<tr><td><a href=\"").append(file.getName());
-            if(file.isDirectory())
+            if (file.isDirectory())
                 html.append("/");
             html.append("\">");
             html.append(file.getName());
-            if(file.isDirectory())
+            if (file.isDirectory())
                 html.append("/");
             html.append("</a></td><td>");
             html.append(getType(file));
@@ -58,9 +76,9 @@ public class DefaultDirectoryIndexGenerator implements DirectoryIndexGenerator {
             html.append(file.length());
             html.append("</td><td>");
             html.append(new Date(file.lastModified()));
-            html.append("</td></tr>");
+            html.append("</td></tr>\n");
         }
-        html.append("</table>");
+        html.append("</table>\n");
         html.append("<HR size=\"1\" noshade=\"noshade\">");
         html.append("<H2>AsyncWeb Server</H2></body></html>");
         IoBuffer out = IoBuffer.allocate(html.length());
@@ -75,12 +93,12 @@ public class DefaultDirectoryIndexGenerator implements DirectoryIndexGenerator {
 
         return out;
     }
-    
+
     private String getType(File file) {
-        if(file.isDirectory())
+        if (file.isDirectory())
             return "DIR";
         String extension = MimeMap.getExtension(file.getName());
-        if(extension==null)
+        if (extension == null)
             return "";
         else
             return extension.toLowerCase();

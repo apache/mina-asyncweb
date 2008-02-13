@@ -71,6 +71,7 @@ public class FileHttpService implements HttpService {
         if (baseUrl == null || basePath == null)
             throw new InvalidParameterException("Null parameters");
         File f = new File(basePath);
+        
         if (!(f.isDirectory() && f.exists()))
             throw new InvalidParameterException("The base path [ " + basePath
                     + " ] is not a valid path.");
@@ -85,6 +86,7 @@ public class FileHttpService implements HttpService {
         URI uri = context.getRequest().getRequestUri();
         String path = uri.getPath();
         LOG.info("Handling file request : [ " + uri+" ] from [ "+context.getRemoteAddress()+" ]");
+        
         if (!path.startsWith(baseUrl)) {
             // error the requested URL is not in the base URL
             //TODO : find the good exception to throw
@@ -96,24 +98,43 @@ public class FileHttpService implements HttpService {
         path = path.substring(baseUrl.length());
         File f = new File(basePath + File.separator + path);
 
-        if (f.exists() && ( indexGenerator!=null ||!f.isDirectory() ) ) {
+        if (f.isDirectory()) {
             
-            if (f.isDirectory()) {
-                // search for index file
-                String[] indexes=f.list(indexFileFilter);
-                if(indexes.length==0) {
-                    if(indexGenerator!=null) {
-                        IoBuffer indexResponse = indexGenerator.generateIndex(f); 
-                        indexResponse.flip();
-                        response.setContent(indexResponse);
-                        response.setHeader("Content-Type","text/html");
-                        response.setStatus(HttpResponseStatus.OK);
-                        context.commitResponse(response);
-                        return;
-                    }
-                } else
-                    f=new File(f.getAbsolutePath()+File.separator+indexes[0]);
+            // is the request finishing by the '/' character ?
+            String urlStr=uri.toString();
+            
+            if (urlStr.charAt(urlStr.length()-1)!='/' ) {
+                
+                if(LOG.isDebugEnabled())
+                    LOG.debug("Redirecting "+urlStr+" to "+urlStr+"/");
+                
+                // send back the good URI
+                response.setStatus(HttpResponseStatus.MOVED_PERMANENTLY);
+                response.setHeader("Location", urlStr+"/");
+                context.commitResponse(response);
+                return;
             }
+           
+            // search for index file
+            String[] indexes=f.list(indexFileFilter);
+            if(indexes.length==0) {
+                LOG.info("Serving directory index for [ " + f.getAbsolutePath() + " ]");
+                if(indexGenerator!=null) {
+                    // create a directory index page
+                    IoBuffer indexResponse = indexGenerator.generateIndex(f); 
+                    indexResponse.flip();
+                    response.setContent(indexResponse);
+                    response.setHeader("Content-Type","text/html");
+                    response.setStatus(HttpResponseStatus.OK);
+                    context.commitResponse(response);
+                    return;
+                }
+            } else
+                // just serve the index file (ex:index.html) 
+                f=new File(f.getAbsolutePath()+File.separator+indexes[0]);
+            
+        }
+        if (f.exists() && !f.isDirectory() ) {
             
             LOG.info("Serving file [ " + f.getAbsolutePath() + " ]");
 
