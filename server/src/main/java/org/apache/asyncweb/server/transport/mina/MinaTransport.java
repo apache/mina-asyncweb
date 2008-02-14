@@ -24,9 +24,11 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 
+import org.apache.mina.common.IoEventType;
 import org.apache.mina.common.IoFilter;
 import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.filter.executor.OrderedThreadPoolExecutor;
+import org.apache.mina.filter.logging.LogLevel;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
@@ -69,6 +71,8 @@ public class MinaTransport implements Transport
     private HttpIoHandler ioHandler;
 
     private boolean isLoggingTraffic;
+    
+    private LogLevel logLevel = LogLevel.WARN;
 
     private ServiceContainer container;
 
@@ -143,6 +147,12 @@ public class MinaTransport implements Transport
     {
         this.isLoggingTraffic = isLoggingTraffic;
     }
+    
+    
+    public void setLogLevel( String logLevel )
+    {
+    	this.logLevel = LogLevel.valueOf( logLevel );
+    }
 
 
     /**
@@ -187,7 +197,17 @@ public class MinaTransport implements Transport
             if ( isLoggingTraffic )
             {
                 LOG.debug( "Configuring traffic logging filter" );
-                IoFilter filter = new LoggingFilter();
+                LoggingFilter filter = new LoggingFilter();
+                filter.setLogLevel( IoEventType.CLOSE, logLevel );
+                filter.setLogLevel( IoEventType.EXCEPTION_CAUGHT, logLevel );
+                filter.setLogLevel( IoEventType.MESSAGE_RECEIVED, logLevel );
+                filter.setLogLevel( IoEventType.MESSAGE_SENT, logLevel );
+                filter.setLogLevel( IoEventType.SESSION_CLOSED, logLevel );
+                filter.setLogLevel( IoEventType.SESSION_CREATED, logLevel );
+                filter.setLogLevel( IoEventType.SESSION_IDLE, logLevel );
+                filter.setLogLevel( IoEventType.SESSION_OPENED, logLevel );
+                filter.setLogLevel( IoEventType.SET_TRAFFIC_MASK, logLevel );
+                filter.setLogLevel( IoEventType.WRITE, logLevel );
                 acceptor.getFilterChain().addFirst( "LoggingFilter", filter );
             }
 

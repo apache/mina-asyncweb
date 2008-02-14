@@ -105,22 +105,19 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
 
     public void sessionCreated()
     {
-        if (LOG.isDebugEnabled())
-            LOG.debug( "Session created" );
+        LOG.info( "Session created: {}", session.getRemoteAddress() );
     }
 
 
     public void sessionOpened()
     {
-        if (LOG.isDebugEnabled())
-            LOG.debug( "Connection opened" );
+        LOG.info( "Session opened: {}", session.getRemoteAddress() );
     }
 
 
     public void sessionClosed()
     {
-        if (LOG.isDebugEnabled())
-            LOG.debug( "Connection closed" );
+        LOG.info( "Session closed: {}", session.getRemoteAddress() );
 
         if ( currentContext != null )
         {
@@ -143,8 +140,7 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
             //        LOG.info("Read idled out while parsing request. Scheduling timeout response");
             //        handleReadFailure(currentContext, HttpResponseStatus.REQUEST_TIMEOUT, "Timeout while reading request");
             //      } else {
-            if (LOG.isDebugEnabled())
-                LOG.debug( "Session idle detected on context {} with idleType {}", currentContext, idleType );
+            LOG.debug( "Session idle detected on context {} with idleType {}", currentContext, idleType );
         	
             if ( currentContext != null )
             {
@@ -156,14 +152,12 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
             else
             {
 	            // TODO - look further into this - it may present serious issues when dealing with HTTP/1.1
-                if (LOG.isDebugEnabled())
-                    LOG.debug( "Idled with no current request. Scheduling closure when pipeline empties" );
+                LOG.debug( "Idled with no current request. Scheduling closure when pipeline empties" );
 	            pipeline.runWhenEmpty( new Runnable()
 	            {
 	                public void run()
 	                {
-	                    if (LOG.isDebugEnabled())
-	                        LOG.debug( "Pipeline empty after idle. Closing session" );
+	                    LOG.info( "Pipeline empty after idle. Closing session: {}", session.getRemoteAddress() );
 	                    session.close();
 	                }
 	            });
@@ -189,7 +183,7 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
                 status = HttpResponseStatus.BAD_REQUEST;
             }
 
-            LOG.warn( "Bad request:", cause );
+            LOG.warn( "Bad request: {}", session.getRemoteAddress(), cause );
 
             response = new DefaultHttpResponse();
             response.setProtocolVersion( HttpVersion.HTTP_1_1 );
@@ -205,7 +199,7 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
             response = new DefaultHttpResponse();
             response.setProtocolVersion( HttpVersion.HTTP_1_1 );
             response.setStatus( HttpResponseStatus.INTERNAL_SERVER_ERROR );
-            LOG.error( "Unexpected exception from a service.", cause );
+            LOG.error( "Unexpected exception from a service: {}", session.getRemoteAddress(), cause );
         }
 
         if ( response != null )
@@ -243,11 +237,7 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
      */
     private void handleReadFailure( HttpServiceContext context, HttpResponseStatus status, String message )
     {
-        if ( LOG.isInfoEnabled() )
-        {
-            LOG.info( "Failed to handle client request. Reason: " + status );
-        }
-
+        LOG.info( "Failed to handle client {} request. Reason: {}", session.getRemoteAddress(), status );
         MutableHttpResponse response = new DefaultHttpResponse();
         response.setStatusReasonPhrase( message );
         response.setStatus( status );
@@ -431,8 +421,7 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
             WriteFuture future = session.write( this );
             if ( requiresClosure )
             {
-                if (LOG.isDebugEnabled())
-                    LOG.debug( "Added CLOSE future listener." );
+                LOG.debug( "Added CLOSE future listener." );
                 future.addListener( IoFutureListener.CLOSE );
             }
         }
