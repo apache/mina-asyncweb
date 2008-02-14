@@ -24,11 +24,13 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 
+import org.apache.mina.common.DefaultIoFilterChainBuilder;
 import org.apache.mina.common.IoEventType;
 import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.filter.executor.OrderedThreadPoolExecutor;
 import org.apache.mina.filter.logging.LogLevel;
 import org.apache.mina.filter.logging.LoggingFilter;
+import org.apache.mina.filter.logging.MdcInjectionFilter;
 import org.apache.mina.transport.socket.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.apache.asyncweb.server.ServiceContainer;
@@ -189,10 +191,14 @@ public class MinaTransport implements Transport
         
         boolean success = false;
         try {
-            acceptor.getFilterChain().addLast( "threadPool", new ExecutorFilter( eventExecutor ) );
+        	DefaultIoFilterChainBuilder chain = acceptor.getFilterChain();
+        	
+            chain.addFirst( "threadPool", new ExecutorFilter( eventExecutor ) );
             acceptor.setReuseAddress( true );
             acceptor.getSessionConfig().setReuseAddress( true );
 
+            chain.addLast("mdc", new MdcInjectionFilter() );
+            
             if ( isLoggingTraffic )
             {
                 LOG.debug( "Configuring traffic logging filter" );
@@ -207,7 +213,7 @@ public class MinaTransport implements Transport
                 filter.setLogLevel( IoEventType.SESSION_OPENED, logLevel );
                 filter.setLogLevel( IoEventType.SET_TRAFFIC_MASK, logLevel );
                 filter.setLogLevel( IoEventType.WRITE, logLevel );
-                acceptor.getFilterChain().addFirst( "LoggingFilter", filter );
+                acceptor.getFilterChain().addLast( "logging", filter );
             }
 
             // TODO make this configurable instead of hardcoding like this
