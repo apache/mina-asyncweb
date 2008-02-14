@@ -156,8 +156,10 @@ public class MimeMap implements FileNameMap {
      */
     public String getContentType(String extn) {
         String type = (String) map.get(extn.toLowerCase());
-        if (type == null)
+        
+        if (type == null) {
             type = (String) defaultMap.get(extn);
+        }
         return type;
     }
 
@@ -173,8 +175,10 @@ public class MimeMap implements FileNameMap {
         int length = fileName.length();
 
         int newEnd = fileName.lastIndexOf('#');
-        if (newEnd == -1)
+        
+        if (newEnd == -1) {
             newEnd = length;
+        }
         // Instead of creating a new string.
         //         if (i != -1) {
         //             fileName = fileName.substring(0, i);
@@ -190,6 +194,7 @@ public class MimeMap implements FileNameMap {
 
     public String getContentTypeFor(String fileName) {
         String extn = getExtension(fileName);
+        
         if (extn != null) {
             return getContentType(extn);
         } else {

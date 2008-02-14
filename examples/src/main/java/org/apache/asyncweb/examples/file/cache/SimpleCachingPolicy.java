@@ -37,22 +37,23 @@ public class SimpleCachingPolicy implements CachingPolicy {
 
     /* formatter for strings like : "Last-Modified  Mon, 17 Dec 2007 00:12:30 GMT" */
     private SimpleDateFormat sdf;
-    
+
     public SimpleCachingPolicy() {
-        sdf=new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz",Locale.US);
+        sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
-    
+
     public boolean isCacheable(File requestedFile, HttpRequest request) {
         return true;
     }
 
-    public boolean testAndSetCacheHit(File requestedFile, HttpRequest request, MutableHttpResponse response) {
-        
-        long last=requestedFile.lastModified();
-        long maxAge=System.currentTimeMillis()-last;
-        response.setHeader("Cache-Control", "max-age="+maxAge);
-        response.setHeader("Last-Modified",sdf.format(new Date(last)));
+    public boolean testAndSetCacheHit(File requestedFile, HttpRequest request,
+            MutableHttpResponse response) {
+
+        long last = requestedFile.lastModified();
+        long maxAge = System.currentTimeMillis() - last;
+        response.setHeader("Cache-Control", "max-age=" + maxAge);
+        response.setHeader("Last-Modified", sdf.format(new Date(last)));
         return true;
     }
 

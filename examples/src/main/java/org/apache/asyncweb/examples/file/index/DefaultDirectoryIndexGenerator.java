@@ -64,12 +64,14 @@ public class DefaultDirectoryIndexGenerator implements DirectoryIndexGenerator {
 
         for (File file : files) {
             html.append("<tr><td><a href=\"").append(file.getName());
-            if (file.isDirectory())
+            if (file.isDirectory()) {
                 html.append("/");
+            }
             html.append("\">");
             html.append(file.getName());
-            if (file.isDirectory())
+            if (file.isDirectory()) {
                 html.append("/");
+            }
             html.append("</a></td><td>");
             html.append(getType(file));
             html.append("</td><td>");
@@ -95,13 +97,17 @@ public class DefaultDirectoryIndexGenerator implements DirectoryIndexGenerator {
     }
 
     private String getType(File file) {
-        if (file.isDirectory())
+        if (file.isDirectory()) {
             return "DIR";
+        }
+        
         String extension = MimeMap.getExtension(file.getName());
-        if (extension == null)
+        
+        if (extension == null) {
             return "";
-        else
+        } else {
             return extension.toLowerCase();
+        }
     }
 
 }

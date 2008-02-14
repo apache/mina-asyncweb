@@ -27,29 +27,34 @@ import org.apache.asyncweb.server.transport.mina.DefaultHttpIoHandler;
 import org.apache.asyncweb.server.transport.mina.MinaTransport;
 
 public class FileMain {
-    
+
     /**
      * Starting an AsyncWeb server on port 9021, service files from ./data to base url /static
      */
-    public static void main( String[] args ) throws Exception
-    {
+    public static void main(String[] args) throws Exception {
         // Setup the default container with a service handler that contains the helloWorldService
         BasicServiceContainer container = new BasicServiceContainer();
         HttpServiceHandler handler = new HttpServiceHandler();
-        handler.addHttpService( "fileExample", new FileHttpService("/static","./data") );
-        handler.addHttpService( "helloWorldExample", new HelloWorldHttpService() );
-        container.addServiceFilter( handler );
+        
+        handler.addHttpService("fileExample", new FileHttpService("/static",
+                "./data"));
+        
+        handler
+                .addHttpService("helloWorldExample",
+                        new HelloWorldHttpService());
+        
+        container.addServiceFilter(handler);
 
         PatternMatchResolver resolver = new PatternMatchResolver();
         resolver.addPatternMapping("/static/.*", "fileExample");
-        handler.setServiceResolver( resolver );
+        handler.setServiceResolver(resolver);
 
         // Create the mina transport and enable the container with it
         MinaTransport transport = new MinaTransport();
-        container.addTransport( transport );
+        container.addTransport(transport);
         DefaultHttpIoHandler ioHandler = new DefaultHttpIoHandler();
-        ioHandler.setReadIdle( 10 );
-        transport.setIoHandler( ioHandler );
+        ioHandler.setReadIdle(10);
+        transport.setIoHandler(ioHandler);
 
         // Fire it up and go
         container.start();

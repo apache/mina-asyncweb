@@ -60,24 +60,31 @@ public class FileHttpService implements HttpService {
     private MimeMap mimeMap = new MimeMap();
 
     private FilenameFilter indexFileFilter;
-    
+
     private DirectoryIndexGenerator indexGenerator = new DefaultDirectoryIndexGenerator();
-    
-    public FileHttpService(String baseUrl, String basePath, String directoryIndexPattern) {
+
+    public FileHttpService(String baseUrl, String basePath,
+            String directoryIndexPattern) {
         this.baseUrl = baseUrl;
         this.basePath = basePath;
-        this.indexFileFilter = new RegExpFilenameFilter( Pattern.compile(directoryIndexPattern));
-        
-        if (baseUrl == null || basePath == null)
+        this.indexFileFilter = new RegExpFilenameFilter(Pattern
+                .compile(directoryIndexPattern));
+
+        if (baseUrl == null || basePath == null) {
             throw new InvalidParameterException("Null parameters");
+        }
+
         File f = new File(basePath);
-        
-        if (!(f.isDirectory() && f.exists()))
+
+        if (!(f.isDirectory() && f.exists())) {
+            
             throw new InvalidParameterException("The base path [ " + basePath
                     + " ] is not a valid path.");
+        }
+
         cachingPolicy = new SimpleCachingPolicy();
     }
-    
+
     public FileHttpService(String baseUrl, String basePath) {
         this(baseUrl, basePath, "index.html");
     }
@@ -85,8 +92,9 @@ public class FileHttpService implements HttpService {
     public void handleRequest(HttpServiceContext context) throws Exception {
         URI uri = context.getRequest().getRequestUri();
         String path = uri.getPath();
-        LOG.info("Handling file request : [ " + uri+" ] from [ "+context.getRemoteAddress()+" ]");
         
+        LOG.info("Handling file request : {} from {}",uri,context.getRemoteAddress());
+
         if (!path.startsWith(baseUrl)) {
             // error the requested URL is not in the base URL
             //TODO : find the good exception to throw
@@ -99,44 +107,46 @@ public class FileHttpService implements HttpService {
         File f = new File(basePath + File.separator + path);
 
         if (f.isDirectory()) {
-            
+
             // is the request finishing by the '/' character ?
-            String urlStr=uri.toString();
-            
-            if (urlStr.charAt(urlStr.length()-1)!='/' ) {
-                
-                if(LOG.isDebugEnabled())
-                    LOG.debug("Redirecting "+urlStr+" to "+urlStr+"/");
-                
+            String urlStr = uri.toString();
+
+            if (urlStr.charAt(urlStr.length() - 1) != '/') {
+
+                LOG.debug("Redirecting {} to {}/", urlStr, urlStr);
+
                 // send back the good URI
                 response.setStatus(HttpResponseStatus.MOVED_PERMANENTLY);
-                response.setHeader("Location", urlStr+"/");
+                response.setHeader("Location", urlStr + "/");
                 context.commitResponse(response);
                 return;
             }
-           
+
             // search for index file
-            String[] indexes=f.list(indexFileFilter);
-            if(indexes.length==0) {
-                LOG.info("Serving directory index for [ " + f.getAbsolutePath() + " ]");
-                if(indexGenerator!=null) {
+            String[] indexes = f.list(indexFileFilter);
+            if (indexes.length == 0) {
+
+                LOG.info("Serving directory index for {}", f.getAbsolutePath());
+
+                if (indexGenerator != null) {
                     // create a directory index page
-                    IoBuffer indexResponse = indexGenerator.generateIndex(f); 
+                    IoBuffer indexResponse = indexGenerator.generateIndex(f);
                     indexResponse.flip();
                     response.setContent(indexResponse);
-                    response.setHeader("Content-Type","text/html");
+                    response.setHeader("Content-Type", "text/html");
                     response.setStatus(HttpResponseStatus.OK);
                     context.commitResponse(response);
                     return;
                 }
-            } else
+            } else {
                 // just serve the index file (ex:index.html) 
-                f=new File(f.getAbsolutePath()+File.separator+indexes[0]);
-            
+                f = new File(f.getAbsolutePath() + File.separator + indexes[0]);
+            }
+
         }
-        if (f.exists() && !f.isDirectory() ) {
-            
-            LOG.info("Serving file [ " + f.getAbsolutePath() + " ]");
+        if (f.exists() && !f.isDirectory()) {
+
+            LOG.info("Serving file {}",f.getAbsolutePath());
 
             // caching processing
             if (cachingPolicy == null
@@ -149,7 +159,7 @@ public class FileHttpService implements HttpService {
             }
 
             // setting mime-type based on the mime-map
-            
+
             String contentType = mimeMap.getContentType(MimeMap.getExtension(f
                     .getName()));
 
@@ -162,21 +172,21 @@ public class FileHttpService implements HttpService {
                     .getChannel();
 
             // TODO : well it's quite explosive on big files, need to change the API
-            
+
             int fileSize = (int) fileChannel.size();
             IoBuffer responseBuffer = IoBuffer.allocate(fileSize);
-            
+
             fileChannel.read(responseBuffer.buf());
             fileChannel.close();
-            
+
             responseBuffer.flip();
             response.setContent(responseBuffer);
-            
+
         } else {
             // the file is not found, we send the famous 404 error
             response.setStatus(HttpResponseStatus.NOT_FOUND);
             response.setStatusReasonPhrase("File \"" + path + "\"");
-            LOG.warn("The file [ " + f.getAbsolutePath() + " ] is not found");
+            LOG.warn("The file {} is not found",f.getAbsolutePath());
         }
         context.commitResponse(response);
 
@@ -200,14 +210,14 @@ public class FileHttpService implements HttpService {
 
     private class RegExpFilenameFilter implements FilenameFilter {
         private Pattern pattern;
-        
+
         public RegExpFilenameFilter(Pattern pattern) {
-            this.pattern=pattern;
+            this.pattern = pattern;
         }
 
         public boolean accept(File dir, String name) {
             return pattern.matcher(name).matches();
         }
-        
+
     }
 }
