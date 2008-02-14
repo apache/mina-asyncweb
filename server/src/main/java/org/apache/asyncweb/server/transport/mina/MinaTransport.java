@@ -47,13 +47,13 @@ import org.slf4j.LoggerFactory;
  */
 public class MinaTransport implements Transport
 {
-    private static final Logger LOG = LoggerFactory.getLogger( MinaTransport.class );
-
     private static final int DEFAULT_PORT = 9012;
 
     private static final int DEFAULT_IO_THREADS = Runtime.getRuntime().availableProcessors();
 
     private static final int DEFAULT_EVENT_THREADS = 16;
+
+    private Logger log = LoggerFactory.getLogger( MinaTransport.class );
 
     private SocketAcceptor acceptor;
 
@@ -72,6 +72,8 @@ public class MinaTransport implements Transport
     private boolean isLoggingTraffic;
     
     private LogLevel logLevel = LogLevel.WARN;
+    
+    private String loggerName;
 
     private ServiceContainer container;
 
@@ -148,11 +150,42 @@ public class MinaTransport implements Transport
     }
     
     
+    /**
+     * Sets the log level to use for the MINA logging filter.
+     * 
+     * @param logLevel the priority of the log message
+     * @see {@link LogLevel}
+     */
     public void setLogLevel( String logLevel )
     {
     	this.logLevel = LogLevel.valueOf( logLevel );
     }
 
+    
+    /**
+     * Sets the name of the MINA logging filter and the category for
+     * this classes logger.
+     * 
+     * @param loggerName the category used by the FilterLogger.
+     */
+    public void setLoggerName( String loggerName )
+    {
+    	this.loggerName = loggerName;
+    	log = LoggerFactory.getLogger( loggerName );
+    }
+    
+    
+    /**
+     * Gets the name of the logger and the name set for the logging 
+     * filter. 
+     * 
+     * @return
+     */
+    public String getLoggerName()
+    {
+    	return loggerName;
+    }
+    
 
     /**
      * Sets the <code>ServiceContainer</code> to which we issue requests
@@ -195,8 +228,18 @@ public class MinaTransport implements Transport
 
             if ( isLoggingTraffic )
             {
-                LOG.debug( "Configuring traffic logging filter" );
-                LoggingFilter filter = new LoggingFilter();
+                log.debug( "Configuring traffic logging filter" );
+                
+                LoggingFilter filter;
+                if ( loggerName == null )
+                {
+                	filter = new LoggingFilter();
+                }
+                else
+                {
+                	filter = new LoggingFilter( loggerName );
+                }
+                
                 filter.setLogLevel( IoEventType.CLOSE, logLevel );
                 filter.setLogLevel( IoEventType.EXCEPTION_CAUGHT, logLevel );
                 filter.setLogLevel( IoEventType.MESSAGE_RECEIVED, logLevel );
@@ -224,7 +267,7 @@ public class MinaTransport implements Transport
             }
             
             success = true;
-            LOG.debug( "NIO HTTP Transport bound on port " + port );
+            log.debug( "NIO HTTP Transport bound on port " + port );
         }
         catch ( IOException e )
         {
@@ -279,7 +322,7 @@ public class MinaTransport implements Transport
     {
         if ( ioHandler == null ) 
         {
-            LOG.info( "No http IO Handler associated - using defaults" );
+            log.info( "No http IO Handler associated - using defaults" );
             ioHandler = new DefaultHttpIoHandler();
         }
 
