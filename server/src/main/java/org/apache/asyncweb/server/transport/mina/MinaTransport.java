@@ -25,7 +25,6 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 
 import org.apache.mina.common.IoEventType;
-import org.apache.mina.common.IoFilter;
 import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.filter.executor.OrderedThreadPoolExecutor;
 import org.apache.mina.filter.logging.LogLevel;
