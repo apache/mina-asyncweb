@@ -21,9 +21,11 @@
 package org.apache.asyncweb.examples.file;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.RandomAccessFile;
 import java.net.URI;
+import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.security.InvalidParameterException;
 import java.util.regex.Pattern;
@@ -168,19 +170,11 @@ public class FileHttpService implements HttpService {
 
             response.setStatus(HttpResponseStatus.OK);
 
-            FileChannel fileChannel = (new RandomAccessFile(f, "r"))
-                    .getChannel();
-
-            // TODO : well it's quite explosive on big files, need to change the API
-
-            int fileSize = (int) fileChannel.size();
-            IoBuffer responseBuffer = IoBuffer.allocate(fileSize);
-
-            fileChannel.read(responseBuffer.buf());
-            fileChannel.close();
-
-            responseBuffer.flip();
-            response.setContent(responseBuffer);
+            RandomAccessFile raf = new RandomAccessFile(f, "r");
+            FileChannel fc = raf.getChannel();
+            MappedByteBuffer buffer = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+            response.setContent(IoBuffer.wrap(buffer));
+            fc.close();
 
         } else {
             // the file is not found, we send the famous 404 error
