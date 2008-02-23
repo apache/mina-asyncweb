@@ -35,6 +35,9 @@ import org.apache.asyncweb.common.HttpResponseStatus;
 import org.apache.asyncweb.common.MutableHttpResponse;
 import org.apache.asyncweb.examples.file.cache.CachingPolicy;
 import org.apache.asyncweb.examples.file.cache.SimpleCachingPolicy;
+import org.apache.asyncweb.examples.file.fileloader.FileLoader;
+import org.apache.asyncweb.examples.file.fileloader.MmapFileLoaderTest;
+import org.apache.asyncweb.examples.file.fileloader.SimpleFileLoader;
 import org.apache.asyncweb.examples.file.index.DefaultDirectoryIndexGenerator;
 import org.apache.asyncweb.examples.file.index.DirectoryIndexGenerator;
 import org.apache.asyncweb.examples.file.mimetype.MimeMap;
@@ -46,8 +49,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * An HTTP service, serving files from the filesystem.
- * @author The Apache MINA Project (dev@mina.apache.org)
  *
+ * @author The Apache MINA Project (dev@mina.apache.org)
  */
 public class FileHttpService implements HttpService {
     private static final Logger LOG = LoggerFactory
@@ -57,13 +60,15 @@ public class FileHttpService implements HttpService {
 
     private String basePath;
 
-    private CachingPolicy cachingPolicy = null;
+    private CachingPolicy cachingPolicy = new SimpleCachingPolicy();
 
     private MimeMap mimeMap = new MimeMap();
 
     private FilenameFilter indexFileFilter;
 
     private DirectoryIndexGenerator indexGenerator = new DefaultDirectoryIndexGenerator();
+    
+    private FileLoader fileLoader = new SimpleFileLoader();
 
     public FileHttpService(String baseUrl, String basePath,
             String directoryIndexPattern) {
@@ -83,8 +88,6 @@ public class FileHttpService implements HttpService {
             throw new InvalidParameterException("The base path [ " + basePath
                     + " ] is not a valid path.");
         }
-
-        cachingPolicy = new SimpleCachingPolicy();
     }
 
     public FileHttpService(String baseUrl, String basePath) {
@@ -170,12 +173,10 @@ public class FileHttpService implements HttpService {
 
             response.setStatus(HttpResponseStatus.OK);
 
-            RandomAccessFile raf = new RandomAccessFile(f, "r");
-            FileChannel fc = raf.getChannel();
-            MappedByteBuffer buffer = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-            response.setContent(IoBuffer.wrap(buffer));
-            fc.close();
-
+            IoBuffer buffer=fileLoader.loadFile(f);
+            
+            response.setContent(buffer);
+            
         } else {
             // the file is not found, we send the famous 404 error
             response.setStatus(HttpResponseStatus.NOT_FOUND);
@@ -214,4 +215,12 @@ public class FileHttpService implements HttpService {
         }
 
     }
+
+	public FileLoader getFileLoader() {
+		return fileLoader;
+	}
+
+	public void setFileLoader(FileLoader fileLoader) {
+		this.fileLoader = fileLoader;
+	}
 }
