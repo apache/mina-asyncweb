@@ -21,12 +21,8 @@
 package org.apache.asyncweb.examples.file;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FilenameFilter;
-import java.io.RandomAccessFile;
 import java.net.URI;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
 import java.security.InvalidParameterException;
 import java.util.regex.Pattern;
 
@@ -36,7 +32,6 @@ import org.apache.asyncweb.common.MutableHttpResponse;
 import org.apache.asyncweb.examples.file.cache.CachingPolicy;
 import org.apache.asyncweb.examples.file.cache.SimpleCachingPolicy;
 import org.apache.asyncweb.examples.file.fileloader.FileLoader;
-import org.apache.asyncweb.examples.file.fileloader.MmapFileLoaderTest;
 import org.apache.asyncweb.examples.file.fileloader.SimpleFileLoader;
 import org.apache.asyncweb.examples.file.index.DefaultDirectoryIndexGenerator;
 import org.apache.asyncweb.examples.file.index.DirectoryIndexGenerator;
