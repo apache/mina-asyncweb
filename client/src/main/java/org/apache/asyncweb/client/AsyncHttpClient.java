@@ -26,13 +26,14 @@ import java.security.GeneralSecurityException;
 
 import javax.net.ssl.SSLContext;
 
-import org.apache.mina.common.ConnectFuture;
-import org.apache.mina.common.IoSession;
-import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.asyncweb.common.HttpCodecFactory;
 import org.apache.asyncweb.common.HttpRequest;
 import org.apache.asyncweb.common.MutableHttpRequest;
+import org.apache.mina.common.ConnectFuture;
+import org.apache.mina.common.IoSession;
+import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.ssl.SslFilter;
+import org.apache.mina.transport.socket.SocketConnector;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
 public class AsyncHttpClient {
@@ -40,8 +41,6 @@ public class AsyncHttpClient {
     public static int DEFAULT_CONNECTION_TIMEOUT = 30;
 
     public static String DEFAULT_SSL_PROTOCOL = "TLS";
-
-    private URI uri;
 
     private boolean followRedirects = true;
 
@@ -51,44 +50,41 @@ public class AsyncHttpClient {
 
     private IoSession session;
 
-    private AsyncHttpClientCallback callback;
-
-    public AsyncHttpClient(URI url, AsyncHttpClientCallback callback) {
-        this.uri = url;
-        this.callback = callback;
+    private SocketConnector connector;
+    
+    public AsyncHttpClient(SocketConnector connector) {
+    	this.connector = connector;
+    	connector.getFilterChain().addLast("protocolFilter",
+                new ProtocolCodecFilter(new HttpCodecFactory()));
     }
 
-    public void connect() throws Exception {
-        NioSocketConnector connector = new NioSocketConnector();
-
+    public void connect(URI url, AsyncHttpClientCallback callback) throws Exception {
         connector.setConnectTimeout(connectionTimeout);
 
-        String scheme = uri.getScheme();
-        int port = uri.getPort();
-        if (scheme.toLowerCase().equals("https")) {
-            SslFilter filter = new SslFilter(createClientSSLContext());
-            filter.setUseClientMode(true);
-            connector.getFilterChain().addLast("SSL", filter);
-            if (port == -1) {
-                port = 443;
-            }
-        }
+        String scheme = url.getScheme();
+        int port = url.getPort();
+        
         if (scheme.toLowerCase().equals("http") && port == -1) {
             port = 80;
+        } else if (scheme.toLowerCase().equals("https") && port == -1) {
+        	port = 443;
         }
-
-        connector.getFilterChain().addLast("protocolFilter",
-                new ProtocolCodecFilter(new HttpCodecFactory()));
         connector.setHandler(new HttpIoHandler(callback));
-        ConnectFuture future = connector.connect(new InetSocketAddress(uri
+        ConnectFuture future = connector.connect(new InetSocketAddress(url
                 .getHost(), port));
         future.awaitUninterruptibly();
         if (!future.isConnected()) {
-            throw new IOException("Cannot connect to " + uri.toString());
+            throw new IOException("Cannot connect to " + url.toString());
         }
         session = future.getSession();
+        // now add the good filters
+        if (scheme.toLowerCase().equals("https")) {
+            SslFilter filter = new SslFilter(createClientSSLContext());
+            filter.setUseClientMode(true);
+            session.getFilterChain().addLast("SSL", filter);
+        }
     }
-
+    
     public void disconnect() {
         if (session != null && session.isConnected()) {
             session.close();

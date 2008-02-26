@@ -17,9 +17,8 @@
  *  under the License.
  *
  */
-package org.apache.asyncweb.examples.file;
+package org.apache.asyncweb.fileservice;
 
-import org.apache.asyncweb.examples.helloworld.HelloWorldHttpService;
 import org.apache.asyncweb.server.BasicServiceContainer;
 import org.apache.asyncweb.server.HttpServiceHandler;
 import org.apache.asyncweb.server.resolver.PatternMatchResolver;
@@ -38,10 +37,6 @@ public class FileMain {
         
         handler.addHttpService("fileExample", new FileHttpService("/static",
                 "./data"));
-        
-        handler
-                .addHttpService("helloWorldExample",
-                        new HelloWorldHttpService());
         
         container.addServiceFilter(handler);
 

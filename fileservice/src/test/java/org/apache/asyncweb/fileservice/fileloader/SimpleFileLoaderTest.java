@@ -1,16 +1,17 @@
-package org.apache.asyncweb.examples.file.fileloader;
+package org.apache.asyncweb.fileservice.fileloader;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Random;
 
+import org.apache.asyncweb.examples.file.fileloader.SimpleFileLoader;
 import org.apache.mina.common.IoBuffer;
 import org.junit.Test;
 
-public class MmapFileLoaderTest {
-	
+public class SimpleFileLoaderTest {
+
 	private static final int TEMP_SIZE=1024*100+3; // ~100K file
 	
 	@Test
@@ -26,7 +27,7 @@ public class MmapFileLoaderTest {
 		fos.write(data);
 		fos.close();
 		
-		FileLoader sfl=new MmapFileLoader();
+		SimpleFileLoader sfl=new SimpleFileLoader();
 		IoBuffer buffer=sfl.loadFile(tempFile);
 
 		assertTrue(buffer.remaining()==TEMP_SIZE);

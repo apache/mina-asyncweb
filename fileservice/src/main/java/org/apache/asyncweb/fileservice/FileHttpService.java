@@ -18,7 +18,7 @@
  *
  */
 
-package org.apache.asyncweb.examples.file;
+package org.apache.asyncweb.fileservice;
 
 import java.io.File;
 import java.io.FilenameFilter;

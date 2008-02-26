@@ -131,6 +131,7 @@
     <module>client</module>
     <module>spring</module>
     <module>examples</module>
+    <module>fileservice</module>
   </modules>
 
   <build>
