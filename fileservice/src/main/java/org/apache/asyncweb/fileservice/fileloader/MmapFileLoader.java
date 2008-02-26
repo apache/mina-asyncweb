@@ -17,24 +17,35 @@
  *  under the License.
  *
  */
-
-package org.apache.asyncweb.examples.file.fileloader;
+package org.apache.asyncweb.fileservice.fileloader;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 
 import org.apache.mina.common.IoBuffer;
 
 /**
- * Interface for providing IoBuffer to File serving services.
+ * A file loader, mammping files to memory, supposed to be efficient 
+ * on relativly large files.
+ * 
  * @author The Apache MINA Project (dev@mina.apache.org)
  */
-public interface FileLoader {
+public class MmapFileLoader implements FileLoader {
 	
-	/**
-	 * Provide an IoBuffer from a given File
-	 * @param file the file to provide
-	 * @return a buffer representing the file
-	 */
-	IoBuffer loadFile(File file) throws IOException;
+	public IoBuffer loadFile(File file) throws IOException {
+        RandomAccessFile raf = new RandomAccessFile(file, "r");
+        
+        FileChannel fc = raf.getChannel();
+        
+        MappedByteBuffer buffer = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+        
+        // it's mmaped we can close the file descriptor
+        fc.close();
+        
+        // the mapped byte buffer will be garbage collected
+        return IoBuffer.wrap(buffer);
+	}
 }

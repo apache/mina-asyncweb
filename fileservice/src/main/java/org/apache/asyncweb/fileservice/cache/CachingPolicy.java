@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.asyncweb.examples.file.cache;
+package org.apache.asyncweb.fileservice.cache;
 
 import java.io.File;
 

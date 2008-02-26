@@ -17,35 +17,36 @@
  *  under the License.
  *
  */
-package org.apache.asyncweb.examples.file.fileloader;
+package org.apache.asyncweb.fileservice.fileloader;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.security.InvalidParameterException;
 
 import org.apache.mina.common.IoBuffer;
 
 /**
- * A file loader, mammping files to memory, supposed to be efficient 
- * on relativly large files.
+ * A simple file loader, supposed to be efficient on relativly small 
+ * files.
  * 
  * @author The Apache MINA Project (dev@mina.apache.org)
  */
-public class MmapFileLoader implements FileLoader {
-	
+public class SimpleFileLoader implements FileLoader {
+
 	public IoBuffer loadFile(File file) throws IOException {
-        RandomAccessFile raf = new RandomAccessFile(file, "r");
-        
+		if(file.length()> Integer.MAX_VALUE)
+				throw new InvalidParameterException("File "+file+" is too big for SimpleFileLoader try MmapFileLoader");
+		IoBuffer buffer=IoBuffer.allocate((int)file.length());
+		RandomAccessFile raf = new RandomAccessFile(file, "r");
         FileChannel fc = raf.getChannel();
-        
-        MappedByteBuffer buffer = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-        
-        // it's mmaped we can close the file descriptor
-        fc.close();
-        
-        // the mapped byte buffer will be garbage collected
-        return IoBuffer.wrap(buffer);
+        fc.read(buffer.buf());
+		buffer.flip();
+		fc.close();
+		raf.close();
+		return buffer;
 	}
+	
+
 }

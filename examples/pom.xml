@@ -55,7 +55,10 @@
       <groupId>${groupId}</groupId>
       <artifactId>asyncweb-server</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>${groupId}</groupId>
+      <artifactId>asyncweb-fileservice</artifactId>
+    </dependency>
     <dependency>
       <groupId>${groupId}</groupId>
       <artifactId>asyncweb-spring</artifactId>

@@ -17,23 +17,24 @@
  *  under the License.
  *
  */
-package org.apache.asyncweb.examples.file.index;
+
+package org.apache.asyncweb.fileservice.fileloader;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.mina.common.IoBuffer;
 
 /**
- * Directory index page generator.
+ * Interface for providing IoBuffer to File serving services.
  * @author The Apache MINA Project (dev@mina.apache.org)
- *
  */
-public interface DirectoryIndexGenerator {
-
-    /**
-     * 
-     * @param directory the directory base of the file index
-     * @return buffer containing the generated index
-     */
-    IoBuffer generateIndex(File directory);
+public interface FileLoader {
+	
+	/**
+	 * Provide an IoBuffer from a given File
+	 * @param file the file to provide
+	 * @return a buffer representing the file
+	 */
+	IoBuffer loadFile(File file) throws IOException;
 }

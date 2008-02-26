@@ -247,6 +247,12 @@
         <artifactId>asyncweb-client</artifactId>
         <version>${pom.version}</version>
       </dependency>
+      
+      <dependency>
+        <groupId>${groupId}</groupId>
+        <artifactId>asyncweb-fileservice</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
 
       <!-- ===================== -->
       <!-- External Dependencies -->

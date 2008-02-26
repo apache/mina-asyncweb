@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Random;
 
-import org.apache.asyncweb.examples.file.fileloader.SimpleFileLoader;
+import org.apache.asyncweb.fileservice.fileloader.SimpleFileLoader;
 import org.apache.mina.common.IoBuffer;
 import org.junit.Test;
 

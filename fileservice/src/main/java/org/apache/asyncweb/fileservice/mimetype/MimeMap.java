@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-package org.apache.asyncweb.examples.file.mimetype;
+package org.apache.asyncweb.fileservice.mimetype;
 
 import java.net.*;
 import java.util.*;

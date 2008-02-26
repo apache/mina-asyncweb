@@ -17,13 +17,13 @@
  *  under the License.
  *
  */
-package org.apache.asyncweb.examples.file.index;
+package org.apache.asyncweb.fileservice.index;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
-import org.apache.asyncweb.examples.file.mimetype.MimeMap;
+import org.apache.asyncweb.fileservice.mimetype.MimeMap;
 import org.apache.asyncweb.server.errorReporting.CSS;
 import org.apache.asyncweb.server.util.StringBundle;
 import org.apache.mina.common.IoBuffer;

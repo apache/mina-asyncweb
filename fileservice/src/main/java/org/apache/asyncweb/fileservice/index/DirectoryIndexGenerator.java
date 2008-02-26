@@ -17,36 +17,23 @@
  *  under the License.
  *
  */
-package org.apache.asyncweb.examples.file.fileloader;
+package org.apache.asyncweb.fileservice.index;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.channels.FileChannel;
-import java.security.InvalidParameterException;
 
 import org.apache.mina.common.IoBuffer;
 
 /**
- * A simple file loader, supposed to be efficient on relativly small 
- * files.
- * 
+ * Directory index page generator.
  * @author The Apache MINA Project (dev@mina.apache.org)
+ *
  */
-public class SimpleFileLoader implements FileLoader {
+public interface DirectoryIndexGenerator {
 
-	public IoBuffer loadFile(File file) throws IOException {
-		if(file.length()> Integer.MAX_VALUE)
-				throw new InvalidParameterException("File "+file+" is too big for SimpleFileLoader try MmapFileLoader");
-		IoBuffer buffer=IoBuffer.allocate((int)file.length());
-		RandomAccessFile raf = new RandomAccessFile(file, "r");
-        FileChannel fc = raf.getChannel();
-        fc.read(buffer.buf());
-		buffer.flip();
-		fc.close();
-		raf.close();
-		return buffer;
-	}
-	
-
+    /**
+     * 
+     * @param directory the directory base of the file index
+     * @return buffer containing the generated index
+     */
+    IoBuffer generateIndex(File directory);
 }

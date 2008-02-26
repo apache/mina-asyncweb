@@ -17,8 +17,9 @@
  *  under the License.
  *
  */
-package org.apache.asyncweb.fileservice;
+package org.apache.asyncweb.examples.fileservice;
 
+import org.apache.asyncweb.fileservice.FileHttpService;
 import org.apache.asyncweb.server.BasicServiceContainer;
 import org.apache.asyncweb.server.HttpServiceHandler;
 import org.apache.asyncweb.server.resolver.PatternMatchResolver;
