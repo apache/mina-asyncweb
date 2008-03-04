@@ -24,14 +24,13 @@ import java.io.FileInputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
 
-import org.apache.mina.common.IoBuffer;
+import org.apache.asyncweb.common.DefaultHttpRequest;
+import org.apache.asyncweb.common.HttpMethod;
 import org.apache.asyncweb.common.HttpRequest;
 import org.apache.asyncweb.common.HttpResponse;
 import org.apache.asyncweb.common.MutableHttpRequest;
-import org.apache.asyncweb.common.DefaultHttpRequest;
-import org.apache.asyncweb.common.HttpMethod;
-import org.apache.asyncweb.client.AsyncHttpClient;
-import org.apache.asyncweb.client.AsyncHttpClientCallback;
+import org.apache.mina.common.IoBuffer;
+import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
 public class AsyncHttpClientTest extends AbstractTest {
 
@@ -128,8 +127,8 @@ public class AsyncHttpClientTest extends AbstractTest {
             throws Exception {
         URI url_connect = new URI(url);
 
-        AsyncHttpClient ahc = new AsyncHttpClient(url_connect, callback);
-        ahc.connect();
+        AsyncHttpClient ahc = new AsyncHttpClient(new NioSocketConnector());
+        ahc.connect(url_connect, callback);
 
         ahc.sendRequest(request);
 

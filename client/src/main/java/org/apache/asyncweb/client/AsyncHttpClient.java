@@ -34,7 +34,6 @@ import org.apache.mina.common.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.ssl.SslFilter;
 import org.apache.mina.transport.socket.SocketConnector;
-import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
 public class AsyncHttpClient {
 
@@ -81,7 +80,7 @@ public class AsyncHttpClient {
         if (scheme.toLowerCase().equals("https")) {
             SslFilter filter = new SslFilter(createClientSSLContext());
             filter.setUseClientMode(true);
-            session.getFilterChain().addLast("SSL", filter);
+            session.getFilterChain().addBefore("protocolFilter", "SSL", filter);
         }
     }
     
