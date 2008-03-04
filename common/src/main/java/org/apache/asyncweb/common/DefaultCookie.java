@@ -69,14 +69,26 @@ public class DefaultCookie implements MutableCookie {
      * @param value  the default value of the new cookie
      */
     public DefaultCookie(String name, String value) {
-    	if (name == null) {
-    		throw new IllegalArgumentException("name can NOT be null");
-    	}
-    	if (value == null) {
-    		throw new IllegalArgumentException("name can NOT be null");
-    	}
-    	this.name = name;
+        this(name);
     	this.value = value;
+    }
+    
+    /**
+     * Creates a new cookie based on the values of the specified <tt>Cookie</tt>.
+     * 
+     * @param cookie  the <tt>Cookie</tt> object from which the new
+     *                  instance of <tt>DefaultCookie</tt> will copy its values
+     */
+    public DefaultCookie(Cookie cookie) {
+        this(cookie.getName());
+        this.comment = cookie.getComment();
+        this.createdDate = cookie.getCreatedDate();
+        this.domain = cookie.getDomain();
+        this.maxAge = cookie.getMaxAge();
+        this.path = cookie.getPath();
+        this.secure = cookie.isSecure();
+        this.value = cookie.getValue();
+        this.version = cookie.getVersion();
     }
 
     public String getComment() {
