@@ -22,9 +22,8 @@ package org.apache.asyncweb.common;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.apache.asyncweb.common.DefaultHttpRequest;
-
 public class DefaultHttpRequestTest extends TestCase {
+    
     public void testSetParametersFromQueryString() throws Exception {
         DefaultHttpRequest req = new DefaultHttpRequest();
         req.setParameters("a=b&c&d=%26&");
@@ -39,4 +38,5 @@ public class DefaultHttpRequestTest extends TestCase {
         Assert.assertEquals(1, req.getParameters().size());
         Assert.assertEquals("\uf6fc", req.getParameter("\u00e4"));
     }
+    
 }
