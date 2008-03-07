@@ -23,7 +23,7 @@ package org.apache.asyncweb.common;
  * HTTP Header Constants.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
+ * @version $Rev: 615489 $, $Date: 2008-01-26 13:59:06 -0700 (Sat, 26 Jan 2008) $
  */
 public class HttpHeaderConstants {
 
@@ -95,12 +95,12 @@ public class HttpHeaderConstants {
     public static final String KEY_DATE = "Date";
     
     /**
-     * The "cookie" header.
+     * The "cookie" request header.
      */
     public static final String KEY_COOKIE = "Cookie";
 
     /**
-     * The "set-cookie" header.
+     * The "set-cookie" response header.
      */
     public static final String KEY_SET_COOKIE = "Set-Cookie";
 
@@ -108,6 +108,11 @@ public class HttpHeaderConstants {
      * The "host" header.
      */
     public static final String KEY_HOST = "Host";
+
+    /**
+     * The "location" header.
+     */
+    public static final String KEY_LOCATION = "Location";
 
     private HttpHeaderConstants() {
     }

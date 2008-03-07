@@ -47,14 +47,12 @@ import org.slf4j.LoggerFactory;
  * each new parse.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
+ * @version $Rev: 615489 $, $Date: 2008-01-26 13:59:06 -0700 (Sat, 26 Jan 2008) $
  */
 abstract class HttpResponseDecodingState extends DecodingStateMachine {
 
     private static final Logger LOG = LoggerFactory
             .getLogger(HttpResponseDecodingState.class);
-
-    private static final String HEADER_COOKIE = "Cookie";
 
     /**
      * The header which provides a requests transfer coding
@@ -76,20 +74,24 @@ abstract class HttpResponseDecodingState extends DecodingStateMachine {
      */
     private static final char EXTENSION_CHAR = ';';
 
+    public static final String COOKIE_COMMENT = "comment";
+    
+    public static final String COOKIE_DOMAIN = "domain";
+    
+    public static final String COOKIE_EXPIRES = "expires";
+    
+    public static final String COOKIE_MAX_AGE = "max-age";
+    
+    public static final String COOKIE_PATH = "path";
+    
+    public static final String COOKIE_SECURE = "secure";
+    
+    public static final String COOKIE_VERSION = "version";
+
     /**
      * The request we are building
      */
     private MutableHttpResponse response;
-
-    private boolean parseCookies = true;
-
-    public boolean isParseCookies() {
-        return parseCookies;
-    }
-
-    public void setParseCookies(boolean parseCookies) {
-        this.parseCookies = parseCookies;
-    }
 
     @Override
     protected DecodingState init() throws Exception {
@@ -154,17 +156,12 @@ abstract class HttpResponseDecodingState extends DecodingStateMachine {
                 ProtocolDecoderOutput out) throws Exception {
             Map<String, List<String>> headers = (Map<String, List<String>>) childProducts
                     .get(0);
-            if (parseCookies) {
-                List<String> cookies = headers.remove(HEADER_COOKIE);
-                if (cookies != null && !cookies.isEmpty()) {
-                    if (cookies.size() > 1) {
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn("Ignoring extra cookie headers: "
-                                    + cookies.subList(1, cookies.size()));
-                        }
-                    }
-                    // FIXME Parse cookies.
-                    //response.setCookies(cookies.get(0));
+
+            // Parse cookies
+            List<String> cookies = headers.get(HttpHeaderConstants.KEY_SET_COOKIE);
+            if (cookies != null && !cookies.isEmpty()) {
+                for (String cookie : cookies) {
+                    response.addCookie(parseCookie(cookie));
                 }
             }
             response.setHeaders(headers);
@@ -253,6 +250,43 @@ abstract class HttpResponseDecodingState extends DecodingStateMachine {
                 }
             }
             return nextState;
+        }
+
+        private Cookie parseCookie(String cookieHeader) throws DateParseException {
+
+            MutableCookie cookie = null;
+
+            String pairs[] = cookieHeader.split(";");
+            for (int i = 0; i < pairs.length; i++) {
+                String nameValue[] = pairs[i].trim().split("=");
+                String name = nameValue[0].trim();
+                String value = (nameValue.length == 2) ? nameValue[1].trim() : null;
+
+                //First pair is the cookie name/value
+                if (i == 0) {
+                    cookie = new DefaultCookie(name, value);
+                } else if (name.equalsIgnoreCase(COOKIE_COMMENT)) {
+                    cookie.setComment(value);
+                } else if (name.equalsIgnoreCase(COOKIE_PATH)) {
+                    cookie.setPath(value);
+                } else if (name.equalsIgnoreCase(COOKIE_SECURE)) {
+                    cookie.setSecure(true);
+                } else if (name.equalsIgnoreCase(COOKIE_VERSION)) {
+                    cookie.setVersion(Integer.parseInt(value));
+                } else if (name.equalsIgnoreCase(COOKIE_MAX_AGE)) {
+                    int age = Integer.parseInt(value);
+                    cookie.setMaxAge(age);
+                } else if (name.equalsIgnoreCase(COOKIE_EXPIRES)) {
+                    long createdDate = System.currentTimeMillis();
+                    int age = (int)(DateUtil.parseDate(value).getTime() - createdDate) / 1000;
+                    cookie.setCreatedDate(createdDate);
+                    cookie.setMaxAge(age);
+                } else if (name.equalsIgnoreCase(COOKIE_DOMAIN)) {
+                    cookie.setDomain(value);
+                }
+            }
+
+            return cookie;
         }
 
         /**

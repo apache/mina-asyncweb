@@ -43,7 +43,7 @@ import org.apache.mina.common.IoBuffer;
  * A default implementation of {@link MutableHttpRequest}.
  * 
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
+ * @version $Rev: 615489 $, $Date: 2008-01-26 13:59:06 -0700 (Sat, 26 Jan 2008) $
  */
 public class DefaultHttpRequest extends DefaultHttpMessage implements
         MutableHttpRequest {
@@ -382,7 +382,7 @@ public class DefaultHttpRequest extends DefaultHttpMessage implements
         Set<Cookie> cookies = getCookies();
         if (!cookies.isEmpty()) {
             // Clear previous values.
-            removeHeader(HttpHeaderConstants.KEY_SET_COOKIE);
+            removeHeader(HttpHeaderConstants.KEY_COOKIE);
             
             // And encode.
             for (Cookie c: cookies) {
