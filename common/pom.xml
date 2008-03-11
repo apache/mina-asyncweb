@@ -25,8 +25,9 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>asyncweb-common</artifactId>
-  <name>Apache Asyncweb Common</name>
   <packaging>bundle</packaging>
+  <name>Apache Asyncweb Common</name>
+
 
   <properties>
     <exportedPackage>${groupId}.common</exportedPackage>

@@ -25,7 +25,7 @@
     <version>0.9.0-SNAPSHOT</version>
   </parent>
   <artifactId>asyncweb-fileservice</artifactId>
-  <packaging>jar</packaging>
+  <packaging>bundle</packaging>
   <name>Apache Asyncweb File Service</name>
 
   <dependencies>

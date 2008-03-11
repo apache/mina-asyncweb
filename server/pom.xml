@@ -18,16 +18,18 @@
 	under the License.
 -->
 <project>
-  <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.asyncweb</groupId>
     <artifactId>asyncweb-parent</artifactId>
     <version>0.9.0-SNAPSHOT</version>
   </parent>
+  <modelVersion>4.0.0</modelVersion>
   <artifactId>asyncweb-server</artifactId>
-  <packaging>jar</packaging>
+  <packaging>bundle</packaging>
   <name>Apache Asyncweb Server</name>
-
+  <properties>
+    <exportedPackage>${groupId}.server</exportedPackage>
+  </properties>
   <dependencies>
     <!-- don't think this concurrent dependency is needed anymore -->
     <dependency>
