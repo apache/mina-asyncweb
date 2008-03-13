@@ -27,6 +27,9 @@
   <artifactId>asyncweb-fileservice</artifactId>
   <packaging>bundle</packaging>
   <name>Apache Asyncweb File Service</name>
+  <properties>
+    <exportedPackage>${groupId}.fileservice</exportedPackage>
+  </properties>
 
   <dependencies>
     <dependency>
