@@ -30,13 +30,21 @@
   <properties>
     <exportedPackage>${groupId}.server</exportedPackage>
   </properties>
-  <dependencies>
-    <!-- don't think this concurrent dependency is needed anymore -->
-    <dependency>
-      <groupId>concurrent</groupId>
-      <artifactId>concurrent</artifactId>
-    </dependency>
+      <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/filter/ThreadPoolFilter.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
 
+        </plugins>
+    </build> 
+  <dependencies>
     <dependency>
       <groupId>org.apache.mina</groupId>
       <artifactId>mina-core</artifactId>
