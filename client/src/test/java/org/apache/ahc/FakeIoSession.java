@@ -339,4 +339,12 @@ public class FakeIoSession implements IoSession {
         return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    public Object getCurrentWriteMessage() {
+        return null;
+    }
+
+    public WriteRequest getCurrentWriteRequest() {
+        return null;
+    }
+
 }
