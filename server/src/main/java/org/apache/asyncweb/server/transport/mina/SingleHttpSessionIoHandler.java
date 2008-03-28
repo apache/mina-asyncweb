@@ -199,7 +199,7 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
             response = new DefaultHttpResponse();
             response.setProtocolVersion( HttpVersion.HTTP_1_1 );
             response.setStatus( HttpResponseStatus.INTERNAL_SERVER_ERROR );
-            LOG.error( "Unexpected exception from a service: {}", session.getRemoteAddress(), cause );
+            LOG.error( "Unexpected exception from a service : "+session.getRemoteAddress(), cause );
         }
 
         if ( response != null )
