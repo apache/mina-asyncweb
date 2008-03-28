@@ -21,23 +21,30 @@ package org.apache.asyncweb.server.errorReporting;
 
 import java.io.UnsupportedEncodingException;
 
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 import org.apache.mina.common.IoBuffer;
 import org.apache.asyncweb.common.MutableHttpResponse;
 import org.apache.asyncweb.common.HttpResponseStatus.Category;
 import org.apache.asyncweb.common.HttpRequest;
 import org.apache.asyncweb.common.HttpResponseStatus;
-import org.apache.asyncweb.server.util.StringBundle;
 
 public class StandardResponseFormatter implements ErrorResponseFormatter {
-
-    private static final StringBundle bundle = StringBundle
-            .getBundle(StandardResponseFormatter.class.getPackage().getName());
 
     public void formatResponse(HttpRequest request, MutableHttpResponse response) {
         if (shouldFormat(response)) {
             doFormat(request, response);
             response.addHeader("content-type", "text/html");
         }
+    }
+    
+    private ResourceBundle bundle;
+    
+    private ResourceBundle getBundle() {
+        if (bundle == null) {
+            bundle = ResourceBundle.getBundle(this.getClass().getPackage().getName()+".strings");
+        }
+        return bundle;
     }
 
     private boolean shouldFormat(MutableHttpResponse response) {
@@ -56,17 +63,17 @@ public class StandardResponseFormatter implements ErrorResponseFormatter {
         StringBuilder html = new StringBuilder(1024);
         html.append("<html><head><title>");
         html.append("AsyncWeb Server - ");
-        html.append(bundle.getString("errorMessage"));
+        html.append(getBundle().getString("errorMessage"));
         html.append("</title><style><!--");
         CSS.appendTo(html).append("--></style>");
         html.append("</head>");
         html.append("<h1>");
-        html.append(bundle.getString("errorTitle"));
+        html.append(getBundle().getString("errorTitle"));
         html.append("</h1>");
         response.getStatusReasonPhrase();
         String code = String.valueOf(response.getStatus().getCode());
         html.append("<h1>");
-        html.append(bundle.getString("statusInfo", code));
+        html.append(MessageFormat.format(getBundle().getString("statusInfo"), new Object[]{code}));
         html.append("</h1>");
         html.append("<HR size=\"1\" noshade=\"noshade\">");
 
@@ -95,7 +102,7 @@ public class StandardResponseFormatter implements ErrorResponseFormatter {
     }
 
     private void appendInfo(String title, String info, StringBuilder html) {
-        html.append("<tr><th>").append(bundle.getString(title)).append("</th>");
+        html.append("<tr><th>").append(getBundle().getString(title)).append("</th>");
         html.append("<td>").append(info).append("</td>");
     }
 
@@ -105,7 +112,7 @@ public class StandardResponseFormatter implements ErrorResponseFormatter {
         if (errorMessage == null) {
             errorMessage = "";
         }
-        return bundle.getString("http." + responseCode, errorMessage);
+        return MessageFormat.format(getBundle().getString("http." + responseCode), new Object[]{errorMessage} );
     }
 
 }
