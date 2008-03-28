@@ -23,9 +23,9 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
+import java.util.ResourceBundle;
 import org.apache.asyncweb.fileservice.mimetype.MimeMap;
 import org.apache.asyncweb.server.errorReporting.CSS;
-import org.apache.asyncweb.server.util.StringBundle;
 import org.apache.mina.common.IoBuffer;
 
 /**
@@ -34,11 +34,15 @@ import org.apache.mina.common.IoBuffer;
  */
 public class DefaultDirectoryIndexGenerator implements DirectoryIndexGenerator {
 
-    private static final StringBundle bundle = StringBundle
-            .getBundle(DefaultDirectoryIndexGenerator.class.getPackage()
-                    .getName());
+    private static ResourceBundle bundle;
 
     public IoBuffer generateIndex(File directory) {
+        if (bundle == null) {
+            
+            bundle = ResourceBundle.getBundle(DefaultDirectoryIndexGenerator.class.getPackage()
+                    .getName()+".strings");
+        }
+            
         File[] files = directory.listFiles();
 
         StringBuilder html = new StringBuilder(1024);
