@@ -39,77 +39,93 @@ import org.slf4j.LoggerFactory;
  * @version $Rev: 601236 $, $Date: 2007-12-05 08:53:03 +0100 (mer, 05 déc 2007) $
  */
 public class PatternMatchResolver implements ServiceResolver {
-	private static final Logger LOG = LoggerFactory
-			.getLogger(PatternMatchResolver.class);
 
-	private Map<Pattern, String> serviceMap = new HashMap<Pattern, String>();
+    private static final Logger LOG = LoggerFactory.getLogger(PatternMatchResolver.class);
+    private Map<Pattern, String> serviceMap = new HashMap<Pattern, String>();
 
-	/**
-	 * Adds a mapping from a request URI to a service name. Any existing mapping
-	 * for the same pattern is overwritten.
-	 * 
-	 * @param regexp
-	 *            The regular expression string {@link Pattern}
-	 * @param serviceName
-	 *            The matching service name
-	 */
-	public void addPatternMapping(String regexp, String serviceName) {
-		String existingMapping = serviceMap.put(Pattern.compile(regexp), serviceName);
-		if (existingMapping != null) {
-			LOG.info("Existing match [ "+existingMapping+" ] replaced by "
-					+ "[" + serviceName + "] for pattern [" + regexp + "]");
-		} else {
-			LOG.info("Mapped [" + regexp + "] to service [" + serviceName + "]");
-		}
-	}
+    /**
+     * Adds a mapping from a request URI to a service name. Any existing mapping
+     * for the same pattern is overwritten.
+     * 
+     * @param regexp
+     *            The regular expression string {@link Pattern}
+     * @param serviceName
+     *            The matching service name
+     */
+    public void addPatternMapping(String regexp, String serviceName) {
+        String existingMapping = serviceMap.put(Pattern.compile(regexp), serviceName);
+        if (existingMapping != null) {
+            LOG.info("Existing match '{}' replaced by '{}' for pattern '{}'",new Object[]{existingMapping, serviceName, regexp});
+        } else {
+            LOG.info("Mapped '{}' to service '{}'", regexp, serviceName);
+        }
+    }
 
-	/**
-	 * Sets all pattern - service name mappings from a given map. Any existing
-	 * mappings are removed
-	 * 
-	 * @param map
-	 *            The map to set from
-	 * @throws ClassCastException
-	 *             If any element (key or value) in the map is not a
-	 *             <code>java.lang.String</code>
-	 */
-	public void setMappings(Map<String, String> map) {
-		serviceMap.clear();
-		for (Entry<String, String> entry : map.entrySet()) {
-			String key = entry.getKey();
-			String value = entry.getValue();
-			addPatternMapping(key, value);
-		}
-	}
+    /**
+     * Remove a mapping for a given regexp.
+     * 
+     * @param regexp
+     *           The regular expression string to remove
+     */
+    public void removePatternMapping(String regexp) {
+        String existingMapping = serviceMap.remove(Pattern.compile(regexp));
 
-	/**
-	 * Attempts to resolve a service name for the specified request by looking
-	 * for an existing pattern matching with the URI as the specified request.
-	 * 
-	 * @param request
-	 *            The request for which a service name is to be resolved
-	 * @return The name of the service, or <code>null</code> if no mapping
-	 *         pattern exists for the requests URI
-	 */
-	public String resolveService(HttpRequest request) {
-		if (request.getRequestUri().isAbsolute()) {
-			return null;
-		}
+        if (existingMapping != null) {
+            LOG.info("Removed mapping '{}' for service '{}'", regexp, existingMapping);
+        } else {
+            LOG.warn("Mapping '{}' wasn't found and can't be removed", regexp);
+        }
+        
+    }
 
-		String path = request.getRequestUri().getPath();
-		
-		// loop around patterns
-		for(Entry<Pattern, String> entry : serviceMap.entrySet()) {
-			if(entry.getKey().matcher(path).matches()) {
-				if(LOG.isDebugEnabled())
-					LOG.debug("Mapped [" + path + "] to service [" + entry.getValue() + "]");
-				return entry.getValue();
-			}
-		}
-		
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("No mapping for path [" + path + "]");
-		}
-		return null;
-	}
+    /**
+     * Sets all pattern - service name mappings from a given map. Any existing
+     * mappings are removed
+     * 
+     * @param map
+     *            The map to set from
+     * @throws ClassCastException
+     *             If any element (key or value) in the map is not a
+     *             <code>java.lang.String</code>
+     */
+    public void setMappings(Map<String, String> map) {
+        serviceMap.clear();
+        for (Entry<String, String> entry : map.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            addPatternMapping(key, value);
+        }
+    }
+
+    /**
+     * Attempts to resolve a service name for the specified request by looking
+     * for an existing pattern matching with the URI as the specified request.
+     * 
+     * @param request
+     *            The request for which a service name is to be resolved
+     * @return The name of the service, or <code>null</code> if no mapping
+     *         pattern exists for the requests URI
+     */
+    public String resolveService(HttpRequest request) {
+        if (request.getRequestUri().isAbsolute()) {
+            return null;
+        }
+
+        String path = request.getRequestUri().getPath();
+
+        // loop around patterns
+        for (Entry<Pattern, String> entry : serviceMap.entrySet()) {
+            if (entry.getKey().matcher(path).matches()) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Mapped '{}' to service '{}'", path, entry.getValue());
+                }
+                return entry.getValue();
+            }
+        }
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("No mapping for path '{}'", path);
+        }
+        return null;
+    }
 }
