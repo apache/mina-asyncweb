@@ -68,7 +68,21 @@ public class HttpServiceHandler implements HttpServiceFilter {
             LOG.warn("Duplicate mapping for '" + name
                     + "'. Previous mapping removed");
         }
-        LOG.info("New HttpService registered against key '" + name + "'");
+        LOG.info("New HttpService registered against key '{}'",name);
+    }
+
+    /**
+     * Remove an <code>HttpService</code> which was previously added.
+     *
+     * @param String name The key name of the HttpService you want to remove
+     */
+    public void removeHttpService(String name) {
+        HttpService service = serviceMap.remove(name);
+        if (service != null) {
+            LOG.info("HttpService {} with key '{}' was removed", service, name);
+        } else {
+            LOG.warn("HttpService with name {} wasn't found for removing", name);
+        }
     }
 
     /**
