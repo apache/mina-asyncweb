@@ -211,11 +211,11 @@ public class FileHttpService implements HttpService {
 
     }
 
-	public FileLoader getFileLoader() {
-		return fileLoader;
-	}
+    public FileLoader getFileLoader() {
+        return fileLoader;
+    }
 
-	public void setFileLoader(FileLoader fileLoader) {
-		this.fileLoader = fileLoader;
-	}
+    public void setFileLoader(FileLoader fileLoader) {
+        this.fileLoader = fileLoader;
+    }
 }
