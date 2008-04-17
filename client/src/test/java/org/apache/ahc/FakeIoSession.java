@@ -347,4 +347,16 @@ public class FakeIoSession implements IoSession {
         return null;
     }
 
+    public boolean isBothIdle() {
+        return false;
+    }
+
+    public boolean isReaderIdle() {
+        return false;
+    }
+
+    public boolean isWriterIdle() {
+        return false;
+    }
+
 }
