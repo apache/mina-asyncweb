@@ -23,8 +23,6 @@ package org.apache.asyncweb.server.context;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 
-import org.apache.asyncweb.common.HttpHeaderConstants;
-import org.apache.asyncweb.common.HttpRequest;
 import org.apache.asyncweb.common.*;
 import org.apache.asyncweb.common.HttpResponse;
 import org.apache.asyncweb.common.HttpResponseStatus;
@@ -49,6 +47,8 @@ public abstract class AbstractHttpServiceContext implements HttpServiceContext
     private final Logger log = LoggerFactory.getLogger( AbstractHttpServiceContext.class );
 
     private final InetSocketAddress remoteAddress;
+    
+    private final InetSocketAddress localAddress;
 
     private final HttpRequest request;
 
@@ -64,7 +64,7 @@ public abstract class AbstractHttpServiceContext implements HttpServiceContext
 
 
 
-    public AbstractHttpServiceContext( InetSocketAddress remoteAddress,
+    public AbstractHttpServiceContext( InetSocketAddress localAddress, InetSocketAddress remoteAddress,
                                        HttpRequest request, ServiceContainer container )
     {
         if ( remoteAddress == null )
@@ -72,6 +72,11 @@ public abstract class AbstractHttpServiceContext implements HttpServiceContext
             throw new NullPointerException( "remoteAddress" );
         }
 
+        if ( localAddress == null )
+        {
+            throw new NullPointerException( "localAddress" );
+        }
+        
         if ( request == null )
         {
             throw new NullPointerException( "request" );
@@ -83,6 +88,7 @@ public abstract class AbstractHttpServiceContext implements HttpServiceContext
         }
 
         this.remoteAddress = remoteAddress;
+        this.localAddress = localAddress;
         this.request = request;
         this.container = container;
         this.session = container.getSessionAccessor().getSession( this, false );
@@ -180,6 +186,11 @@ public abstract class AbstractHttpServiceContext implements HttpServiceContext
     public InetSocketAddress getRemoteAddress()
     {
         return remoteAddress;
+    }
+
+    public InetSocketAddress getLocalAddress()
+    {
+        return localAddress;
     }
 
 

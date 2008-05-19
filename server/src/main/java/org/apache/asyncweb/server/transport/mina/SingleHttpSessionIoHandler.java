@@ -397,7 +397,7 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
 
         private DefaultHttpServiceContext( HttpRequest request )
         {
-            super( ( InetSocketAddress ) session.getRemoteAddress(), request, container );
+            super( ( InetSocketAddress ) session.getLocalAddress(), ( InetSocketAddress ) session.getRemoteAddress(), request, container );
         }
 
         private WriteFuture getWriteFuture()

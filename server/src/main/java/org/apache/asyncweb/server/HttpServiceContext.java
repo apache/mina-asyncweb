@@ -42,6 +42,13 @@ public interface HttpServiceContext
      */
     InetSocketAddress getRemoteAddress();
 
+    /**
+     * Returns the socket address of the server.
+     *
+     * @return the socket address of the server
+     */
+    InetSocketAddress getLocalAddress();
+
 
     /**
      * Returns the request which is received from the client.
