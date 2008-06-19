@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 
+import org.apache.asyncweb.server.ServiceContainer;
+import org.apache.asyncweb.server.Transport;
+import org.apache.asyncweb.server.TransportException;
 import org.apache.mina.common.DefaultIoFilterChainBuilder;
 import org.apache.mina.common.IoEventType;
 import org.apache.mina.filter.executor.ExecutorFilter;
@@ -32,11 +35,7 @@ import org.apache.mina.filter.logging.LogLevel;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.filter.logging.MdcInjectionFilter;
 import org.apache.mina.transport.socket.SocketAcceptor;
-import org.apache.mina.transport.socket.SocketSessionConfig;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-import org.apache.asyncweb.server.ServiceContainer;
-import org.apache.asyncweb.server.Transport;
-import org.apache.asyncweb.server.TransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -196,8 +195,7 @@ public class MinaTransport implements Transport
         	
             chain.addFirst( "threadPool", new ExecutorFilter( eventExecutor ) );
             acceptor.setReuseAddress( true );
-            ((SocketSessionConfig) acceptor.getSessionConfig())
-                    .setReuseAddress(true);
+            acceptor.getSessionConfig().setReuseAddress(true);
 
             chain.addLast("mdc", new MdcInjectionFilter() );
             
