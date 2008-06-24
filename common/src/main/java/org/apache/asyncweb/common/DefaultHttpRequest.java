@@ -37,13 +37,13 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
-import org.apache.mina.common.IoBuffer;
+import org.apache.mina.common.buffer.IoBuffer;
 
 /**
  * A default implementation of {@link MutableHttpRequest}.
  * 
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev: 615489 $, $Date: 2008-01-26 13:59:06 -0700 (Sat, 26 Jan 2008) $
+ * @version $Rev$, $Date$
  */
 public class DefaultHttpRequest extends DefaultHttpMessage implements
         MutableHttpRequest {

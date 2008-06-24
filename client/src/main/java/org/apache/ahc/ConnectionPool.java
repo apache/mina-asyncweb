@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.ahc.codec.HttpRequestMessage;
-import org.apache.mina.common.IoSession;
+import org.apache.mina.common.session.IoSession;
 
 /**
  * Facilitates support for connection pooling by storing IoSession instances

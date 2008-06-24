@@ -31,9 +31,9 @@ import org.apache.ahc.codec.HttpResponseMessage;
 import org.apache.ahc.util.MonitoringEvent;
 import org.apache.ahc.util.NameValuePair;
 import org.apache.asyncweb.common.HttpMethod;
-import org.apache.mina.common.IdleStatus;
-import org.apache.mina.common.IoHandlerAdapter;
-import org.apache.mina.common.IoSession;
+import org.apache.mina.common.session.IdleStatus;
+import org.apache.mina.common.service.IoHandlerAdapter;
+import org.apache.mina.common.session.IoSession;
 
 
 /**

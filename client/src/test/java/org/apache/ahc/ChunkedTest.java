@@ -22,8 +22,8 @@ package org.apache.ahc;
 import junit.framework.TestCase;
 import org.apache.ahc.codec.HttpResponseDecoder;
 import org.apache.ahc.codec.HttpResponseMessage;
-import org.apache.mina.common.IoBuffer;
-import org.apache.mina.common.IoSession;
+import org.apache.mina.common.buffer.IoBuffer;
+import org.apache.mina.common.session.IoSession;
 
 import java.util.Arrays;
 

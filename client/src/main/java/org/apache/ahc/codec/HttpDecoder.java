@@ -28,7 +28,7 @@ import org.apache.ahc.util.NameValuePair;
 import org.apache.asyncweb.common.Cookie;
 import org.apache.asyncweb.common.DefaultCookie;
 import org.apache.asyncweb.common.MutableCookie;
-import org.apache.mina.common.IoBuffer;
+import org.apache.mina.common.buffer.IoBuffer;
 
 /**
  * Utility class for helping to decode the HTTP Protocol.

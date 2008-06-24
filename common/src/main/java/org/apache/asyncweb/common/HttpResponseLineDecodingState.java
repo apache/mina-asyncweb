@@ -21,7 +21,7 @@ package org.apache.asyncweb.common;
 
 import java.nio.charset.CharsetDecoder;
 
-import org.apache.mina.common.IoBuffer;
+import org.apache.mina.common.buffer.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.apache.mina.filter.codec.statemachine.ConsumeToCrLfDecodingState;
 import org.apache.mina.filter.codec.statemachine.ConsumeToLinearWhitespaceDecodingState;

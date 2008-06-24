@@ -23,7 +23,7 @@ import java.io.UnsupportedEncodingException;
 
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
-import org.apache.mina.common.IoBuffer;
+import org.apache.mina.common.buffer.IoBuffer;
 import org.apache.asyncweb.common.MutableHttpResponse;
 import org.apache.asyncweb.common.HttpResponseStatus.Category;
 import org.apache.asyncweb.common.HttpRequest;

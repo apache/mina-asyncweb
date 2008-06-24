@@ -38,7 +38,7 @@ import org.apache.asyncweb.fileservice.index.DirectoryIndexGenerator;
 import org.apache.asyncweb.fileservice.mimetype.MimeMap;
 import org.apache.asyncweb.server.HttpService;
 import org.apache.asyncweb.server.HttpServiceContext;
-import org.apache.mina.common.IoBuffer;
+import org.apache.mina.common.buffer.IoBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

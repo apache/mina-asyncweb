@@ -8,7 +8,7 @@ import java.util.Random;
 
 import org.apache.asyncweb.fileservice.fileloader.FileLoader;
 import org.apache.asyncweb.fileservice.fileloader.MmapFileLoader;
-import org.apache.mina.common.IoBuffer;
+import org.apache.mina.common.buffer.IoBuffer;
 import org.junit.Test;
 
 public class MmapFileLoaderTest {

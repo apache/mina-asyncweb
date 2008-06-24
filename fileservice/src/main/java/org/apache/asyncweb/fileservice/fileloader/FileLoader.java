@@ -23,7 +23,7 @@ package org.apache.asyncweb.fileservice.fileloader;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.mina.common.IoBuffer;
+import org.apache.mina.common.buffer.IoBuffer;
 
 /**
  * Interface for providing IoBuffer to File serving services.

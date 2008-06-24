@@ -23,12 +23,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 
-import org.apache.mina.common.IoBuffer;
+import org.apache.mina.common.buffer.IoBuffer;
+import org.apache.asyncweb.common.HttpRequest;
 import org.apache.asyncweb.common.MutableCookie;
 import org.apache.asyncweb.common.MutableHttpResponse;
 import org.apache.asyncweb.common.DefaultCookie;
 import org.apache.asyncweb.common.DefaultHttpResponse;
-import org.apache.asyncweb.common.*;
 import org.apache.asyncweb.server.HttpService;
 import org.apache.asyncweb.server.HttpServiceContext;
 

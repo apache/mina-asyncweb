@@ -5,9 +5,9 @@ import org.apache.ahc.HttpIoHandler;
 import org.apache.ahc.auth.UsernamePasswordCredentials;
 import org.apache.ahc.codec.HttpRequestMessage;
 import org.apache.ahc.codec.HttpResponseMessage;
-import org.apache.mina.common.IoFilterAdapter;
-import org.apache.mina.common.IoSession;
-import org.apache.mina.common.WriteRequest; 
+import org.apache.mina.common.filterchain.IoFilterAdapter;
+import org.apache.mina.common.session.IoSession;
+import org.apache.mina.common.write.WriteRequest; 
 import org.apache.mina.filter.ssl.SslFilter;
 
 public class ProxyFilter extends IoFilterAdapter {

@@ -22,7 +22,7 @@ package org.apache.asyncweb.common;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.mina.common.IoBuffer;
+import org.apache.mina.common.buffer.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderException;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.apache.mina.filter.codec.statemachine.ConsumeToEndOfSessionDecodingState;
@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * each new parse.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev: 615489 $, $Date: 2008-01-26 13:59:06 -0700 (Sat, 26 Jan 2008) $
+ * @version $Rev$, $Date$
  */
 abstract class HttpResponseDecodingState extends DecodingStateMachine {
 

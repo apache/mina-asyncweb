@@ -22,8 +22,8 @@ package org.apache.asyncweb.common;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetEncoder;
 
-import org.apache.mina.common.IoBuffer;
-import org.apache.mina.common.IoSession;
+import org.apache.mina.common.buffer.IoBuffer;
+import org.apache.mina.common.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolEncoder;
 import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 

@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import org.apache.asyncweb.fileservice.mimetype.MimeMap;
 import org.apache.asyncweb.server.errorReporting.CSS;
-import org.apache.mina.common.IoBuffer;
+import org.apache.mina.common.buffer.IoBuffer;
 
 /**
  * A simply directory index page generator, generating page in the error page style.

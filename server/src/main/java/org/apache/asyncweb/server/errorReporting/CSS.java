@@ -21,7 +21,7 @@ package org.apache.asyncweb.server.errorReporting;
 
 import java.io.UnsupportedEncodingException;
 
-import org.apache.mina.common.IoBuffer;
+import org.apache.mina.common.buffer.IoBuffer;
 
 /**
  * Manages the stylesheet info used for generated pages

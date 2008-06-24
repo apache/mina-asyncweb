@@ -20,7 +20,7 @@
 package org.apache.asyncweb.server.transport.mina;
 
 
-import org.apache.mina.common.IoSession;
+import org.apache.mina.common.session.IoSession;
 import org.apache.mina.handler.multiton.SingleSessionIoHandler;
 import org.apache.mina.handler.multiton.SingleSessionIoHandlerDelegate;
 import org.apache.mina.handler.multiton.SingleSessionIoHandlerFactory;

@@ -26,7 +26,7 @@ import java.nio.charset.CharsetEncoder;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.mina.common.IoBuffer;
+import org.apache.mina.common.buffer.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

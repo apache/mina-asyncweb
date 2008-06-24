@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.mina.common.IoFilter;
+import org.apache.mina.common.filterchain.IoFilter;
 import org.apache.asyncweb.common.HttpResponseStatus;
 import org.apache.asyncweb.common.MutableHttpResponse;
 import org.apache.asyncweb.common.DefaultHttpResponse;
