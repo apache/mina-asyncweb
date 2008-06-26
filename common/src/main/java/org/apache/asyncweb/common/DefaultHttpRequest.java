@@ -37,7 +37,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
-import org.apache.mina.common.buffer.IoBuffer;
+import org.apache.mina.core.buffer.IoBuffer;
 
 /**
  * A default implementation of {@link MutableHttpRequest}.

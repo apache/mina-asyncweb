@@ -22,7 +22,7 @@ package org.apache.asyncweb.common;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.mina.common.buffer.IoBuffer;
+import org.apache.mina.core.buffer.IoBuffer;
 
 /**
  * Represents a response to an <code>HttpRequest</code>.

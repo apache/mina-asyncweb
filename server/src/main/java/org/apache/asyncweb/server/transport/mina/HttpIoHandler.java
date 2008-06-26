@@ -20,7 +20,7 @@
 package org.apache.asyncweb.server.transport.mina;
 
 
-import org.apache.mina.common.service.IoHandler;
+import org.apache.mina.core.service.IoHandler;
 import org.apache.asyncweb.server.ServiceContainer;
 
 

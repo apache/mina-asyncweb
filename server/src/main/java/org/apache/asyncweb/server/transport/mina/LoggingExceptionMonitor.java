@@ -19,7 +19,7 @@
  */
 package org.apache.asyncweb.server.transport.mina;
 
-import org.apache.mina.common.ExceptionMonitor;
+import org.apache.mina.core.ExceptionMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

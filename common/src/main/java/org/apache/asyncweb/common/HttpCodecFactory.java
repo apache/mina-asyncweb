@@ -20,8 +20,8 @@
 package org.apache.asyncweb.common;
 
 
-import org.apache.mina.common.service.IoAcceptor;
-import org.apache.mina.common.session.IoSession;
+import org.apache.mina.core.service.IoAcceptor;
+import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;
 import org.apache.mina.filter.codec.ProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolEncoder;

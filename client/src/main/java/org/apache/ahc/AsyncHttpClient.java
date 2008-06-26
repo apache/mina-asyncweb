@@ -39,12 +39,12 @@ import org.apache.ahc.util.EventDispatcher;
 import org.apache.ahc.util.MonitoringEvent;
 import org.apache.ahc.util.MonitoringListener;
 import org.apache.asyncweb.common.HttpMethod;
-import org.apache.mina.common.future.ConnectFuture;
-import org.apache.mina.common.future.DefaultConnectFuture;
-import org.apache.mina.common.future.IoFutureListener;
-import org.apache.mina.common.session.IoSession;
-import org.apache.mina.common.RuntimeIoException;
-import org.apache.mina.common.service.SimpleIoProcessorPool;
+import org.apache.mina.core.future.ConnectFuture;
+import org.apache.mina.core.future.DefaultConnectFuture;
+import org.apache.mina.core.future.IoFutureListener;
+import org.apache.mina.core.session.IoSession;
+import org.apache.mina.core.RuntimeIoException;
+import org.apache.mina.core.service.SimpleIoProcessorPool;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.filter.ssl.SslFilter;
@@ -681,7 +681,7 @@ public class AsyncHttpClient {
          * Event notification that the conection has completed, either by a successful connection or
          * by an error.
          *
-         * @param future the {@link org.apache.mina.common.ConnectFuture}.
+         * @param future the {@link org.apache.mina.core.ConnectFuture}.
          */
         public void operationComplete(ConnectFuture future) {
             if (future.isConnected()) {

@@ -34,8 +34,8 @@ import org.apache.ahc.util.EncodingUtil;
 import org.apache.ahc.util.NameValuePair;
 import org.apache.asyncweb.common.Cookie;
 import org.apache.asyncweb.common.HttpMethod;
-import org.apache.mina.common.session.IoSession;
-import org.apache.mina.common.buffer.IoBuffer;
+import org.apache.mina.core.session.IoSession;
+import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolEncoderAdapter;
 import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 
@@ -78,10 +78,10 @@ public class HttpRequestEncoder extends ProtocolEncoderAdapter {
     /**
      * Method responsible for encoding a HttpRequestMessage into raw bytes.
      * 
-     * @param ioSession the {@link org.apache.mina.common.IoSession} representing the connection to the server.
+     * @param ioSession the {@link org.apache.mina.core.IoSession} representing the connection to the server.
      * @param message the {@link HttpRequestMessage} object
      * @param out {@link org.apache.mina.filter.codec.ProtocolEncoderOutput} used for output
-     * @see org.apache.mina.filter.codec.ProtocolEncoder#encode(org.apache.mina.common.IoSession, java.lang.Object, org.apache.mina.filter.codec.ProtocolEncoderOutput)
+     * @see org.apache.mina.filter.codec.ProtocolEncoder#encode(org.apache.mina.core.IoSession, java.lang.Object, org.apache.mina.filter.codec.ProtocolEncoderOutput)
      */
     public void encode(IoSession ioSession, Object message, ProtocolEncoderOutput out) throws Exception {
         HttpRequestMessage msg = (HttpRequestMessage)message;

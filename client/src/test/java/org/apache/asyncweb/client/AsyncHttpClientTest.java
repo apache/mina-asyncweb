@@ -29,7 +29,7 @@ import org.apache.asyncweb.common.HttpMethod;
 import org.apache.asyncweb.common.HttpRequest;
 import org.apache.asyncweb.common.HttpResponse;
 import org.apache.asyncweb.common.MutableHttpRequest;
-import org.apache.mina.common.buffer.IoBuffer;
+import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
 public class AsyncHttpClientTest extends AbstractTest {

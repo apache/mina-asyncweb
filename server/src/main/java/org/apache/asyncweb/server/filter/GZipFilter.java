@@ -25,7 +25,7 @@ import java.util.zip.GZIPOutputStream;
 import org.apache.asyncweb.common.MutableHttpResponse;
 import org.apache.asyncweb.server.HttpServiceContext;
 import org.apache.asyncweb.server.HttpServiceFilter;
-import org.apache.mina.common.buffer.IoBuffer;
+import org.apache.mina.core.buffer.IoBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -22,7 +22,7 @@ package org.apache.ahc.codec;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;
 import org.apache.mina.filter.codec.ProtocolDecoder;
 import org.apache.mina.filter.codec.ProtocolEncoder;
-import org.apache.mina.common.session.IoSession;
+import org.apache.mina.core.session.IoSession;
 
 /**
  * A factory for creating {@link HttpRequestEncoder} and {@link HttpResponseDecoder} objects.

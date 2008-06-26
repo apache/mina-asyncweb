@@ -25,12 +25,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.mina.common.session.IdleStatus;
-import org.apache.mina.common.buffer.IoBuffer;
-import org.apache.mina.common.future.IoFutureListener;
-import org.apache.mina.common.service.IoHandler;
-import org.apache.mina.common.session.IoSession;
-import org.apache.mina.common.future.WriteFuture;
+import org.apache.mina.core.session.IdleStatus;
+import org.apache.mina.core.buffer.IoBuffer;
+import org.apache.mina.core.future.IoFutureListener;
+import org.apache.mina.core.service.IoHandler;
+import org.apache.mina.core.session.IoSession;
+import org.apache.mina.core.future.WriteFuture;
 import org.apache.asyncweb.common.HttpRequest;
 import org.apache.asyncweb.common.HttpResponseStatus;
 import org.apache.asyncweb.common.MutableHttpResponse;

@@ -21,7 +21,7 @@ package org.apache.asyncweb.client;
 
 import junit.framework.TestCase;
 
-import org.apache.mina.common.buffer.IoBuffer;
+import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolCodecSession;
 import org.apache.asyncweb.common.HttpResponse;
 import org.apache.asyncweb.common.HttpResponseDecoder;

@@ -25,7 +25,7 @@ import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.security.InvalidParameterException;
 
-import org.apache.mina.common.buffer.IoBuffer;
+import org.apache.mina.core.buffer.IoBuffer;
 
 /**
  * A simple file loader, supposed to be efficient on relativly small 

@@ -21,7 +21,7 @@ package org.apache.asyncweb.fileservice.index;
 
 import java.io.File;
 
-import org.apache.mina.common.buffer.IoBuffer;
+import org.apache.mina.core.buffer.IoBuffer;
 
 /**
  * Directory index page generator.
