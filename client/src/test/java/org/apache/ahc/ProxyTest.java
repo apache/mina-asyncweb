@@ -1,11 +1,5 @@
 package org.apache.ahc;
 
-import java.net.URL;
-import java.util.concurrent.Future;
-
-import org.apache.ahc.codec.HttpRequestMessage;
-import org.apache.ahc.codec.HttpResponseMessage;
-import org.apache.ahc.proxy.ProxyConfiguration;
 
 // TODO Figure out if we can make this test work
 public class ProxyTest extends AbstractTest {
