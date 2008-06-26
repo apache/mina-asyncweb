@@ -139,7 +139,6 @@ public abstract class AbstractTest extends TestCase {
             throwable = cause;
             exception = true;
             complete.countDown();
-            cause.printStackTrace();
         }
 
         public void onClosed() {
