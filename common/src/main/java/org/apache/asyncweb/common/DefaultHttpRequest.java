@@ -37,6 +37,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
+import org.apache.asyncweb.common.codec.HttpCodecUtils;
 import org.apache.mina.core.buffer.IoBuffer;
 
 /**

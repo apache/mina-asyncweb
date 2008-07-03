@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.mina.core.buffer.IoBuffer;
+
 /**
  * Base message type of {@link HttpRequest} and {@link HttpResponse}.
  *
@@ -38,7 +40,7 @@ public interface HttpMessage extends Serializable {
     HttpVersion getProtocolVersion();
 
     /**
-     * Gets the <tt>Content-Type</tt> header of the request.
+     * Gets the <tt>Content-Type</tt> header of the message.
      * @return The content type.
      */
     String getContentType();
@@ -78,6 +80,7 @@ public interface HttpMessage extends Serializable {
 
     /**
      * Returns the content of the request body.
+     * @return the data contained in the message in the form of a buffer of bytes
      */
-    Object getContent();
+    IoBuffer getContent();
 }

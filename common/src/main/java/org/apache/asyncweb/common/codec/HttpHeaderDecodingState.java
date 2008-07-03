@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.asyncweb.common;
+package org.apache.asyncweb.common.codec;
 
 import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;

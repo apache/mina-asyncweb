@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.asyncweb.common.codec.HttpCodecUtils;
 import org.apache.mina.core.buffer.IoBuffer;
 
 /**

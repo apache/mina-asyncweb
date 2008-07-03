@@ -17,8 +17,9 @@
  *  under the License.
  *
  */
-package org.apache.asyncweb.common;
+package org.apache.asyncweb.common.codec;
 
+import org.apache.asyncweb.common.HttpResponseStatus;
 import org.apache.mina.filter.codec.ProtocolDecoderException;
 
 /**

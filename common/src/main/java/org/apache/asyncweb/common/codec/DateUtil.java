@@ -17,7 +17,7 @@
  * under the License.
  *
  */
-package org.apache.asyncweb.common;
+package org.apache.asyncweb.common.codec;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+
 /**
  * A utility class for parsing and formatting HTTP dates as used in cookies and
  * other headers.  This class handles dates as defined by RFC 2616 section
@@ -36,7 +37,7 @@ import java.util.TimeZone;
  * @author Christopher Brown
  * @author Michael Becke
  */
-final class DateUtil {
+final public class DateUtil {
 
     /**
      * Date format pattern used to parse HTTP date headers in RFC 1123 format.

@@ -24,6 +24,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.apache.asyncweb.common.codec.HttpCodecUtils;
+
 /**
  * Utility for generating date strings in the format required by HTTP.
  *

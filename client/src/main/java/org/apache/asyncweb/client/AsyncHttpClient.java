@@ -26,9 +26,9 @@ import java.security.GeneralSecurityException;
 
 import javax.net.ssl.SSLContext;
 
-import org.apache.asyncweb.common.HttpCodecFactory;
 import org.apache.asyncweb.common.HttpRequest;
 import org.apache.asyncweb.common.MutableHttpRequest;
+import org.apache.asyncweb.common.codec.HttpCodecFactory;
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;

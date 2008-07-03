@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.asyncweb.common;
+package org.apache.asyncweb.common.codec;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.CharacterCodingException;
@@ -26,6 +26,9 @@ import java.nio.charset.CharsetEncoder;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.asyncweb.common.HttpMessage;
+import org.apache.asyncweb.common.HttpResponseStatus;
+import org.apache.asyncweb.common.HttpResponseStatus.Category;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolDecoderException;
 import org.slf4j.Logger;
@@ -35,15 +38,15 @@ import org.slf4j.LoggerFactory;
  * @author The Apache MINA Project (dev@mina.apache.org)
  * @version $Rev$, $Date$
  */
-class HttpCodecUtils {
+public class HttpCodecUtils {
 
-    static final String DEFAULT_CHARSET_NAME = "UTF-8";
-    static final Charset DEFAULT_CHARSET =
+    public static final String DEFAULT_CHARSET_NAME = "UTF-8";
+    public static final Charset DEFAULT_CHARSET =
         Charset.forName(DEFAULT_CHARSET_NAME);
-    static final String US_ASCII_CHARSET_NAME = "US-ASCII";
-    static final Charset US_ASCII_CHARSET =
+    public static final String US_ASCII_CHARSET_NAME = "US-ASCII";
+    public static final Charset US_ASCII_CHARSET =
         Charset.forName(US_ASCII_CHARSET_NAME);
-    static final String DEFAULT_TIME_ZONE_NAME = "GMT";
+    public static final String DEFAULT_TIME_ZONE_NAME = "GMT";
 
     /**
      * Bytes making up a <code>CR LF</code>
@@ -108,7 +111,7 @@ class HttpCodecUtils {
      * @return   <code>true</code> iff the character is an HTTP field
      *           separator
      */
-    static boolean isHttpSeparator(byte b) {
+    public static boolean isHttpSeparator(byte b) {
         return HTTP_SEPARATORS[b];
     }
 
@@ -120,7 +123,7 @@ class HttpCodecUtils {
      * @return   <code>true</code> iff the character is an HTTP control
      *           character
      */
-    static boolean isHttpControl(byte b) {
+    public static boolean isHttpControl(byte b) {
         return HTTP_CONTROLS[b];
     }
 
@@ -232,7 +235,7 @@ class HttpCodecUtils {
      * @param buffer   The buffer to write to
      */
     static void encodeBody(HttpMessage message, IoBuffer buffer) {
-        IoBuffer content = (IoBuffer) message.getContent();
+        IoBuffer content = message.getContent();
         buffer.put(content);
     }
 

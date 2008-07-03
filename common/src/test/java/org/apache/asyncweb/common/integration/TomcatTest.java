@@ -6,7 +6,7 @@ import java.net.URI;
 
 import junit.framework.TestCase;
 
-import org.apache.asyncweb.common.HttpCodecFactory;
+import org.apache.asyncweb.common.codec.HttpCodecFactory;
 import org.apache.catalina.Engine;
 import org.apache.catalina.Host;
 import org.apache.catalina.connector.Connector;

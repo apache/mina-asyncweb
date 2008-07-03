@@ -79,10 +79,10 @@ public interface HttpRequest extends HttpMessage {
      * Otherwise, the connection is only kept alive if an explicit
      * <code>"Connection: keep-alive"</code> header is sent
      *
-     * @return  <code>true</code> iff the connection should remain
+     * @return  <code>true</code> if the connection should remain
      *          open following the handling of this request
      */
-    boolean isKeepAlive();
+    boolean isKeepAlive(); // TODO keep it due to extra javadoc ?
 
     /**
      * Determines whether this request requires a "100-continue" response.

@@ -17,7 +17,7 @@
  *  under the License.
  *
  */
-package org.apache.asyncweb.common;
+package org.apache.asyncweb.common.codec;
 
 
 import org.apache.mina.core.service.IoAcceptor;

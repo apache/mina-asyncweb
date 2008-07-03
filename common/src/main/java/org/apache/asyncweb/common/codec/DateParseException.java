@@ -17,7 +17,8 @@
  * under the License.
  *
  */
-package org.apache.asyncweb.common;
+package org.apache.asyncweb.common.codec;
+
 
 /**
  * An exception to indicate an error parsing a date string.

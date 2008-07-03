@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.filter.codec.ProtocolCodecSession;
 import org.apache.asyncweb.common.HttpResponse;
-import org.apache.asyncweb.common.HttpResponseDecoder;
+import org.apache.asyncweb.common.codec.HttpResponseDecoder;
 
 public class ChunkedTest extends TestCase {
 
