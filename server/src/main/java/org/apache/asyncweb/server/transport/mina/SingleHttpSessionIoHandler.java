@@ -104,19 +104,19 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
 
     public void sessionCreated()
     {
-        LOG.info( "Session created: {}", session.getRemoteAddress() );
+        LOG.debug( "Session created: {}", session.getRemoteAddress() );
     }
 
 
     public void sessionOpened()
     {
-        LOG.info( "Session opened: {}", session.getRemoteAddress() );
+        LOG.debug( "Session opened: {}", session.getRemoteAddress() );
     }
 
 
     public void sessionClosed()
     {
-        LOG.info( "Session closed: {}", session.getRemoteAddress() );
+        LOG.debug( "Session closed: {}", session.getRemoteAddress() );
 
         if ( currentContext != null )
         {
@@ -156,7 +156,7 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
 	            {
 	                public void run()
 	                {
-	                    LOG.info( "Pipeline empty after idle. Closing session: {}", session.getRemoteAddress() );
+	                    LOG.debug( "Pipeline empty after idle. Closing session: {}", session.getRemoteAddress() );
 	                    session.close();
 	                }
 	            });
