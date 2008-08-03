@@ -90,121 +90,117 @@ public class HttpRequestEncoder extends ProtocolEncoderAdapter {
         // Enable auto-expand for easier encoding
         buf.setAutoExpand(true);
 
-        try {
-            //If we have content, lets create the query string
-            int attrCount = msg.getParameters().size();
-            String urlAttrs = "";
-            if (attrCount > 0) {
-                NameValuePair attrs[] = new NameValuePair[attrCount];
-                Set<Map.Entry<String, String>> set = msg.getParameters().entrySet();
-                int i = 0;
-                for (Map.Entry<String, String> entry : set) {
-                    attrs[i++] = new NameValuePair(entry.getKey(), entry.getValue());
-                }
-                urlAttrs = EncodingUtil.formUrlEncode(attrs, msg.getUrlEncodingCharset());
+        //If we have content, lets create the query string
+        int attrCount = msg.getParameters().size();
+        String urlAttrs = "";
+        if (attrCount > 0) {
+            NameValuePair attrs[] = new NameValuePair[attrCount];
+            Set<Map.Entry<String, String>> set = msg.getParameters().entrySet();
+            int i = 0;
+            for (Map.Entry<String, String> entry : set) {
+                attrs[i++] = new NameValuePair(entry.getKey(), entry.getValue());
             }
-
-            CharsetEncoder encoder = Charset.forName(HttpMessage.HTTP_ELEMENT_CHARSET).newEncoder();
-            String method = msg.getRequestMethod();
-            buf.putString(method, encoder);
-            buf.putString(" ", encoder);
-            if (method.equals(HttpRequestMessage.REQUEST_CONNECT)) {
-                buf.putString(msg.getHost(), encoder);
-                buf.putString(":", encoder);
-                buf.putString(msg.getPort() + "", encoder);
-            } else {
-                if (msg.isProxyEnabled() && !msg.getProtocol().toLowerCase().equals("https")) {
-                    buf.putString(msg.getUrl().toString(), encoder);
-                } else {
-                    buf.putString(msg.getUrl().getFile(), encoder);
-                }
-                //If its a GET, append the attributes
-                if (method.equals(HttpRequestMessage.REQUEST_GET) && attrCount > 0) {
-                    //If there is not already a ? in the query, append one, otherwise append a &
-                    if (!msg.getUrl().getFile().contains("?")) {
-                        buf.putString("?", encoder);
-                    } else {
-                        buf.putString("&", encoder);
-                    }
-                    buf.putString(urlAttrs, encoder);
-                }
-            }
-            buf.putString(" HTTP/1.1", encoder);
-            buf.put(CRLF);
-
-            //This header is required for HTTP/1.1
-            
-            String hostHeader = msg.getHost(); 
-            if ((msg.getProtocol().equals("http") && msg.getPort() != 80)
-                || (msg.getProtocol().equals("https") && msg.getPort() != 443)) {
-                hostHeader += ":" + msg.getPort(); 
-            }
-            // set the host header, removing any Host header that might already exist. 
-            msg.setHeader("Host", hostHeader); 
-            
-            //User agent
-            if (msg.getUserAgent() != null) {
-                msg.setHeader("User-Agent", msg.getUserAgent()); 
-            }
-            
-            // potentially for a POST request.  We need to obtain the content information 
-            // so we can add the content headers...but the attaching of the content comes later. 
-            byte content[] = null;  
-            
-            // If this is a POST and parameters are provided, this is a form
-            // post; any existing content is an error and will be ignored and 
-            // the content type will be set accordingly
-            if (method.equals(HttpRequestMessage.REQUEST_POST) && attrCount > 0) {
-                content = urlAttrs.getBytes();
-
-                // these override any headers that might already be in the set 
-                msg.setHeader(HttpMessage.CONTENT_TYPE, FORM_POST_CONTENT_TYPE);
-            } else if (msg.getContent() != null) {
-                // if the message body was provided by the caller, then use it
-                // (as long as the method is not among the types for which
-                // entities are disallowed)
-                if (!method.equals(HttpRequestMessage.REQUEST_TRACE) && 
-                        !method.equals(HttpRequestMessage.REQUEST_CONNECT)) {
-                    content = msg.getContent();
-                }
-            }
-            
-            // set the proper content length header
-            if (content != null && content.length > 0) {
-                msg.setHeader(HttpMessage.CONTENT_LENGTH, String.valueOf(content.length));
-            } else {
-                // remove any existing content related headers
-                msg.removeHeader(HttpMessage.CONTENT_TYPE);
-                msg.removeHeader(HttpMessage.CONTENT_LENGTH);
-            }
-
-            //Process authentication
-            AuthState state = msg.getAuthState();
-            if (state != null){
-                String auth = state.getAuthScheme().authenticate(msg.getCredential(new AuthScope(msg.getHost(), msg.getPort(), state.getAuthScheme().getRealm())),msg);
-                msg.setHeader("Authorization", auth); 
-                state.setAuthAttempted(true);
-            }
-
-            //Process any headers we have
-            processHeaders(msg, buf, encoder);
-
-            //Process cookies
-            //NOTE: I am just passing the name value pairs and not doing management of the expiration or path
-            //As that will be left up to the user.  A possible enhancement is to make use of a CookieManager
-            //to handle these issues for the request
-            processCookies(msg, buf, encoder);
-
-            //Blank line indicates end of the headers 
-            buf.put(CRLF);
-            
-            //If this is a POST, then we have content to attach after the blank line 
-            if (content != null) {
-                buf.put(content);
-            } 
-        } catch (CharacterCodingException ex) {
-            ex.printStackTrace();
+            urlAttrs = EncodingUtil.formUrlEncode(attrs, msg.getUrlEncodingCharset());
         }
+
+        CharsetEncoder encoder = Charset.forName(HttpMessage.HTTP_ELEMENT_CHARSET).newEncoder();
+        String method = msg.getRequestMethod();
+        buf.putString(method, encoder);
+        buf.putString(" ", encoder);
+        if (method.equals(HttpRequestMessage.REQUEST_CONNECT)) {
+            buf.putString(msg.getHost(), encoder);
+            buf.putString(":", encoder);
+            buf.putString(msg.getPort() + "", encoder);
+        } else {
+            if (msg.isProxyEnabled() && !msg.getProtocol().toLowerCase().equals("https")) {
+                buf.putString(msg.getUrl().toString(), encoder);
+            } else {
+                buf.putString(msg.getUrl().getFile(), encoder);
+            }
+            //If its a GET, append the attributes
+            if (method.equals(HttpRequestMessage.REQUEST_GET) && attrCount > 0) {
+                //If there is not already a ? in the query, append one, otherwise append a &
+                if (!msg.getUrl().getFile().contains("?")) {
+                    buf.putString("?", encoder);
+                } else {
+                    buf.putString("&", encoder);
+                }
+                buf.putString(urlAttrs, encoder);
+            }
+        }
+        buf.putString(" HTTP/1.1", encoder);
+        buf.put(CRLF);
+
+        //This header is required for HTTP/1.1
+
+        String hostHeader = msg.getHost(); 
+        if ((msg.getProtocol().equals("http") && msg.getPort() != 80)
+                || (msg.getProtocol().equals("https") && msg.getPort() != 443)) {
+            hostHeader += ":" + msg.getPort(); 
+        }
+        // set the host header, removing any Host header that might already exist. 
+        msg.setHeader("Host", hostHeader); 
+
+        //User agent
+        if (msg.getUserAgent() != null) {
+            msg.setHeader("User-Agent", msg.getUserAgent()); 
+        }
+
+        // potentially for a POST request.  We need to obtain the content information 
+        // so we can add the content headers...but the attaching of the content comes later. 
+        byte content[] = null;  
+
+        // If this is a POST and parameters are provided, this is a form
+        // post; any existing content is an error and will be ignored and 
+        // the content type will be set accordingly
+        if (method.equals(HttpRequestMessage.REQUEST_POST) && attrCount > 0) {
+            content = urlAttrs.getBytes();
+
+            // these override any headers that might already be in the set 
+            msg.setHeader(HttpMessage.CONTENT_TYPE, FORM_POST_CONTENT_TYPE);
+        } else if (msg.getContent() != null) {
+            // if the message body was provided by the caller, then use it
+            // (as long as the method is not among the types for which
+            // entities are disallowed)
+            if (!method.equals(HttpRequestMessage.REQUEST_TRACE) && 
+                    !method.equals(HttpRequestMessage.REQUEST_CONNECT)) {
+                content = msg.getContent();
+            }
+        }
+
+        // set the proper content length header
+        if (content != null && content.length > 0) {
+            msg.setHeader(HttpMessage.CONTENT_LENGTH, String.valueOf(content.length));
+        } else {
+            // remove any existing content related headers
+            msg.removeHeader(HttpMessage.CONTENT_TYPE);
+            msg.removeHeader(HttpMessage.CONTENT_LENGTH);
+        }
+
+        //Process authentication
+        AuthState state = msg.getAuthState();
+        if (state != null){
+            String auth = state.getAuthScheme().authenticate(msg.getCredential(new AuthScope(msg.getHost(), msg.getPort(), state.getAuthScheme().getRealm())),msg);
+            msg.setHeader("Authorization", auth); 
+            state.setAuthAttempted(true);
+        }
+
+        //Process any headers we have
+        processHeaders(msg, buf, encoder);
+
+        //Process cookies
+        //NOTE: I am just passing the name value pairs and not doing management of the expiration or path
+        //As that will be left up to the user.  A possible enhancement is to make use of a CookieManager
+        //to handle these issues for the request
+        processCookies(msg, buf, encoder);
+
+        //Blank line indicates end of the headers 
+        buf.put(CRLF);
+
+        //If this is a POST, then we have content to attach after the blank line 
+        if (content != null) {
+            buf.put(content);
+        } 
 
         buf.flip();
 
