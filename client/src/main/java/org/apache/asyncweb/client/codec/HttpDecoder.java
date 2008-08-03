@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import org.apache.asyncweb.client.util.DateUtil;
 import org.apache.asyncweb.client.util.NameValuePair;
@@ -91,8 +92,16 @@ public class HttpDecoder {
     private static final char HT = 9;
 
 
-    /** The decoder. */
-    private CharsetDecoder decoder = Charset.forName(HttpMessage.HTTP_ELEMENT_CHARSET).newDecoder();
+    /** The decoder instances as threadlocals. */
+    private static final ThreadLocal<CharsetDecoder> decoder = new ThreadLocal<CharsetDecoder>() {
+        @Override
+        protected CharsetDecoder initialValue() {
+            return Charset.forName(HttpMessage.HTTP_ELEMENT_CHARSET).newDecoder();
+        }
+    };
+    
+    /** Cached folding pattern. */
+    private static final Pattern folding = Pattern.compile("\\r\\n([ \\t])");
 
     /**
      * Finds a line from a ByteBuffer that ends with a CR/LF and returns the line as a String.
@@ -131,7 +140,7 @@ public class HttpDecoder {
         if (terminatorPos > 1) {
             ByteBuffer line = in.slice();
             line.limit(terminatorPos - beginPos - 1);
-            result = line.getString(decoder);
+            result = line.getString(decoder.get());
         }
 
         in.position(terminatorPos + 1);
@@ -200,7 +209,7 @@ public class HttpDecoder {
         if (terminatorPos > 1) {
             ByteBuffer line = in.slice();
             line.limit(terminatorPos - beginPos - 1);
-            result = line.getString(decoder);
+            result = line.getString(decoder.get());
         }
 
         in.position(terminatorPos + 1);
@@ -241,7 +250,7 @@ public class HttpDecoder {
     public void decodeHeader(String line, HttpResponseMessage msg) throws Exception {
         LOG.debug("Processing Header Line: " + line);
         // first, get rid of the CRLF from linear whitespace
-        line = line.replaceAll("\\r\\n([ \\t])", "$1");
+        line = folding.matcher(line).replaceAll("$1");
         int pos = line.indexOf(":");
         String name = line.substring(0, pos);
         String value = trimHeaderValue(line.substring(pos + 1));
