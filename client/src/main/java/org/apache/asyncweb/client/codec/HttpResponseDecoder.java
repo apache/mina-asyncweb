@@ -84,12 +84,16 @@ public class HttpResponseDecoder extends CumulativeProtocolDecoder {
 
                     //Check if the entire response headers have been read
                     if (line.length() == 0) {
-                        response.setState(HttpResponseMessage.STATE_STATUS_READ);
-
                         //The next line should be a header
                         if (!processStatus(response, in)) {
+                            // the continue response is completely read but we
+                            // didn't get the full status line from the next
+                            // response; reset the state to STATE_START
+                            response.setState(HttpResponseMessage.STATE_START);
                             throw new NeedMoreDataException();
                         }
+                        // status was processed
+                        response.setState(HttpResponseMessage.STATE_STATUS_READ);
                         break;
                     }
                 }
