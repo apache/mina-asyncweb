@@ -44,11 +44,13 @@ import org.apache.asyncweb.client.util.AsyncHttpClientException;
 import org.apache.asyncweb.client.util.EventDispatcher;
 import org.apache.asyncweb.client.util.MonitoringEvent;
 import org.apache.asyncweb.client.util.MonitoringListener;
+import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.ConnectFuture;
 import org.apache.mina.common.IoFuture;
 import org.apache.mina.common.IoFutureListener;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.common.RuntimeIOException;
+import org.apache.mina.common.SimpleByteBufferAllocator;
 import org.apache.mina.common.ThreadModel;
 import org.apache.mina.common.support.DefaultConnectFuture;
 import org.apache.mina.filter.SSLFilter;
@@ -160,6 +162,12 @@ public class AsyncHttpClient {
     public static final String PROTOCOL_FILTER = "protocolFilter";
     public static final String PROXY_FILTER = "proxyFilter";
     public static final String EVENT_THREAD_POOL_FILTER = "eventThreadPoolFilter";
+    
+    static {
+        // use heap buffers with a simple byte buffer allocator
+        ByteBuffer.setUseDirectBuffers(false);
+        ByteBuffer.setAllocator(new SimpleByteBufferAllocator());
+    }
 
     /**
      * Checks if is reuse address.
