@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 
+import org.apache.asyncweb.client.proxy.ProxyConfiguration;
 import org.apache.mina.common.IoSession;
 
 /**
@@ -59,7 +60,7 @@ public final class SessionCache {
         
         IoSession cached = null;
         while ((cached = queue.poll()) != null) {
-        	// see if the session is usable
+            // see if the session is usable
             if (cached.isConnected() && !cached.isClosing()) {
                 return cached;
             }
@@ -115,7 +116,14 @@ public final class SessionCache {
      * @return A String key instance for this request. 
      */
     private String getKey(HttpRequestMessage msg) {
-        return getKey(msg.getHost(), msg.getPort());
+        if (msg.isProxyEnabled()) {
+            ProxyConfiguration proxyCfg = msg.getProxyConfiguration();
+            return (msg.getProtocol().equalsIgnoreCase("https")) ?
+                    getKey(proxyCfg.getHttpsProxyHost(), proxyCfg.getHttpsProxyPort()) :
+                    getKey(proxyCfg.getHttpProxyHost(), proxyCfg.getHttpProxyPort());
+        } else {
+            return getKey(msg.getHost(), msg.getPort());
+        }
     }
     
     /**

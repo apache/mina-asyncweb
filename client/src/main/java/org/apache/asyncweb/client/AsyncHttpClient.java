@@ -505,7 +505,7 @@ public class AsyncHttpClient {
         // *IF* connection reuse is enabled, we should see if we have a cached 
         // connection first; if not, always open a new one
         ConnectFuture future = null;
-        if (!message.isProxyEnabled() && getSessionCache() != null) {
+        if (getSessionCache() != null) {
             future = getCachedConnection(message);
         } else {
             // add the Connection close header explicitly
