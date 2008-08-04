@@ -19,7 +19,6 @@
  */
 package org.apache.asyncweb.client.codec;
 
-import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.Collection;
@@ -48,10 +47,19 @@ public class HttpRequestEncoder extends ProtocolEncoderAdapter {
     private static final Set<Class<?>> TYPES;
     
     /** The Constant CRLF. */
-    private static final byte[] CRLF = new byte[] {0x0D, 0x0A};
+    private static final String CRLF = "\r\n";
     
     /** The Constant FORM_POST_CONTENT_TYPE. */
     private static final String FORM_POST_CONTENT_TYPE = "application/x-www-form-urlencoded";
+    
+    /** The encoder instances as thread locals. */
+    private static final ThreadLocal<CharsetEncoder> ENCODER =
+            new ThreadLocal<CharsetEncoder>() {
+                @Override
+                protected CharsetEncoder initialValue() {
+                    return Charset.forName(HttpMessage.HTTP_ELEMENT_CHARSET).newEncoder();
+                }
+    };
 
     static {
         Set<Class<?>> types = new HashSet<Class<?>>();
@@ -90,6 +98,7 @@ public class HttpRequestEncoder extends ProtocolEncoderAdapter {
         // Enable auto-expand for easier encoding
         buf.setAutoExpand(true);
 
+        StringBuilder sb = new StringBuilder(1024);
         //If we have content, lets create the query string
         int attrCount = msg.getParameters().size();
         String urlAttrs = "";
@@ -103,33 +112,29 @@ public class HttpRequestEncoder extends ProtocolEncoderAdapter {
             urlAttrs = EncodingUtil.formUrlEncode(attrs, msg.getUrlEncodingCharset());
         }
 
-        CharsetEncoder encoder = Charset.forName(HttpMessage.HTTP_ELEMENT_CHARSET).newEncoder();
         String method = msg.getRequestMethod();
-        buf.putString(method, encoder);
-        buf.putString(" ", encoder);
+        sb.append(method).append(' ');
         if (method.equals(HttpRequestMessage.REQUEST_CONNECT)) {
-            buf.putString(msg.getHost(), encoder);
-            buf.putString(":", encoder);
-            buf.putString(msg.getPort() + "", encoder);
+            sb.append(msg.getHost()).append(':').append(msg.getPort());
         } else {
             if (msg.isProxyEnabled() && !msg.getProtocol().toLowerCase().equals("https")) {
-                buf.putString(msg.getUrl().toString(), encoder);
+                sb.append(msg.getUrl().toString());
             } else {
-                buf.putString(msg.getUrl().getFile(), encoder);
+                sb.append(msg.getUrl().getFile());
             }
             //If its a GET, append the attributes
             if (method.equals(HttpRequestMessage.REQUEST_GET) && attrCount > 0) {
                 //If there is not already a ? in the query, append one, otherwise append a &
                 if (!msg.getUrl().getFile().contains("?")) {
-                    buf.putString("?", encoder);
+                    sb.append('?');
                 } else {
-                    buf.putString("&", encoder);
+                    sb.append('&');
                 }
-                buf.putString(urlAttrs, encoder);
+                sb.append(urlAttrs);
             }
         }
-        buf.putString(" HTTP/1.1", encoder);
-        buf.put(CRLF);
+        sb.append(" HTTP/1.1");
+        sb.append(CRLF);
 
         //This header is required for HTTP/1.1
 
@@ -186,16 +191,19 @@ public class HttpRequestEncoder extends ProtocolEncoderAdapter {
         }
 
         //Process any headers we have
-        processHeaders(msg, buf, encoder);
+        processHeaders(msg, sb);
 
         //Process cookies
         //NOTE: I am just passing the name value pairs and not doing management of the expiration or path
         //As that will be left up to the user.  A possible enhancement is to make use of a CookieManager
         //to handle these issues for the request
-        processCookies(msg, buf, encoder);
+        processCookies(msg, sb);
 
         //Blank line indicates end of the headers 
-        buf.put(CRLF);
+        sb.append(CRLF);
+        
+        // finally encode and add the string to the buffer
+        buf.putString(sb, ENCODER.get());
 
         //If this is a POST, then we have content to attach after the blank line 
         if (content != null) {
@@ -213,32 +221,25 @@ public class HttpRequestEncoder extends ProtocolEncoderAdapter {
      * Process header encoding.
      * 
      * @param msg the {@link HttpRequestMessage} message object
-     * @param buf the <code>ByteBuffer</code> in which to place the raw bytes
-     * @param encoder the character set encoder
+     * @param sb the <code>StringBuilder</code> at which to append the data
      * 
      * @throws Exception if any exception occurs.
      */
-    private void processHeaders(HttpRequestMessage msg, ByteBuffer buf, CharsetEncoder encoder)
+    private void processHeaders(HttpRequestMessage msg, StringBuilder sb)
         throws Exception {
         List<NameValuePair> headers = msg.getHeaders();
         for (NameValuePair header : headers) {
             String name = header.getName();
             String value = header.getValue();
 
-            buf.putString(name, encoder);
-            buf.putString(": ", encoder);
-            buf.putString(value, encoder);
-            buf.put(CRLF);
+            sb.append(name).append(": ").append(value).append(CRLF);
         }
 
         //Process authentication
         AuthState state = msg.getAuthState();
         if (state != null){
             String auth = state.getAuthScheme().authenticate(msg.getCredential(new AuthScope(msg.getHost(), msg.getPort(), state.getAuthScheme().getRealm())),msg);
-            buf.putString("Authorization", encoder);
-            buf.putString(": ", encoder);
-            buf.putString(auth, encoder);
-            buf.put(CRLF);
+            sb.append("Authorization").append(": ").append(auth).append(CRLF);
             state.setAuthAttempted(true);
         }
     }
@@ -247,26 +248,22 @@ public class HttpRequestEncoder extends ProtocolEncoderAdapter {
      * Process cookies.
      * 
      * @param msg the msg
-     * @param buf the buf
-     * @param encoder the encoder
+     * @param sb the StringBuilder
      * 
      * @throws Exception the exception
      */
-    private void processCookies(HttpRequestMessage msg, ByteBuffer buf, CharsetEncoder encoder)
+    private void processCookies(HttpRequestMessage msg, StringBuilder sb)
         throws Exception {
         Collection<Cookie> cookies = msg.getCookies();
         if (cookies.size() > 0) {
-            buf.putString("Cookie: ", encoder);
+            sb.append("Cookie: ");
             for (Cookie cookie : cookies) {
                 String name = cookie.getName();
                 String value = cookie.getValue();
 
-                buf.putString(name, encoder);
-                buf.putString("=", encoder);
-                buf.putString(value, encoder);
-                buf.putString("; ", encoder);
+                sb.append(name).append('=').append(value).append("; ");
             }
-            buf.put(CRLF);
+            sb.append(CRLF);
         }
     }
 
