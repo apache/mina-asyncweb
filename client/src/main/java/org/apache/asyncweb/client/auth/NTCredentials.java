@@ -130,7 +130,7 @@ public class NTCredentials extends UsernamePasswordCredentials {
      * @return A string represenation of this object.
      */
     public String toString() {
-        final StringBuffer sbResult = new StringBuffer(super.toString());
+        final StringBuilder sbResult = new StringBuilder(super.toString());
 
         sbResult.append("@");
         sbResult.append(this.host);

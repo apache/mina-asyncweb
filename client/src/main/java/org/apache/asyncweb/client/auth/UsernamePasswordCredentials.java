@@ -144,7 +144,7 @@ public class UsernamePasswordCredentials implements Credentials{
      * @return the username:password formed string
      */
     public String toString() {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         result.append(this.userName);
         result.append(":");
         result.append((this.password == null) ? "null" : this.password);
