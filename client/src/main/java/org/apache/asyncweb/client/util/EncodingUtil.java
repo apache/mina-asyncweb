@@ -72,7 +72,7 @@ public final class EncodingUtil {
         try {
             return doFormUrlEncode(pairs, charset);
         } catch (UnsupportedEncodingException e) {
-            LOG.error("Encoding not supported: " + charset);
+            LOG.error("Encoding not supported: {}", charset);
             try {
                 return doFormUrlEncode(pairs, DEFAULT_CHARSET);
             } catch (UnsupportedEncodingException fatal) {
@@ -151,10 +151,7 @@ public final class EncodingUtil {
         try {
             return new String(data, offset, length, charset);
         } catch (UnsupportedEncodingException e) {
-
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Unsupported encoding: " + charset + ". System encoding used");
-            }
+            LOG.warn("Unsupported encoding: {}. System encoding used", charset);
             return new String(data, offset, length);
         }
     }
@@ -196,11 +193,7 @@ public final class EncodingUtil {
         try {
             return data.getBytes(charset);
         } catch (UnsupportedEncodingException e) {
-
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Unsupported encoding: " + charset + ". System encoding used.");
-            }
-
+            LOG.warn("Unsupported encoding: {}. System encoding used.", charset);
             return data.getBytes();
         }
     }

@@ -173,9 +173,7 @@ public class NTLMScheme implements AuthScheme {
      */
     public String authenticate(Credentials credentials, HttpRequestMessage request)
         throws AuthenticationException {
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("enter NTLMScheme.authenticate(Credentials, HttpMethod)");
-        }
+        LOG.trace("enter NTLMScheme.authenticate(Credentials, HttpMethod)");
 
         if (this.state == UNINITIATED) {
             throw new IllegalStateException("NTLM authentication process has not been initiated");

@@ -248,9 +248,8 @@ public class HttpDecoder {
      * @throws Exception if any exception occurs
      */
     public void decodeHeader(String line, HttpResponseMessage msg) throws Exception {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Processing Header Line: " + line);
-        }
+        LOG.debug("Processing Header Line: {}", line);
+
         // first, get rid of the CRLF from linear whitespace
         line = folding.matcher(line).replaceAll("$1");
         int pos = line.indexOf(":");
@@ -422,9 +421,8 @@ public class HttpDecoder {
      * @see Cookie
      */
     public Cookie decodeCookie(String cookieStr, HttpResponseMessage msg) throws Exception {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Processing Cookie Line: " + cookieStr);
-        }
+        LOG.debug("Processing Cookie Line: {}", cookieStr);
+
         Cookie cookie = null;
 
         String pairs[] = cookieStr.split(";");

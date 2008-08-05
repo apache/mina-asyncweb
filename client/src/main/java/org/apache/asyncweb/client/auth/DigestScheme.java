@@ -108,7 +108,7 @@ public class DigestScheme extends RFC2617Scheme {
                     qopVariant = QOP_AUTH_INT;
                 } else {
                     unsupportedQop = true;
-                    LOG.warn("Unsupported qop detected: "+ variant);
+                    LOG.warn("Unsupported qop detected: {}", variant);
                 }
             }
         }
@@ -176,9 +176,7 @@ public class DigestScheme extends RFC2617Scheme {
     public String authenticate(Credentials credentials, HttpRequestMessage request)
     throws AuthenticationException {
 
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("enter DigestScheme.authenticate(Credentials, HttpMethod)");
-        }
+        LOG.trace("enter DigestScheme.authenticate(Credentials, HttpMethod)");
 
         UsernamePasswordCredentials usernamepassword = null;
         try {
@@ -221,9 +219,7 @@ public class DigestScheme extends RFC2617Scheme {
      */
     private String createDigest(final String uname, final String pwd) throws AuthenticationException {
 
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("enter DigestScheme.createDigest(String, String, Map)");
-        }
+        LOG.trace("enter DigestScheme.createDigest(String, String, Map)");
 
         final String digAlg = "MD5";
 
@@ -284,7 +280,7 @@ public class DigestScheme extends RFC2617Scheme {
             tmp3.append(cnonce);
             a1 = tmp3.toString();
         } else if(!algorithm.equals("MD5")) {
-            LOG.warn("Unhandled algorithm " + algorithm + " requested");
+            LOG.warn("Unhandled algorithm {} requested", algorithm);
         }
         String md5a1 = encode(md5Helper.digest(EncodingUtil.getBytes(a1, charset)));
 
@@ -301,9 +297,7 @@ public class DigestScheme extends RFC2617Scheme {
         // 3.2.2.1
         String serverDigestValue;
         if (qopVariant == QOP_MISSING) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Using null qop method");
-            }
+            LOG.debug("Using null qop method");
             StringBuilder tmp2 = new StringBuilder(md5a1.length() + nonce.length() + md5a2.length());
             tmp2.append(md5a1);
             tmp2.append(':');
@@ -312,9 +306,7 @@ public class DigestScheme extends RFC2617Scheme {
             tmp2.append(md5a2);
             serverDigestValue = tmp2.toString();
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Using qop method " + qop);
-            }
+            LOG.debug("Using qop method {}", qop);
             String qopOption = getQopVariantString();
             StringBuilder tmp2 = new StringBuilder(md5a1.length() + nonce.length()
                 + NC.length() + cnonce.length() + qopOption.length() + md5a2.length() + 5);
@@ -349,10 +341,7 @@ public class DigestScheme extends RFC2617Scheme {
     private String createDigestHeader(final String uname, final String digest)
         throws AuthenticationException {
 
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("enter DigestScheme.createDigestHeader(String, Map, "
-                    + "String)");
-        }
+        LOG.trace("enter DigestScheme.createDigestHeader(String, Map, String)");
 
         String uri = getParameter("uri");
         String realm = getParameter("realm");
@@ -412,9 +401,7 @@ public class DigestScheme extends RFC2617Scheme {
      * @return encoded MD5, or <CODE>null</CODE> if encoding failed
      */
     private static String encode(byte[] binaryData) {
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("enter DigestScheme.encode(byte[])");
-        }
+        LOG.trace("enter DigestScheme.encode(byte[])");
 
         if (binaryData.length != 16) {
             return null;
@@ -439,9 +426,7 @@ public class DigestScheme extends RFC2617Scheme {
      * @throws AsyncHttpClientException if MD5 algorithm is not supported.
      */
     public static String createCnonce() {
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("enter DigestScheme.createCnonce()");
-        }
+        LOG.trace("enter DigestScheme.createCnonce()");
 
         String cnonce;
         final String digAlg = "MD5";

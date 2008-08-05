@@ -107,9 +107,7 @@ public class BasicScheme extends RFC2617Scheme{
      */
     public String authenticate(Credentials credentials, HttpRequestMessage request) throws AuthenticationException {
 
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("enter BasicScheme.authenticate(Credentials, HttpMethod)");
-        }
+        LOG.trace("enter BasicScheme.authenticate(Credentials, HttpMethod)");
 
         if (request == null) {
             throw new IllegalArgumentException("Request may not be null");
@@ -139,9 +137,7 @@ public class BasicScheme extends RFC2617Scheme{
      */
     public static String authenticate(UsernamePasswordCredentials credentials, String charset) {
 
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("enter BasicScheme.authenticate(UsernamePasswordCredentials, String)");
-        }
+        LOG.trace("enter BasicScheme.authenticate(UsernamePasswordCredentials, String)");
 
         if (credentials == null) {
             throw new IllegalArgumentException("Credentials may not be null");
