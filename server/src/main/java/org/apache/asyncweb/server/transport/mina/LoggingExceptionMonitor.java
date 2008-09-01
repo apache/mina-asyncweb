@@ -19,7 +19,6 @@
  */
 package org.apache.asyncweb.server.transport.mina;
 
-import org.apache.mina.core.ExceptionMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @author irvingd
  *
  */
-class LoggingExceptionMonitor extends ExceptionMonitor {
+class LoggingExceptionMonitor extends org.apache.mina.util.ExceptionMonitor {
 
     private static final Logger LOG = LoggerFactory
             .getLogger(LoggingExceptionMonitor.class);

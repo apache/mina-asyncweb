@@ -23,7 +23,7 @@ package org.apache.asyncweb.common;
  * HTTP Header Constants.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev: 615489 $, $Date: 2008-01-26 13:59:06 -0700 (Sat, 26 Jan 2008) $
+ * @version $Rev$, $Date$
  */
 public class HttpHeaderConstants {
 
