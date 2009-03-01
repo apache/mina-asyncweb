@@ -76,7 +76,7 @@ abstract class HttpResponseDecodingState extends DecodingStateMachine {
     /**
      * The header which provides a requests content length
      */
-    private static final String CONTENT_LENGTH = "content-length";
+    private static final String CONTENT_LENGTH = "Content-Length";
 
     /**
      * Indicates the start of a coding extension
