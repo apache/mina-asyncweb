@@ -38,9 +38,9 @@ import org.apache.mina.core.service.IoService;
 import org.apache.mina.core.service.TransportMetadata;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
-import org.apache.mina.core.session.TrafficMask;
 import org.apache.mina.core.session.IoSessionConfig;
 import org.apache.mina.core.write.WriteRequest;
+import org.apache.mina.core.write.WriteRequestQueue;
 import org.apache.mina.transport.socket.SocketSessionConfig;
 
 public class FakeIoSession implements IoSession {
@@ -234,13 +234,6 @@ public class FakeIoSession implements IoSession {
     public void setWriteTimeout(int i) {
     }
 
-    public TrafficMask getTrafficMask() {
-        return null;
-    }
-
-    public void setTrafficMask(TrafficMask trafficMask) {
-    }
-
     public void suspendRead() {
     }
 
@@ -373,4 +366,21 @@ public class FakeIoSession implements IoSession {
         return false;
     }
 
+    public boolean isWriteSuspended() {
+        return false;
+    }
+
+    public void updateThroughput( long currentTime, boolean force ) {
+    }
+
+    public void setCurrentWriteRequest( WriteRequest currentWriteRequest ) {
+    }
+
+    public WriteRequestQueue getWriteRequestQueue() {
+        return null;
+    }
+
+    public boolean isReadSuspended() {
+        return false;
+    }
 }

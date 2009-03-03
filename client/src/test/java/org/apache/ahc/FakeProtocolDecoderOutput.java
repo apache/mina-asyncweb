@@ -20,6 +20,8 @@
 
 package org.apache.ahc;
 
+import org.apache.mina.core.filterchain.IoFilter.NextFilter;
+import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 
 public class FakeProtocolDecoderOutput implements ProtocolDecoderOutput {
@@ -38,4 +40,6 @@ public class FakeProtocolDecoderOutput implements ProtocolDecoderOutput {
         return object;
     }
 
+    public void flush( NextFilter nextFilter, IoSession session ) {
+    }
 }
