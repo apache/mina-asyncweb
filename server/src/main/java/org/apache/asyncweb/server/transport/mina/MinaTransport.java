@@ -204,8 +204,8 @@ public class MinaTransport implements Transport
                 LOG.debug( "Configuring traffic logging filter" );
                 LoggingFilter filter = new LoggingFilter();
                 filter.setSessionClosedLoglevel( logLevel );
-                filter.setExceptionCaughtLoglevel( logLevel );
-                filter.setMessageReceivedLoglevel( logLevel );
+                filter.setExceptionCaughtLogLevel( logLevel );
+                filter.setMessageReceivedLogLevel( logLevel );
                 filter.setMessageSentLoglevel( logLevel );
                 filter.setSessionClosedLoglevel( logLevel );
                 filter.setSessionCreatedLoglevel( logLevel );
