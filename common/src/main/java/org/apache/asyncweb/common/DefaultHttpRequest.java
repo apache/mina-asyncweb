@@ -279,9 +279,9 @@ public class DefaultHttpRequest extends DefaultHttpMessage implements
         if (content == null) {
             throw new NullPointerException("content");
         }
-        
-        if (HttpHeaderConstants.VALUE_URLENCODED_FORM.equalsIgnoreCase(
-                getContentType())) {
+
+        String ct = getContentType();
+        if (ct != null && ct.toLowerCase().startsWith(HttpHeaderConstants.VALUE_URLENCODED_FORM.toLowerCase())) {
             content.mark();
             try {
                 setParameters(content.getString(
