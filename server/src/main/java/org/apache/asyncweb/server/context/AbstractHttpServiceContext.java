@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
  * A default implementation of {@link HttpServiceContext}.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public abstract class AbstractHttpServiceContext implements HttpServiceContext
 {

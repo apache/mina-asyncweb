@@ -29,7 +29,6 @@ import org.apache.asyncweb.common.MutableHttpResponse;
  * A <code>SessionIdentifier</code> which adds and extracts session key
  * cookies
  *
- * @author irvingd
  *
  */
 public class CookieIdentifier implements HttpSessionIdentifier {

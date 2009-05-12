@@ -54,9 +54,6 @@ public interface HttpServiceFilter {
     /**
      * Encapsuates a location within a chain of tasks to be performed.
      *
-     * @author irvingd
-     * @author trustin
-     * @version $Rev$, $Date$
      */
     public interface NextFilter {
 

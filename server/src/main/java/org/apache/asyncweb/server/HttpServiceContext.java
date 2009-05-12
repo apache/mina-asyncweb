@@ -31,7 +31,6 @@ import org.apache.asyncweb.common.HttpResponseStatus;
  * Provides conversational context between a HTTP client and a {@link HttpService}.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public interface HttpServiceContext
 {

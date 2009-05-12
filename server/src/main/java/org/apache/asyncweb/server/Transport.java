@@ -22,7 +22,6 @@ package org.apache.asyncweb.server;
 /**
  * A mechanism over which <code>Request</code>s are received.
  *
- * @author irvingd
  *
  */
 public interface Transport {

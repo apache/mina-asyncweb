@@ -24,7 +24,6 @@ package org.apache.asyncweb.common;
  * A mutable {@link Cookie}.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public interface MutableCookie extends Cookie {
 

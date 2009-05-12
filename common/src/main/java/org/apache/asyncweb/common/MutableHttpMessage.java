@@ -29,7 +29,6 @@ import org.apache.mina.core.buffer.IoBuffer;
  * A mutable {@link HttpMessage}.
  * 
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public interface MutableHttpMessage extends HttpMessage {
 

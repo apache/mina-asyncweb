@@ -32,7 +32,6 @@ import org.apache.asyncweb.server.resolver.ExactMatchURIServiceResolver;
 /**
  * Tests the <code>ExactMatchURIServiceResolver</code>
  *
- * @author irvingd
  *
  */
 public class ExactMatchURIServiceResolverTest extends TestCase {

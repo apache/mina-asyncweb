@@ -33,8 +33,6 @@ import org.apache.asyncweb.server.HttpSession;
 /**
  * A very simple example which demonstrates session usage
  *
- * @author irvingd
- *
  */
 public class SessionExample implements HttpService
 {

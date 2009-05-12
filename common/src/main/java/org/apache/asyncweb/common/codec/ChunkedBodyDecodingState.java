@@ -66,7 +66,6 @@ import org.apache.mina.filter.codec.statemachine.SkippingState;
  * copying.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public abstract class ChunkedBodyDecodingState extends DecodingStateMachine {
 

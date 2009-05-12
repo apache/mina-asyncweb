@@ -24,7 +24,6 @@ package org.apache.asyncweb.common;
  * Type safe enumeration representing HTTP protocol version
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public enum HttpVersion {
     /**

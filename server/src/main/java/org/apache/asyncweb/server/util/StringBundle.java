@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Simplifies looking up locale specific format strings.
  *
- * @author irvingd
  *
  */
 public class StringBundle {

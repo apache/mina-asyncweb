@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
  * If an incoming request can not be mapped to an <code>HttpService</code>,
  * a <code>404</code> response status is returned to the client
  *
- * @author irvingd
  *
  */
 public class HttpServiceHandler implements HttpServiceFilter {

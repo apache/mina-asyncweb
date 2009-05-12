@@ -31,8 +31,6 @@ import org.slf4j.LoggerFactory;
  * resolvers in turn until a match is made or all children have
  * been tried
  *
- * @author irvingd
- *
  */
 public class CompositeResolver implements ServiceResolver {
 

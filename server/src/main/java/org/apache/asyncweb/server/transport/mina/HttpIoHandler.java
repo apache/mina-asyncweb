@@ -28,7 +28,6 @@ import org.apache.asyncweb.server.ServiceContainer;
  * IO handler extension for HTTP.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public interface HttpIoHandler extends IoHandler 
 {

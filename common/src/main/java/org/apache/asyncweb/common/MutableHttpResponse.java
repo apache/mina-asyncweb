@@ -23,7 +23,6 @@ package org.apache.asyncweb.common;
  * A mutable {@link HttpResponse}
  * 
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public interface MutableHttpResponse extends MutableHttpMessage, HttpResponse {
 

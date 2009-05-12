@@ -22,7 +22,6 @@ package org.apache.asyncweb.server;
 /**
  * Provides a mechanism to store data across multiple requests from the same client.
  *
- * @author irvingd
  *
  */
 public interface HttpSession {

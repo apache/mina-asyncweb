@@ -25,7 +25,6 @@ import java.io.Serializable;
  * An HTTP cookie.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev: 592337 $, $Date: 2007-11-06 17:59:36 +0900 (화, 06 11월 2007) $
  */
 public interface Cookie extends Serializable, Comparable<Cookie> {
 

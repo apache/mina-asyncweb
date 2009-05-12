@@ -21,7 +21,6 @@ import java.util.EventListener;
 
 /**
  * The interface for listening for monitoring events.
- * @version $Rev$ $Date$
  */
 public interface MonitoringListener extends EventListener {
     /**

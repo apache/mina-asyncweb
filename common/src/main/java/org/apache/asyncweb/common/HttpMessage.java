@@ -30,7 +30,6 @@ import org.apache.mina.core.buffer.IoBuffer;
  * Base message type of {@link HttpRequest} and {@link HttpResponse}.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public interface HttpMessage extends Serializable {
 

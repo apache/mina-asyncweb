@@ -27,7 +27,6 @@ package org.apache.asyncweb.server;
  * for notifications when the connection idles.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public interface HttpClientListener
 {

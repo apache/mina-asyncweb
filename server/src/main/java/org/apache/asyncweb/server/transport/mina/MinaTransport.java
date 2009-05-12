@@ -45,7 +45,6 @@ import org.slf4j.LoggerFactory;
  * responses using non-blocking selector based IO.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public class MinaTransport implements Transport
 {

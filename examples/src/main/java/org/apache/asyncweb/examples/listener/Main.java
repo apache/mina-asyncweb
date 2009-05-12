@@ -30,7 +30,6 @@ import org.apache.asyncweb.server.resolver.ExactMatchURIServiceResolver;
  * An application launcher which runs the ClientListenerExample example.
  *
  * @author <a href="mailto:dev@mina.apache.org">Apache MINA Project</a>
- * @version $Rev$, $Date$
  */
 public class Main
 {

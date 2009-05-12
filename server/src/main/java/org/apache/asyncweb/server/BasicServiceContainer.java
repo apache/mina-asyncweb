@@ -36,10 +36,7 @@ import org.apache.asyncweb.server.context.CounterKeepAliveStrategy;
 /**
  * Basic <code>ServiceContainer</code> implementation.
  *
- * @author irvingd
- * @author trustin
- *
- * @version $Rev$, $Date$
+ * 
  */
 public class BasicServiceContainer implements ServiceContainer {
 

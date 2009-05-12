@@ -28,7 +28,6 @@ import org.apache.asyncweb.server.util.PermitExpirationListener;
  * <code>PermitExpirationListener</code>s associated with this issuer are notified of
  * the expiry.
  *
- * @author irvingd
  *
  */
 public interface TimedPermitIssuer {

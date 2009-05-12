@@ -41,7 +41,6 @@ import org.apache.mina.filter.codec.statemachine.LinearWhitespaceSkippingState;
  * </pre>
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 abstract class HttpRequestLineDecodingState extends DecodingStateMachine {
 

@@ -33,7 +33,6 @@ import org.apache.mina.filter.codec.ProtocolEncoderOutput;
  * TODO HttpRequestEncoder.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public class HttpRequestEncoder extends ProtocolEncoderAdapter {
 

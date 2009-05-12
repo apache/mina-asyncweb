@@ -30,7 +30,6 @@ package org.apache.asyncweb.server.session;
  *       at any time in the future</li>
  * </ul>
  *
- * @author irvingd
  *
  */
 public interface HttpSessionKeyFactory {

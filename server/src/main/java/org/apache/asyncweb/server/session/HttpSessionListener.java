@@ -24,7 +24,6 @@ import org.apache.asyncweb.server.HttpSession;
 /**
  * Receives notifications of session lifecycle events
  *
- * @author irvingd
  *
  */
 public interface HttpSessionListener {

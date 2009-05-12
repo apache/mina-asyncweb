@@ -26,7 +26,6 @@ import org.apache.asyncweb.common.MutableHttpResponse;
  * A strategy for encoding / decoding session keys information to / from
  * requests.
  *
- * @author irvingd
  *
  */
 public interface HttpSessionIdentifier {

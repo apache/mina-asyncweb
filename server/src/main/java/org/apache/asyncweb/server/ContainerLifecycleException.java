@@ -23,7 +23,6 @@ package org.apache.asyncweb.server;
  * Exception thrown when a problem is encountered whilst transitioning
  * a <code>ServiceContainer</code> through its lifecycle
  *
- * @author irvingd
  *
  */
 public class ContainerLifecycleException extends Exception {

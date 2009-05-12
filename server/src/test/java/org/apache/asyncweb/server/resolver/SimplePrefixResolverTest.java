@@ -32,7 +32,6 @@ import org.apache.asyncweb.server.resolver.SimplePrefixResolver;
 /**
  * Tests <code>SimplePrefixResolver</code>
  *
- * @author irvingd
  *
  */
 public class SimplePrefixResolverTest extends TestCase {

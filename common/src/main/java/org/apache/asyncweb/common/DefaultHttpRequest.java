@@ -44,7 +44,6 @@ import org.apache.mina.core.buffer.IoBuffer;
  * A default implementation of {@link MutableHttpRequest}.
  * 
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public class DefaultHttpRequest extends DefaultHttpMessage implements
         MutableHttpRequest {

@@ -34,7 +34,6 @@ import org.apache.mina.filter.codec.statemachine.LinearWhitespaceSkippingState;
  * Decodes a HTTP response line.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 abstract class HttpResponseLineDecodingState extends DecodingStateMachine {
 

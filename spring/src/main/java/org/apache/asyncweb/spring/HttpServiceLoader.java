@@ -32,7 +32,6 @@ import org.springframework.context.ApplicationContextAware;
  * <code>ApplicationContext</code> to an associated
  * <code>HttpServiceHandler</code>
  *
- * @author irvingd
  */
 public class HttpServiceLoader implements ApplicationContextAware {
 

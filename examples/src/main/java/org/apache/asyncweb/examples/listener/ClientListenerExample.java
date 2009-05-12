@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
  * for long polling requests.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public class ClientListenerExample implements HttpService
 {

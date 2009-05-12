@@ -25,7 +25,6 @@ import java.util.concurrent.TimeUnit;
  * Default cookie implementation.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public class DefaultCookie implements MutableCookie {
 

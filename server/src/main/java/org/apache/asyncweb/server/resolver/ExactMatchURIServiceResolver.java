@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
  * service names. An exact match is required on a request URI to
  * a registered URI must be made for a service name to be resolved
  *
- * @author irvingd
  * FIXME Rename to ExactMatchPathServiceResolver
  */
 public class ExactMatchURIServiceResolver implements ServiceResolver {

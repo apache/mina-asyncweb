@@ -27,7 +27,6 @@ import org.apache.asyncweb.server.HttpServiceFilter.NextFilter;
  * A simple <code>InvocationChain</code> which counts the
  * number of invocations made
  *
- * @author irvingd
  *
  */
 public class MockNextFilter implements NextFilter {

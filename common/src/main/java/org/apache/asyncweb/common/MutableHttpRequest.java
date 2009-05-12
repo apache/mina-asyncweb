@@ -28,7 +28,6 @@ import java.util.Map;
  * A mutable {@link HttpRequest}.
  * 
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public interface MutableHttpRequest extends MutableHttpMessage, HttpRequest {
 

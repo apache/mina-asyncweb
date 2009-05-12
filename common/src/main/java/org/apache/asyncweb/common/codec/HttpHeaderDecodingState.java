@@ -40,7 +40,6 @@ import org.apache.mina.filter.codec.statemachine.LinearWhitespaceSkippingState;
  * the responsibility of decoding a specific part of the header.<br/>
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 abstract class HttpHeaderDecodingState extends DecodingStateMachine {
 

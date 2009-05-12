@@ -38,7 +38,6 @@ import org.apache.asyncweb.server.util.TimedPermit;
  * Each permit issued by this issuer has direct access to its place in the list -
  * allowing constant time renewals.
  *
- * @author irvingd
  *
  */
 public class LinkedPermitIssuer implements TimedPermitIssuer
@@ -197,7 +196,6 @@ public class LinkedPermitIssuer implements TimedPermitIssuer
     /**
      * An entry in a linked list of permits.
      *
-     * @author irvingd
      *
      */
     private class PermitEntry implements TimedPermit {
@@ -302,7 +300,6 @@ public class LinkedPermitIssuer implements TimedPermitIssuer
      * Cancelled and expired entries are removed (listeners are notified of all
      * expired entries)
      *
-     * @author irvingd
      */
     private class ExpiryNotifier implements Runnable {
 

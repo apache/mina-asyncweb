@@ -30,7 +30,6 @@ import org.apache.asyncweb.server.util.PermitExpirationListener;
 /**
  * Tests <code>LinkedPermitIssuer</code>
  *
- * @author irvingd
  *
  */
 public class LinkedPermitIssuerTest extends TestCase {
@@ -149,7 +148,6 @@ public class LinkedPermitIssuerTest extends TestCase {
     /**
      * A mock <code>PermitExpirationListener</code>
      *
-     * @author irvingd
      */
     private class MockListener implements PermitExpirationListener
     {

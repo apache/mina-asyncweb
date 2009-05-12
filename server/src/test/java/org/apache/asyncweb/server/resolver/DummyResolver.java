@@ -29,7 +29,6 @@ import org.apache.asyncweb.server.resolver.ServiceResolver;
  * A simple <code>ServiceResolver</code> which allows mappings
  * from requests to service names to be registered
  *
- * @author irvingd
  *
  */
 public class DummyResolver implements ServiceResolver {

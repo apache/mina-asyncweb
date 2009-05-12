@@ -55,7 +55,6 @@ import org.slf4j.LoggerFactory;
  * The single session handler implementation.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
 {

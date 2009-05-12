@@ -24,7 +24,6 @@ import org.apache.asyncweb.server.HttpSession;
 /**
  * Creates and maintains <code>Session</code>s.
  *
- * @author irvingd
  *
  */
 public interface HttpSessionStore {

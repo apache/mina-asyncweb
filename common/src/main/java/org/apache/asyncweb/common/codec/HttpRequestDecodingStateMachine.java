@@ -54,7 +54,6 @@ import org.slf4j.LoggerFactory;
  * each new parse.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 abstract class HttpRequestDecodingStateMachine extends DecodingStateMachine {
 

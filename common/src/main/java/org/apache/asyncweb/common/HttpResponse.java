@@ -24,7 +24,6 @@ package org.apache.asyncweb.common;
  * Represents a response to an <code>HttpRequest</code>.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public interface HttpResponse extends HttpMessage {
 

@@ -30,7 +30,6 @@ import org.apache.asyncweb.common.codec.HttpCodecUtils;
  * Utility for generating date strings in the format required by HTTP.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 class HttpDateFormat {
 

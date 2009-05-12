@@ -31,7 +31,6 @@ import org.apache.asyncweb.server.ServiceContainer;
  * The default HttpIoHandler used when one is not provided.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public class DefaultHttpIoHandler extends SingleSessionIoHandlerDelegate implements HttpIoHandler
 {

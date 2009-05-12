@@ -26,8 +26,6 @@ import org.apache.asyncweb.server.HttpServiceContext;
  * Defines a strategy for deciding whether a connection should
  * remain open after a response has been handled
  *
- * @author irvingd
- *
  */
 public interface KeepAliveStrategy {
 

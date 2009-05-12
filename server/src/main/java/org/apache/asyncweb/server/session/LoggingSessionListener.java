@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 /**
  * A simple <code>SessionListener</code> which logs the various lifecycle events
  *
- * @author irvingd
  *
  */
 public class LoggingSessionListener implements HttpSessionListener {

@@ -25,7 +25,6 @@ import java.util.Comparator;
 /**
  * 
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public class CookieComparator implements Serializable, Comparator<Cookie> {
 

@@ -23,7 +23,6 @@ package org.apache.asyncweb.server.util;
  * Something interested in receiving notifications when permits issued by a
  * <code>TimedPermitIssuer</code> exipre
  *
- * @author irvingd
  *
  */
 public interface PermitExpirationListener {

@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
  * "/hello/".
  * 
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev: 601236 $, $Date: 2007-12-05 08:53:03 +0100 (mer, 05 déc 2007) $
  */
 public class PatternMatchResolver implements ServiceResolver {
 

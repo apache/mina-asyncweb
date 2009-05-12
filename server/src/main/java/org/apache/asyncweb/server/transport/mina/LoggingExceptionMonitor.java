@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 /**
  * An <code>ExceptionMonitor</code> which simply logs exceptions.
  *
- * @author irvingd
  *
  */
 class LoggingExceptionMonitor extends org.apache.mina.util.ExceptionMonitor {

@@ -37,8 +37,6 @@ import org.slf4j.LoggerFactory;
  * Implementations should override <code></code> to provide additional
  * constraints
  *
- * @author irvingd
- *
  */
 public class BasicKeepAliveStrategy implements KeepAliveStrategy {
 

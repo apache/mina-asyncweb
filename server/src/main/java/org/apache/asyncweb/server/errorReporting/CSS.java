@@ -29,8 +29,6 @@ import org.apache.mina.core.buffer.IoBuffer;
  * TODO: Should be moved out to a configuration file when we sort out a
  *       standard resource strategy
  *
- * @author irvingd
- *
  */
 public class CSS {
     //525D76

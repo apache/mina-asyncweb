@@ -34,8 +34,6 @@ import org.apache.asyncweb.server.HttpServiceFilter;
  * This handler does not need to be installed for deployments which do not employ
  * sessions
  *
- * @author irvingd
- *
  */
 public class SessionKeepAliveFilter implements HttpServiceFilter
 {

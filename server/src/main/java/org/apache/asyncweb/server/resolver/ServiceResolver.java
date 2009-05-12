@@ -25,8 +25,6 @@ import org.apache.asyncweb.common.HttpRequest;
  * Resolves the name of the <code>HttpService</code> to be used to
  * service a request.
  *
- * @author irvingd
- *
  */
 public interface ServiceResolver {
 

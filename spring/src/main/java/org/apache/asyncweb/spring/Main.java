@@ -31,7 +31,6 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 /**
  * Simple stand-alone server which loads configuration using Spring
  *
- * @author irvingd
  *
  */
 public class Main {

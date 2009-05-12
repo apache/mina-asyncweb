@@ -25,8 +25,6 @@ import org.apache.asyncweb.common.MutableHttpResponse;
 /**
  * Formats error responses to include a descriptive body where appropriate
  *
- * @author irvingd
- *
  */
 public interface ErrorResponseFormatter {
 

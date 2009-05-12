@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
  * implementations used can be switched (if required) using the appropriate
  * setter methods.<br/>
  *
- * @author irvingd
  *
  */
 public class DefaultSessionAccessor implements HttpSessionAccessor {

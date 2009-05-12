@@ -42,8 +42,6 @@ import org.apache.asyncweb.server.HttpServiceContext;
  *
  * Note that normally we wouldn't be generating html directly in a service :o)
  *
- * @author irvingd
- *
  */
 public class HelloWorldHttpService implements HttpService {
 

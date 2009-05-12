@@ -23,7 +23,6 @@ package org.apache.asyncweb.common;
  * Type-safe enumeration of standard HTTP Methods
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public enum HttpMethod {
 

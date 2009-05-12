@@ -32,7 +32,6 @@ import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 /**
  * 
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public class HttpResponseEncoder implements ProtocolEncoder {
 

@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
  * the client support it. 
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev: 615489 $, $Date: 2008-01-26 21:59:06 +0100 (sam, 26 jan 2008) $
  */
 public class GZipFilter implements HttpServiceFilter {
 

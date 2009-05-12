@@ -26,8 +26,6 @@ import org.apache.asyncweb.common.HttpRequest;
  * request URI as the service name, optionally removing any leading
  * "/"
  *
- * @author irvingd
- *
  */
 public class PassThruResolver implements ServiceResolver {
 

@@ -27,7 +27,6 @@ import java.util.concurrent.Executors;
 /**
  * This is an event dispatcher to dispatch monitoring events on separate threads
  * from the main thread.  
- * @version $Rev$ $Date$
  */
 public class EventDispatcher {
     /** shared thread pool for dispatching events */

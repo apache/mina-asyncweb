@@ -39,8 +39,6 @@ import org.slf4j.LoggerFactory;
  * data in memory. A <code>TimedPermitIssuer</code> is employed to issue a time-out
  * permit for each issued session.
  *
- * @author irvingd
- *
  */
 public class BasicSessionStore implements HttpSessionStore {
 
@@ -264,8 +262,6 @@ public class BasicSessionStore implements HttpSessionStore {
     /**
      * Receives notifications of timed out permits issued by this store,
      * and triggers expiry of the associated session
-     *
-     * @author irvingd
      *
      */
     private class TimeoutListener implements PermitExpirationListener

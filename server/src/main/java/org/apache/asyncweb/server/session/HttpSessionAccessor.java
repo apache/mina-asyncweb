@@ -28,7 +28,6 @@ import org.apache.asyncweb.server.HttpSession;
  * A <code>SessionAccessor</code> provides a simple interface for accessing
  * the Session associated with a request (and optionally creating it if required)
  *
- * @author irvingd
  *
  */
 public interface HttpSessionAccessor {

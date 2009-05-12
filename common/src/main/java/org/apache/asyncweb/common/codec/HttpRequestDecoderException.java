@@ -29,7 +29,6 @@ import org.apache.mina.filter.codec.ProtocolDecoderException;
  * failure to specify the response which is ultimately returned to the client.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public class HttpRequestDecoderException extends ProtocolDecoderException {
 

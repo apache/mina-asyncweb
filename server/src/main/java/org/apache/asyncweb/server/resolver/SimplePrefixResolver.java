@@ -46,8 +46,6 @@ import org.slf4j.LoggerFactory;
  *  <tr><td>/x/serviceA</td><td>null</td></tr>
  * </table>
  *
- * @author irvingd
- *
  */
 public class SimplePrefixResolver implements ServiceResolver {
 

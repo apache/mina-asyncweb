@@ -30,8 +30,6 @@ import org.apache.asyncweb.server.util.TimedPermit;
  * A basic <code>Session</code> implementation which holds session values
  * in memory
  *
- * @author irvingd
- *
  */
 class BasicSession implements HttpSession
 {

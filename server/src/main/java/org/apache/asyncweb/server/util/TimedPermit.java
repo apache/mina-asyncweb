@@ -25,7 +25,6 @@ package org.apache.asyncweb.server.util;
  * When the time limit (determined by the issuer) is reached, any listeners attached to
  * the issuer are notified.
  *
- * @author irvingd
  *
  */
 public interface TimedPermit {

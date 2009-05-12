@@ -24,7 +24,6 @@ import java.io.Serializable;
 /**
  * 
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 public class HttpResponseStatus implements Serializable {
 
@@ -309,7 +308,6 @@ public class HttpResponseStatus implements Serializable {
     /**
      * Category of response
      *
-     * @author irvingd
      */
     public static enum Category {
         /**

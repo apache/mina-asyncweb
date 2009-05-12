@@ -34,7 +34,6 @@ import org.apache.mina.filter.codec.statemachine.DecodingState;
  * Decodes HTTP version.
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
- * @version $Rev$, $Date$
  */
 abstract class HttpVersionDecodingState implements DecodingState {
 
