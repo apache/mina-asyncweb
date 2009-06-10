@@ -202,14 +202,14 @@ public class MinaTransport implements Transport
             {
                 LOG.debug( "Configuring traffic logging filter" );
                 LoggingFilter filter = new LoggingFilter();
-                filter.setSessionClosedLoglevel( logLevel );
+                filter.setSessionClosedLogLevel( logLevel );
                 filter.setExceptionCaughtLogLevel( logLevel );
                 filter.setMessageReceivedLogLevel( logLevel );
-                filter.setMessageSentLoglevel( logLevel );
-                filter.setSessionClosedLoglevel( logLevel );
-                filter.setSessionCreatedLoglevel( logLevel );
-                filter.setSessionIdleLoglevel( logLevel );
-                filter.setSessionOpenedLoglevel( logLevel );
+                filter.setMessageSentLogLevel( logLevel );
+                filter.setSessionClosedLogLevel( logLevel );
+                filter.setSessionCreatedLogLevel( logLevel );
+                filter.setSessionIdleLogLevel( logLevel );
+                filter.setSessionOpenedLogLevel( logLevel );
                 acceptor.getFilterChain().addLast( "logging", filter );
             }
 
