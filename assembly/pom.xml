@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.apache.asyncweb</groupId>
     <artifactId>asyncweb-parent</artifactId>
-    <version>0.9.0-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>asyncweb-assembly</artifactId>
   <packaging>jar</packaging>
