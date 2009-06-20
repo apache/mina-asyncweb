@@ -19,11 +19,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.asyncweb</groupId>
-    <artifactId>asyncweb-client</artifactId>
-    <packaging>jar</packaging>
     <version>1.0.0-SNAPSHOT</version>
-    <name>AsyncHttpClient</name>
-
+    <artifactId>asyncweb-client</artifactId>
+    <name>Apache Asyncweb Client</name>
+    <packaging>jar</packaging>
+    
     <build>
         <plugins>
             <plugin>
@@ -127,11 +127,6 @@
             <artifactId>jasper-jdt</artifactId>
             <version>${tomcatVersion}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.3</version>
         </dependency>
     </dependencies>
 
