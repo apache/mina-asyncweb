@@ -504,9 +504,10 @@ public class AsyncHttpClient {
         
         // *IF* connection reuse is enabled, we should see if we have a cached 
         // connection first; if not, always open a new one
+        InetSocketAddress remote = getAddress(message);
         ConnectFuture future = null;
         if (getSessionCache() != null) {
-            future = getCachedConnection(message);
+            future = getCachedConnection(message, remote);
         } else {
             // add the Connection close header explicitly
             message.setHeader(HttpDecoder.CONNECTION, HttpDecoder.CLOSE);
@@ -521,7 +522,7 @@ public class AsyncHttpClient {
             // having a connection retry result in both a CONNECTION_ATTEMPTED and 
             // CONNECTION_RETRIED event getting dispatched. 
             notifyMonitoringListeners(MonitoringEvent.CONNECTION_ATTEMPTED, message); 
-            future = openConnection(message);
+            future = openConnection(remote);
         }
         ResponseFuture response = message.getResponseFuture();
         FutureListener listener = 
@@ -546,8 +547,18 @@ public class AsyncHttpClient {
         // set the connect start time again
         message.setConnectStartTime();
         notifyMonitoringListeners(MonitoringEvent.CONNECTION_RETRIED, message); 
-        ConnectFuture future = openConnection(message);
+        ConnectFuture future = openConnection(getAddress(message));
         future.addListener(listener);
+    }
+    
+    /**
+     * Creates an InetSocketAddress object appropriate for the message, taking
+     * into account a possible proxy configuration.
+     */
+    private InetSocketAddress getAddress(HttpRequestMessage message) {
+        return message.isProxyEnabled() ?
+                    message.getProxyConfiguration().getProxyAddress(message.getUrl()) :
+                    new InetSocketAddress(message.getHost(), message.getPort());
     }
     
     /**
@@ -555,16 +566,11 @@ public class AsyncHttpClient {
      * This will either open a direct connection or connect 
      * to the configured proxy server.
      * 
-     * @param message The message getting sent.  This defines the target
-     *                location and also holds the proxy configuration.
+     * @param remote the remote address.
      * 
      * @return A ConnectFuture instance for managing the connection.
      */
-    private ConnectFuture openConnection(HttpRequestMessage message) {
-        InetSocketAddress remote = 
-                message.isProxyEnabled() ?
-                        message.getProxyConfiguration().getProxyAddress(message.getUrl()) :
-                        new InetSocketAddress(message.getHost(), message.getPort());
+    private ConnectFuture openConnection(InetSocketAddress remote) {
         return connector.connect(remote, handler);
     }
     
@@ -572,12 +578,13 @@ public class AsyncHttpClient {
      * Attempt to get a connection from the session cache.
      * 
      * @param message The message we're sending.
+     * @param remote the remote address.
      * 
      * @return A cached connection.  This returns null if there's
      *         no available connection for the target location.
      */
-    private ConnectFuture getCachedConnection(HttpRequestMessage message) {
-        IoSession cached = sessionCache.getActiveSession(message);
+    private ConnectFuture getCachedConnection(HttpRequestMessage message, InetSocketAddress remote) {
+        IoSession cached = sessionCache.getActiveSession(remote);
         if (cached == null) {
             return null;
         }

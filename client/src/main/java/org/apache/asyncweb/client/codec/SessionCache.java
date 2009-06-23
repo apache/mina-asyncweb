@@ -25,7 +25,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.asyncweb.client.proxy.ProxyConfiguration;
 import org.apache.mina.common.IoSession;
 
 /**
@@ -33,8 +32,8 @@ import org.apache.mina.common.IoSession;
  * the host and the port.  This class is thread safe.
  */
 public final class SessionCache {
-    private final ConcurrentMap<String,Queue<IoSession>> cachedSessions = 
-            new ConcurrentHashMap<String,Queue<IoSession>>();
+    private final ConcurrentMap<InetSocketAddress,Queue<IoSession>> cachedSessions = 
+            new ConcurrentHashMap<InetSocketAddress,Queue<IoSession>>();
     
     public SessionCache() {}
 
@@ -44,16 +43,16 @@ public final class SessionCache {
      * connection can be used without errors, although it should be usually
      * safe to use it.
      * 
-     * @param msg the message for which to look up an active session.
-     * @throws IllegalArgumentException if a null request message was passed in.
+     * @param addr the remote address with which to look up an active session.
+     * @throws IllegalArgumentException if a null address was passed in.
      * @return an active IoSession, or null if none are found.
      */
-    public IoSession getActiveSession(HttpRequestMessage msg) {
-        if (msg == null) {
-            throw new IllegalArgumentException("null request was passed in");
+    public IoSession getActiveSession(InetSocketAddress addr) {
+        if (addr == null) {
+            throw new IllegalArgumentException("null address was passed in");
         }
         
-        Queue<IoSession> queue = cachedSessions.get(getKey(msg));
+        Queue<IoSession> queue = cachedSessions.get(addr);
         if (queue == null) {
             return null;
         }
@@ -69,7 +68,7 @@ public final class SessionCache {
     }
     
     /**
-     * Caches the given session using its remote host and port information.
+     * Caches the given session using its remote address.
      * 
      * @param session IoSession to cache
      * @throws IllegalArgumentException if a null session was passed in.
@@ -79,12 +78,15 @@ public final class SessionCache {
             throw new IllegalArgumentException("null session was passed in");
         }
         
-        String key = getKey((InetSocketAddress)session.getRemoteAddress());
-        Queue<IoSession> newQueue = new ConcurrentLinkedQueue<IoSession>();
-        Queue<IoSession> queue = cachedSessions.putIfAbsent(key, newQueue);
-        if (queue == null) {
-            // the value was previously empty
-            queue = newQueue;
+        InetSocketAddress addr = (InetSocketAddress)session.getRemoteAddress();
+		Queue<IoSession> queue = cachedSessions.get(addr);
+		if (queue == null) {
+            queue = new ConcurrentLinkedQueue<IoSession>();
+            Queue<IoSession> existing = cachedSessions.putIfAbsent(addr, queue);
+            if (existing != null) {
+                // the value exists
+                queue = existing;
+            }
         }
         // add it to the queue
         queue.offer(session);
@@ -101,46 +103,10 @@ public final class SessionCache {
             throw new IllegalArgumentException("null session was passed in");
         }
         
-        String key = getKey((InetSocketAddress)session.getRemoteAddress());
-        Queue<IoSession> queue = cachedSessions.get(key);
+        InetSocketAddress addr = (InetSocketAddress)session.getRemoteAddress();
+        Queue<IoSession> queue = cachedSessions.get(addr);
         if (queue != null) {
             queue.remove(session);
         }
-    }
-    
-    /**
-     * Generate a request key from an HTTP request message.
-     * 
-     * @param msg    The request message we need a key from.
-     * 
-     * @return A String key instance for this request. 
-     */
-    private String getKey(HttpRequestMessage msg) {
-        if (msg.isProxyEnabled()) {
-            ProxyConfiguration proxyCfg = msg.getProxyConfiguration();
-            return (msg.getProtocol().equalsIgnoreCase("https")) ?
-                    getKey(proxyCfg.getHttpsProxyHost(), proxyCfg.getHttpsProxyPort()) :
-                    getKey(proxyCfg.getHttpProxyHost(), proxyCfg.getHttpProxyPort());
-        } else {
-            return getKey(msg.getHost(), msg.getPort());
-        }
-    }
-    
-    /**
-     * Generate a session key from an InetSocketAddress 
-     * 
-     * @param remote The endpoint address of the connection.
-     * 
-     * @return A string key for this endpoint. 
-     */
-    private String getKey(InetSocketAddress remote) {
-        return getKey(remote.getHostName(), remote.getPort());
-    }
-    
-    /**
-     * The key is of the form "host:port".
-     */
-    private String getKey(String host, int port) {
-        return new StringBuilder(host).append(':').append(port).toString();
     }
 }
