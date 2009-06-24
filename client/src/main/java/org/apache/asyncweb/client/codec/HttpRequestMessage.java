@@ -24,7 +24,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
@@ -102,7 +101,7 @@ public class HttpRequestMessage extends HttpMessage {
     /**
      * The parameters.
      */
-    private Map<String, String> parameters = new HashMap<String, String>();
+    private Map<String, List<String>> parameters = new HashMap<String, List<String>>();
 
     /**
      * The user agent.
@@ -346,21 +345,27 @@ public class HttpRequestMessage extends HttpMessage {
     }
 
     /**
-     * Gets a parameter from the parameter map.
+     * Gets a parameter from the parameter map.  Call this method <b>only 
+     * if</b> you are certain there is one value for the name, as it returns
+     * the first value.
      *
      * @param name the parameter name
      * @return the parameter value
      */
     public String getParameter(String name) {
-        return parameters.get(name);
+        List<String> values = parameters.get(name);
+        if (values == null || values.isEmpty()) {
+            return null;
+        }
+        return values.get(0);
     }
-
+    
     /**
      * Gets the parameter map.
      *
      * @return the parameter map
      */
-    public Map<String, String> getParameters() {
+    public Map<String, List<String>> getParameters() {
         return parameters;
     }
 
@@ -369,18 +374,24 @@ public class HttpRequestMessage extends HttpMessage {
      *
      * @param parameters the parameter map
      */
-    public void setParameters(Map<String, String> parameters) {
+    public void setParameters(Map<String, List<String>> parameters) {
         this.parameters.putAll(parameters);
     }
 
     /**
-     * Sets a single parameter.
+     * Sets a single parameter.  If a value already exists for the key, the
+     * new value is added to the list.
      *
      * @param name  the parameter name
      * @param value the value of parameter
      */
     public void setParameter(String name, String value) {
-        parameters.put(name, value);
+        List<String> values = parameters.get(name);
+        if (values == null) {
+            values = new ArrayList<String>();
+            parameters.put(name, values);
+        }
+        values.add(value);
     }
     
     /**
@@ -484,17 +495,15 @@ public class HttpRequestMessage extends HttpMessage {
         return matchCredentials(credentials, scope);
     }
 
-    private static Credentials matchCredentials(final HashMap map, final AuthScope authscope) {
+    private static Credentials matchCredentials(final HashMap<AuthScope,Credentials> map, final AuthScope authscope) {
         // see if we get a direct hit
-        Credentials creds = (Credentials)map.get(authscope);
+        Credentials creds = map.get(authscope);
         if (creds == null) {
             // Nope.
             // Do a full scan
             int bestMatchFactor = -1;
             AuthScope bestMatch = null;
-            Iterator items = map.keySet().iterator();
-            while (items.hasNext()) {
-                AuthScope current = (AuthScope)items.next();
+            for (AuthScope current : map.keySet()) {
                 int factor = authscope.match(current);
                 if (factor > bestMatchFactor) {
                     bestMatchFactor = factor;
@@ -502,7 +511,7 @@ public class HttpRequestMessage extends HttpMessage {
                 }
             }
             if (bestMatch != null) {
-                creds = (Credentials)map.get(bestMatch);
+                creds = map.get(bestMatch);
             }
         }
         return creds;

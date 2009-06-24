@@ -21,6 +21,7 @@ package org.apache.asyncweb.client.codec;
 
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -100,16 +101,21 @@ public class HttpRequestEncoder extends ProtocolEncoderAdapter {
 
         StringBuilder sb = new StringBuilder(1024);
         //If we have content, lets create the query string
-        int attrCount = msg.getParameters().size();
         String urlAttrs = "";
-        if (attrCount > 0) {
-            NameValuePair attrs[] = new NameValuePair[attrCount];
-            Set<Map.Entry<String, String>> set = msg.getParameters().entrySet();
-            int i = 0;
-            for (Map.Entry<String, String> entry : set) {
-                attrs[i++] = new NameValuePair(entry.getKey(), entry.getValue());
+        Map<String, List<String>> parameters = msg.getParameters();
+        if (!parameters.isEmpty()) {
+            List<NameValuePair> attrs = new ArrayList<NameValuePair>();
+            for (Map.Entry<String, List<String>> entry : parameters.entrySet()) {
+                List<String> values = entry.getValue();
+                if (values != null) {
+                    for (String value : values) {
+                        attrs.add(new NameValuePair(entry.getKey(), value));
+                    }
+                }
             }
-            urlAttrs = EncodingUtil.formUrlEncode(attrs, msg.getUrlEncodingCharset());
+            if (!attrs.isEmpty()) {
+                urlAttrs = EncodingUtil.formUrlEncode(attrs.toArray(new NameValuePair[] {}), msg.getUrlEncodingCharset());
+            }    
         }
 
         String method = msg.getRequestMethod();
@@ -120,10 +126,14 @@ public class HttpRequestEncoder extends ProtocolEncoderAdapter {
             if (msg.isProxyEnabled() && !msg.getProtocol().toLowerCase().equals("https")) {
                 sb.append(msg.getUrl().toString());
             } else {
-                sb.append(msg.getUrl().getFile());
+                String file = msg.getUrl().getFile();
+                if (file.equals("")) {
+                    file = "/"; // default path
+                }
+                sb.append(file);
             }
             //If its a GET, append the attributes
-            if (method.equals(HttpRequestMessage.REQUEST_GET) && attrCount > 0) {
+            if (method.equals(HttpRequestMessage.REQUEST_GET) && urlAttrs.length() > 0) {
                 //If there is not already a ? in the query, append one, otherwise append a &
                 if (!msg.getUrl().getFile().contains("?")) {
                     sb.append('?');
@@ -158,7 +168,7 @@ public class HttpRequestEncoder extends ProtocolEncoderAdapter {
         // If this is a POST and parameters are provided, this is a form
         // post; any existing content is an error and will be ignored and 
         // the content type will be set accordingly
-        if (method.equals(HttpRequestMessage.REQUEST_POST) && attrCount > 0) {
+        if (method.equals(HttpRequestMessage.REQUEST_POST) && urlAttrs.length() > 0) {
             content = urlAttrs.getBytes();
 
             // these override any headers that might already be in the set 
