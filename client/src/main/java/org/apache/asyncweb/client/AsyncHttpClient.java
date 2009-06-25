@@ -49,7 +49,6 @@ import org.apache.mina.common.ConnectFuture;
 import org.apache.mina.common.IoFuture;
 import org.apache.mina.common.IoFutureListener;
 import org.apache.mina.common.IoSession;
-import org.apache.mina.common.RuntimeIOException;
 import org.apache.mina.common.SimpleByteBufferAllocator;
 import org.apache.mina.common.ThreadModel;
 import org.apache.mina.common.support.DefaultConnectFuture;
@@ -725,38 +724,43 @@ public class AsyncHttpClient {
          */
         public void operationComplete(IoFuture future) {
             ConnectFuture connFuture = (ConnectFuture) future;
-            if (connFuture.isConnected()) {
-                notifyMonitoringListeners(MonitoringEvent.CONNECTION_SUCCESSFUL, request); 
-                IoSession sess = future.getSession();
+            // capture any exception and propagate it
+            try {
+                if (connFuture.isConnected()) {
+                    IoSession sess = future.getSession();
 
-                // see if we need to add the SSL filter
-                addSSLFilter(sess);
-                // add the protocol filter (if it's not there already like in a
-                // reused session)
-                addProtocolCodecFilter(sess);
-                // (optional) add the executor filter for the event thread pool 
-                // (if it's not there already like in a reused session)
-                addEventThreadPoolFilter(sess);
-                // now that we're connection, configure the session appropriately. 
-                configureSession(sess);
-                // and finally start the request process rolling. 
-                sess.write(request);
-            } 
-            else {
-                if (retries-- > 0) {
-                    // go retry this connection 
-                    retryConnection(request, response, this); 
-                }
-                else {
-                    try {
-                        notifyMonitoringListeners(MonitoringEvent.CONNECTION_FAILED, request); 
+                    // see if we need to add the SSL filter
+                    addSSLFilter(sess);
+                    // add the protocol filter (if it's not there already like 
+                    // in a reused session)
+                    addProtocolCodecFilter(sess);
+                    // (optional) add the executor filter for the event thread 
+                    // pool (if it's not there already like in a reused session)
+                    addEventThreadPoolFilter(sess);
+                    // now that we're connection, configure the session appropriately. 
+                    configureSession(sess);
+                    // and finally start the request process rolling. 
+                    sess.write(request);
+                    notifyMonitoringListeners(MonitoringEvent.CONNECTION_SUCCESSFUL, request); 
+                } else {
+                    if (retries-- > 0) {
+                        // go retry this connection 
+                        retryConnection(request, response, this); 
+                    } else {
                         future.getSession();
-                        response.setException(new AsyncHttpClientException("Connection failed."));
-                    } catch (RuntimeIOException e) {
-                        //Set the future exception
-                        response.setException(e);
-                    }
+                        throw new AsyncHttpClientException("Connection failed.");
+                	}
                 }
+            } catch (RuntimeException re) {
+                // set the future exception to ensure the exception propagate
+                response.setException(re);
+                notifyMonitoringListeners(MonitoringEvent.CONNECTION_FAILED, request);
+                throw re;
+            } catch (Error e) {
+                // set the future exception to ensure the exception propagate
+                response.setException(e);
+                notifyMonitoringListeners(MonitoringEvent.CONNECTION_FAILED, request);
+                throw e;
             }
         }
 
@@ -900,26 +904,39 @@ public class AsyncHttpClient {
         public void operationComplete(IoFuture future) {
             ConnectFuture connectFuture = (ConnectFuture)future;
             if (connectFuture.isConnected()) {
-                notifyMonitoringListeners(MonitoringEvent.CONNECTION_SUCCESSFUL, request); 
-                IoSession session = future.getSession();
-                // add the protocol filter (if it's not there already like in a
-                // reused session)
-                addProtocolCodecFilter(session);
-                addProxyFilter(session);
-                // (optional) add the executor filter for the event thread pool 
-                // (if it's not there already like in a reused session)
-                addEventThreadPoolFilter(session);
-                
-                configureSession(session);
-                
-                // write the connect request if the protocol is https
-                String protocol = request.getUrl().getProtocol();
-                if (protocol.toLowerCase().equals("https")) {
-                    // add a connect handshake pending flag to the session
-                    session.setAttribute(HttpIoHandler.PROXY_CONNECT_IN_PROGRESS);
-                    session.write(createConnectRequest());
-                } else {
-                    session.write(request);
+                // capture any exception and propagate it
+                try {
+                    IoSession session = future.getSession();
+                    // add the protocol filter (if it's not there already like 
+                    // in a reused session)
+                    addProtocolCodecFilter(session);
+                    addProxyFilter(session);
+                    // (optional) add the executor filter for the event thread 
+                    // pool (if it's not there already like in a reused session)
+                    addEventThreadPoolFilter(session);
+
+                    configureSession(session);
+
+                    // write the connect request if the protocol is https
+                    String protocol = request.getUrl().getProtocol();
+                    if (protocol.toLowerCase().equals("https")) {
+                        // add a connect handshake pending flag to the session
+                        session.setAttribute(HttpIoHandler.PROXY_CONNECT_IN_PROGRESS);
+                        session.write(createConnectRequest());
+                    } else {
+                        session.write(request);
+                    }
+                    notifyMonitoringListeners(MonitoringEvent.CONNECTION_SUCCESSFUL, request); 
+                } catch (RuntimeException re) {
+                    // set the future exception to ensure the exception propagate
+                    response.setException(re);
+                    notifyMonitoringListeners(MonitoringEvent.CONNECTION_FAILED, request);
+                    throw re;
+                } catch (Error e) {
+                    // set the future exception to ensure the exception propagate
+                    response.setException(e);
+                    notifyMonitoringListeners(MonitoringEvent.CONNECTION_FAILED, request);
+                    throw e;
                 }
             } else {
                 super.operationComplete(future);
