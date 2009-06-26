@@ -60,7 +60,9 @@ public final class SessionCache {
         IoSession cached = null;
         while ((cached = queue.poll()) != null) {
             // see if the session is usable
-            if (cached.isConnected() && !cached.isClosing()) {
+        	// ensure the connection is not closing nor is there a pending close
+            if (cached.isConnected() && 
+                    !cached.isClosing()  && cached.getAttribute(HttpIoHandler.CLOSE_PENDING) == null) {
                 return cached;
             }
         }

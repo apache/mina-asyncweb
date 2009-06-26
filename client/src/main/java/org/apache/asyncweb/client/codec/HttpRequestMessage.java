@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.net.ssl.SSLContext;
 
@@ -116,7 +117,8 @@ public class HttpRequestMessage extends HttpMessage {
     /**
      * The timeout handle.
      */
-    private ScheduledFuture timeoutHandle;
+    private final AtomicReference<ScheduledFuture<?>> timeoutHandle =
+            new AtomicReference<ScheduledFuture<?>>();
 
     /**
      * The response future.
@@ -202,8 +204,8 @@ public class HttpRequestMessage extends HttpMessage {
      *
      * @return the timeout <code>ScheduledFuture</code> handle
      */
-    protected ScheduledFuture getTimeoutHandle() {
-        return timeoutHandle;
+    protected ScheduledFuture<?> getTimeoutHandle() {
+        return timeoutHandle.get();
     }
 
     /**
@@ -211,8 +213,17 @@ public class HttpRequestMessage extends HttpMessage {
      *
      * @param timeoutHandle the new <code>ScheduledFuture</code> timeout handle
      */
-    protected void setTimeoutHandle(ScheduledFuture timeoutHandle) {
-        this.timeoutHandle = timeoutHandle;
+    protected void setTimeoutHandle(ScheduledFuture<?> timeoutHandle) {
+        this.timeoutHandle.set(timeoutHandle);
+    }
+    
+    /**
+     * Removes the timeout handle and returns it atomically.
+     * 
+     * @return the timeout <code>ScheduledFuture</code> handle
+     */
+    protected ScheduledFuture<?> removeTimeoutHandle() {
+        return timeoutHandle.getAndSet(null);
     }
 
     /**

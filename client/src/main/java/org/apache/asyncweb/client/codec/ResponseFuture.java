@@ -24,6 +24,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.asyncweb.client.AsyncHttpClientCallback;
 
@@ -49,6 +50,12 @@ public class ResponseFuture extends FutureTask<HttpResponseMessage>
     private final HttpRequestMessage request;
     private final BlockingQueue<ResponseFuture> queue;
     private final AsyncHttpClientCallback callback;
+    
+    /**
+     * Indicates whether set/setException was done on the future.  It is used
+     * to prevent multiple callback events from going out.
+     */
+    private final AtomicBoolean setDone = new AtomicBoolean();
     
     /**
      * Constructor.  Optionally one can pass in the completion queue and/or the
@@ -95,9 +102,14 @@ public class ResponseFuture extends FutureTask<HttpResponseMessage>
             // fire the callback before completing the future to 
             // ensure everything gets handled before the future gets 
             // completed. 
-            if (callback != null) {
-                callback.onResponse(v);
+            // run the callback only if the future is not already complete
+            if (setDone.compareAndSet(false, true)) {
+            	if (callback != null) {
+            	    callback.onResponse(v);
+                }
             }
+        } catch (Throwable th) {
+            // we need to tolerate exceptions coming from the callback
         } finally {
             super.set(v);
         }
@@ -116,13 +128,18 @@ public class ResponseFuture extends FutureTask<HttpResponseMessage>
             // fire the callback before completing the future to 
             // ensure everything gets handled before the future gets 
             // completed. 
-            if (callback != null) {
-                if (t instanceof TimeoutException) {
-                    callback.onTimeout();
-                } else {
-                    callback.onException(t);
+            // run the callback only if the future is not already complete
+            if (setDone.compareAndSet(false, true)) {
+                if (callback != null) {
+                    if (t instanceof TimeoutException) {
+                        callback.onTimeout();
+                    } else {
+                        callback.onException(t);
+                    }
                 }
             }
+        } catch (Throwable th) {
+            // we need to tolerate exceptions coming from the callback
         } finally {
             super.setException(t);
         }

@@ -64,6 +64,11 @@ public class HttpIoHandler extends IoHandlerAdapter {
     public static final String REQUEST_OUTSTANDING = "REQUEST_OUTSTANDING";
     
     /**
+     * Indicates whether the request is getting closed due to problems.
+     */
+    public static final String CLOSE_PENDING = "CLOSE_PENDING";
+    
+    /**
      * The Constant for the proxy connect status.
      */
     public static final String PROXY_CONNECT_IN_PROGRESS = "PROXY_CONNECT_IN_PROGRESS";
@@ -136,7 +141,6 @@ public class HttpIoHandler extends IoHandlerAdapter {
      * @param object    the {@link HttpResponseMessage} object
      * @see org.apache.mina.common.IoHandlerAdapter#messageReceived(org.apache.mina.common.IoSession,java.lang.Object)
      */
-    @SuppressWarnings({"UnusedDeclaration"})
     public void messageReceived(IoSession ioSession, Object object) throws Exception {
         // clear the request outstanding flag on the session
         ioSession.removeAttribute(REQUEST_OUTSTANDING);
@@ -220,11 +224,12 @@ public class HttpIoHandler extends IoHandlerAdapter {
 
         cancelTasks(request);
 
-        // notify any interesting parties that this is starting 
-        client.notifyMonitoringListeners(MonitoringEvent.REQUEST_COMPLETED, request); 
         // complete the future which will also fire the callback
         ResponseFuture result = request.getResponseFuture();
         result.set(response);
+        
+        // notify any interesting parties that this is starting 
+        client.notifyMonitoringListeners(MonitoringEvent.REQUEST_COMPLETED, request); 
 
         // if we've been provided with a cache, put this session into 
         // the cache. 
@@ -243,6 +248,9 @@ public class HttpIoHandler extends IoHandlerAdapter {
      * @see org.apache.mina.common.IoHandlerAdapter#exceptionCaught(org.apache.mina.common.IoSession,java.lang.Throwable)
      */
     public void exceptionCaught(IoSession ioSession, Throwable throwable) throws Exception {
+        // mark the session as closing so it won't be used
+        ioSession.setAttribute(CLOSE_PENDING);
+    	
         // clear the request outstanding flag on the session if set
         ioSession.removeAttribute(REQUEST_OUTSTANDING);
         
@@ -252,13 +260,13 @@ public class HttpIoHandler extends IoHandlerAdapter {
         HttpRequestMessage request = (HttpRequestMessage) ioSession.getAttribute(CURRENT_REQUEST);
         cancelTasks(request);
         
-        AsyncHttpClient client = (AsyncHttpClient) ioSession.getAttachment();
-
-        // notify any interesting parties that this is starting 
-        client.notifyMonitoringListeners(MonitoringEvent.REQUEST_FAILED, request); 
         // complete the future which will also fire the callback
         ResponseFuture result = request.getResponseFuture();
         result.setException(throwable);
+        
+        AsyncHttpClient client = (AsyncHttpClient) ioSession.getAttachment();
+        // notify any interesting parties that this is starting 
+        client.notifyMonitoringListeners(MonitoringEvent.REQUEST_FAILED, request); 
 
         //Exception is bad, so just close it up
         ioSession.close();
@@ -286,9 +294,6 @@ public class HttpIoHandler extends IoHandlerAdapter {
         }
         HttpRequestMessage request = (HttpRequestMessage) ioSession.getAttribute(CURRENT_REQUEST);
         cancelTasks(request);
-        AsyncHttpClient client = (AsyncHttpClient) ioSession.getAttachment();
-        // notify any interesting parties that this is starting 
-        client.notifyMonitoringListeners(MonitoringEvent.CONNECTION_CLOSED_BY_SERVER, request); 
         
         // if the session is closing while the request is outstanding, it means
         // the connection is closing prematurely; we need to cause an exception
@@ -301,6 +306,10 @@ public class HttpIoHandler extends IoHandlerAdapter {
                 callback.onClosed();
             }
         }
+        
+        AsyncHttpClient client = (AsyncHttpClient) ioSession.getAttachment();
+        // notify any interesting parties that this is starting 
+        client.notifyMonitoringListeners(MonitoringEvent.CONNECTION_CLOSED_BY_SERVER, request); 
     }
 
     /**
@@ -320,7 +329,7 @@ public class HttpIoHandler extends IoHandlerAdapter {
         //Start the timeout timer now if a timeout is needed and there is not one already in effect for this request
         if (msg.getTimeOut() > 0 && msg.getTimeoutHandle() == null) {
             TimeoutTask task = new TimeoutTask(ioSession);
-            ScheduledFuture handle = scheduler.schedule(task, msg.getTimeOut(), TimeUnit.MILLISECONDS);
+            ScheduledFuture<?> handle = scheduler.schedule(task, msg.getTimeOut(), TimeUnit.MILLISECONDS);
             msg.setTimeoutHandle(handle);
         }
     }
@@ -331,15 +340,10 @@ public class HttpIoHandler extends IoHandlerAdapter {
      * @param request the {@link HttpRequestMessage} request
      */
     private void cancelTasks(HttpRequestMessage request) {
-        ScheduledFuture handle = request.getTimeoutHandle();
+        ScheduledFuture<?> handle = request.removeTimeoutHandle();
         if (handle != null) {
-            boolean canceled = handle.cancel(true);
-            //See if it canceled
-            if (!canceled) {
-                //Couldn't cancel it and it ran, so too late :-(
-                return;
-            }
-            request.setTimeoutHandle(null);
+            // cancel but don't interrupt
+            handle.cancel(false);
         }
     }
 
@@ -351,7 +355,7 @@ public class HttpIoHandler extends IoHandlerAdapter {
         /**
          * The session object.
          */
-        private IoSession sess;
+        private final IoSession sess;
 
         /**
          * Instantiates a new timeout task.
@@ -368,19 +372,23 @@ public class HttpIoHandler extends IoHandlerAdapter {
          * @see java.lang.Runnable#run()
          */
         public void run() {
+            // first, indicate that the request has timed out
+            sess.setAttribute(CLOSE_PENDING);
+        	
         	// clear the request outstanding flag on the session
         	sess.removeAttribute(REQUEST_OUTSTANDING);
         	
             // complete the future which will also fire the callback
             HttpRequestMessage request = (HttpRequestMessage)sess.getAttribute(CURRENT_REQUEST);
-            
-            AsyncHttpClient client = (AsyncHttpClient) sess.getAttachment();
-
-            // notify any interesting parties that this is starting 
-            client.notifyMonitoringListeners(MonitoringEvent.REQUEST_TIMEOUT, request); 
+            // make sure to remove the timeout handle
+            request.setTimeoutHandle(null);
             
             ResponseFuture result = request.getResponseFuture();
             result.setException(new TimeoutException());
+            
+            AsyncHttpClient client = (AsyncHttpClient) sess.getAttachment();
+            // notify any interesting parties that this is starting 
+            client.notifyMonitoringListeners(MonitoringEvent.REQUEST_TIMEOUT, request); 
             
             //Close the session, its no good since the server is timing out
             sess.close();
