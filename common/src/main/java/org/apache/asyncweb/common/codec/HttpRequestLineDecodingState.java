@@ -19,7 +19,7 @@
  */
 package org.apache.asyncweb.common.codec;
 
-import java.net.URI;
+import java.net.URL;
 import java.nio.charset.CharsetDecoder;
 
 import org.apache.asyncweb.common.HttpMethod;
@@ -87,7 +87,7 @@ abstract class HttpRequestLineDecodingState extends DecodingStateMachine {
         @Override
         protected DecodingState finishDecode(IoBuffer product,
                 ProtocolDecoderOutput out) throws Exception {
-            out.write(new URI(product.getString(defaultDecoder)));
+            out.write(new URL(product.getString(defaultDecoder)));
             return AFTER_READ_REQUEST_URI;
         }
     };
