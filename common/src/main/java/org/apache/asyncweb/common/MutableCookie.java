@@ -63,6 +63,13 @@ public interface MutableCookie extends Cookie {
     void setSecure(boolean secure);
 
     /**
+     * Mark the cookie a only for HTTP. Browser are supposed to block access to this cookie
+     * from client side code.
+     * {@link http://www.owasp.org/index.php/HTTPOnly}
+     */
+    void setHttpOnly(boolean httpOnly);
+
+    /**
      * Sets the maximum age of the cookie in seconds.
      * A positive value indicates that the cookie will expire after the specified number
      * of seconds.

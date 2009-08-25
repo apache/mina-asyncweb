@@ -98,4 +98,10 @@ public interface Cookie extends Serializable, Comparable<Cookie> {
      * @return  the expiration date of the cookie in milliseconds after Jan. 1, 1970.
      */
     long getExpirationDate();
+
+    /**
+     * Returns if this cookie is marked as "HTTP only".
+     * {@link http://www.owasp.org/index.php/HTTPOnly}
+     */
+    boolean isHttpOnly();
 }

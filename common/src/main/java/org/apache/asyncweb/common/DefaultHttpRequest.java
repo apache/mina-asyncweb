@@ -417,6 +417,9 @@ public class DefaultHttpRequest extends DefaultHttpMessage implements
                 if (c.isSecure()) {
                     buf.append("; secure");
                 }
+                if (c.isHttpOnly()) {
+                   buf.append("; HTTPOnly");
+                }
                 
                 buf.append(';');
                 

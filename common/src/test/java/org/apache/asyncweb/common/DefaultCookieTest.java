@@ -12,6 +12,7 @@ public class DefaultCookieTest extends TestCase {
         final String domain = "mina.apache.org";
         final String path = "/cookie/path";
         final boolean secure = true;
+        final boolean httpOnly = true;
         final int maxAge = 324987;
         final String comment = "This is the cookie comment";
         final long createdDate = 437874235475L;
@@ -36,6 +37,9 @@ public class DefaultCookieTest extends TestCase {
             public boolean isSecure() {
                 return secure;
             }
+            public boolean isHttpOnly() {
+                return httpOnly;
+            }
             public int getMaxAge() {
                 return maxAge;
             }
@@ -45,6 +49,7 @@ public class DefaultCookieTest extends TestCase {
             public long getCreatedDate() {
                 return createdDate;
             }
+
             public long getExpirationDate() {
                 // This should be a calculated field so we'll just return 0
                 return 0;
@@ -64,6 +69,7 @@ public class DefaultCookieTest extends TestCase {
         assertEquals(domain, copy.getDomain());
         assertEquals(path, copy.getPath());
         assertEquals(secure, copy.isSecure());
+        assertEquals(httpOnly, copy.isHttpOnly());
         assertEquals(maxAge, copy.getMaxAge());
         assertEquals(comment, copy.getComment());
         assertEquals(createdDate, copy.getCreatedDate());

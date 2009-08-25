@@ -42,6 +42,8 @@ public class DefaultCookie implements MutableCookie {
 
     private boolean secure;
 
+    private boolean httpOnly;
+
     private int version = 0;
 
     private int maxAge = -1;
@@ -88,6 +90,7 @@ public class DefaultCookie implements MutableCookie {
         this.secure = cookie.isSecure();
         this.value = cookie.getValue();
         this.version = cookie.getVersion();
+        this.httpOnly = cookie.isHttpOnly();
     }
 
     public String getComment() {
@@ -130,6 +133,14 @@ public class DefaultCookie implements MutableCookie {
         this.secure = secure;
     }
 
+    public boolean isHttpOnly() {
+        return httpOnly;
+    }
+    
+    public void setHttpOnly(boolean httpOnly) {
+        this.httpOnly= httpOnly;
+    }
+    
     public String getValue() {
         return value;
     }
@@ -255,6 +266,6 @@ public class DefaultCookie implements MutableCookie {
     public String toString() {
         return "name=" + getName() + " value=" + getValue() + " domain="
                 + getDomain() + " path=" + getPath() + " maxAge=" + getMaxAge()
-                + " secure=" + isSecure();
+                + " secure=" + isSecure()+ " httpOnly="+isHttpOnly();
     }
 }

@@ -61,6 +61,9 @@ public class HttpDecoder {
     
     /** The Constant COOKIE_SECURE. */
     public static final String COOKIE_SECURE = "secure";
+
+    /** The Constant COOKIE_HTTP_ONLY. */
+    public static final String COOKIE_HTTP_ONLY = "HTTPOnly";
     
     /** The Constant COOKIE_VERSION. */
     public static final String COOKIE_VERSION = "version";
@@ -298,6 +301,10 @@ public class HttpDecoder {
 
             if (name.equalsIgnoreCase(COOKIE_SECURE)) {
                 cookie.setSecure(true);
+            }
+
+            if (name.equalsIgnoreCase(COOKIE_HTTP_ONLY)) {
+                cookie.setHttpOnly(true);
             }
 
             if (name.equalsIgnoreCase(COOKIE_VERSION)) {
