@@ -19,7 +19,7 @@
  */
 package org.apache.asyncweb.common.codec;
 
-import java.net.URL;
+import java.net.URI;
 import java.nio.charset.CharsetDecoder;
 
 import org.apache.asyncweb.common.HttpMethod;
@@ -87,8 +87,11 @@ abstract class HttpRequestLineDecodingState extends DecodingStateMachine {
         @Override
         protected DecodingState finishDecode(IoBuffer product,
                 ProtocolDecoderOutput out) throws Exception {
-            out.write(new URL(product.getString(defaultDecoder)));
-            return AFTER_READ_REQUEST_URI;
+            String uri = product.getString(defaultDecoder);
+            // replacing all the | by %7C because URI class doesn't support it
+            uri = uri.replace("|","%7C");
+            out.write(new URI(uri));
+	return AFTER_READ_REQUEST_URI;
         }
     };
 
