@@ -19,7 +19,6 @@
  */
 package org.apache.asyncweb.client.codec;
 
-import org.apache.asyncweb.client.util.NeedMoreDataException;
 import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.filter.codec.CumulativeProtocolDecoder;
@@ -46,86 +45,82 @@ public class HttpResponseDecoder extends CumulativeProtocolDecoder {
      * @see org.apache.mina.filter.codec.CumulativeProtocolDecoder#doDecode(org.apache.mina.common.IoSession, org.apache.mina.common.ByteBuffer, org.apache.mina.filter.codec.ProtocolDecoderOutput)
      */
     protected boolean doDecode(IoSession ioSession, ByteBuffer in, ProtocolDecoderOutput out)
-        throws Exception {
+            throws Exception {
 
-        try {
-            HttpResponseMessage response = (HttpResponseMessage)ioSession.getAttribute(HttpIoHandler.CURRENT_RESPONSE);
-            if (response == null) {
-                HttpRequestMessage request = (HttpRequestMessage)ioSession.getAttribute(HttpIoHandler.CURRENT_REQUEST);
-                response = new HttpResponseMessage(request.getUrl());
-                ioSession.setAttribute(HttpIoHandler.CURRENT_RESPONSE, response);
-            }
-
-            //Test if we need the response...
-            if (response.getState() == HttpResponseMessage.STATE_START) {
-
-                if (!processStatus(response, in)) {
-                    throw new NeedMoreDataException();
-                }
-
-                //Handle HTTP/1.1 100 Continue
-                if (response.getStatusCode() == 100) {
-                    response.setState(HttpResponseMessage.STATE_STATUS_CONTINUE);
-                } else {
-                    response.setState(HttpResponseMessage.STATE_STATUS_READ);
-                }
-            }
-
-            //If we are in a 100 Continue, read until we get the real header
-            if (response.getState() == HttpResponseMessage.STATE_STATUS_CONTINUE) {
-                //Continue reading until we get a blank line
-                while (true) {
-                    String line = httpDecoder.decodeLine(in);
-
-                    //Check if the entire response has been read
-                    if (line == null) {
-                        throw new NeedMoreDataException();
-                    }
-
-                    //Check if the entire response headers have been read
-                    if (line.length() == 0) {
-                        //The next line should be a header
-                        if (!processStatus(response, in)) {
-                            // the continue response is completely read but we
-                            // didn't get the full status line from the next
-                            // response; reset the state to STATE_START
-                            response.setState(HttpResponseMessage.STATE_START);
-                            throw new NeedMoreDataException();
-                        }
-                        // status was processed
-                        response.setState(HttpResponseMessage.STATE_STATUS_READ);
-                        break;
-                    }
-                }
-            }
-
-            //Are we reading headers?
-            if (response.getState() == HttpResponseMessage.STATE_STATUS_READ) {
-                if (!processHeaders(response, in)) {
-                    throw new NeedMoreDataException();
-                }
-            }
-
-            //Are we reading content?
-            if (response.getState() == HttpResponseMessage.STATE_HEADERS_READ) {
-                if (!processContent(response, ioSession, in)) {
-                    throw new NeedMoreDataException();
-                }
-            }
-
-            //If we are chunked and we have read all the content, then read the footers if there are any
-            if (response.isChunked() && response.getState() == HttpResponseMessage.STATE_CONTENT_READ) {
-                if (!processFooters(response, in)) {
-                    throw new NeedMoreDataException();
-                }
-            }
-
-            completeResponse(ioSession, out, response);
-
-            return true;
-        } catch (NeedMoreDataException e) {
-            return false;
+        HttpResponseMessage response = (HttpResponseMessage)ioSession.getAttribute(HttpIoHandler.CURRENT_RESPONSE);
+        if (response == null) {
+            HttpRequestMessage request = (HttpRequestMessage)ioSession.getAttribute(HttpIoHandler.CURRENT_REQUEST);
+            response = new HttpResponseMessage(request.getUrl());
+            ioSession.setAttribute(HttpIoHandler.CURRENT_RESPONSE, response);
         }
+
+        //Test if we need the response...
+        if (response.getState() == HttpResponseMessage.STATE_START) {
+
+            if (!processStatus(response, in)) {
+                return false;
+            }
+
+            //Handle HTTP/1.1 100 Continue
+            if (response.getStatusCode() == 100) {
+                response.setState(HttpResponseMessage.STATE_STATUS_CONTINUE);
+            } else {
+                response.setState(HttpResponseMessage.STATE_STATUS_READ);
+            }
+        }
+
+        //If we are in a 100 Continue, read until we get the real header
+        if (response.getState() == HttpResponseMessage.STATE_STATUS_CONTINUE) {
+            //Continue reading until we get a blank line
+            while (true) {
+                String line = httpDecoder.decodeLine(in);
+
+                //Check if the entire response has been read
+                if (line == null) {
+                    return false;
+                }
+
+                //Check if the entire response headers have been read
+                if (line.length() == 0) {
+                    //The next line should be a header
+                    if (!processStatus(response, in)) {
+                        // the continue response is completely read but we
+                        // didn't get the full status line from the next
+                        // response; reset the state to STATE_START
+                        response.setState(HttpResponseMessage.STATE_START);
+                        return false;
+                    }
+                    // status was processed
+                    response.setState(HttpResponseMessage.STATE_STATUS_READ);
+                    break;
+                }
+            }
+        }
+
+        //Are we reading headers?
+        if (response.getState() == HttpResponseMessage.STATE_STATUS_READ) {
+            if (!processHeaders(response, in)) {
+                return false;
+            }
+        }
+
+        //Are we reading content?
+        if (response.getState() == HttpResponseMessage.STATE_HEADERS_READ) {
+            if (!processContent(response, ioSession, in)) {
+                return false;
+            }
+        }
+
+        //If we are chunked and we have read all the content, then read the footers if there are any
+        if (response.isChunked() && response.getState() == HttpResponseMessage.STATE_CONTENT_READ) {
+            if (!processFooters(response, in)) {
+                return false;
+            }
+        }
+
+        completeResponse(ioSession, out, response);
+
+        return true;
     }
 
     @Override
