@@ -29,6 +29,7 @@ public class ResponseHeaderParsingTest extends TestCase {
             + "\r\n"
             + "<html></html>";
     private static final String EMPTY_VALUE_COOKIE = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    private static final String CRLF = "\r\n";
 
     public void testParsing() throws Exception {
         ByteBuffer buffer = ByteBuffer.allocate(TEST_RESPONSE.length());
@@ -64,5 +65,17 @@ public class ResponseHeaderParsingTest extends TestCase {
         assertTrue(c.getValue().length() == 0);
         assertEquals("/", c.getPath());
         assertEquals(DateUtil.parseDate("Thu, 01 Jan 1970 00:00:00 GMT"), c.getExpires());
+    }
+    
+    public void testParsingEmptyCRLF() throws Exception {
+        ByteBuffer buffer = ByteBuffer.allocate(CRLF.length());
+        buffer.put(CRLF.getBytes());
+        buffer.flip();
+
+        HttpDecoder decoder = new HttpDecoder();
+        String line = decoder.decodeHeaderLine(buffer);
+        // we should get a non-null empty string
+        assertTrue(line != null);
+        assertEquals("", line);
     }
 }

@@ -108,7 +108,9 @@ public class HttpDecoder {
      * 
      * @param in ByteBuffer containing data
      * 
-     * @return a <code>String</code> representing the decoded line
+     * @return a <code>String</code> representing the decoded line, an empty
+     * String if we encountered an empty CR/LF, or null if we don't have a full
+     * line to process
      * 
      * @throws Exception for any Exception that is encountered
      */
@@ -136,12 +138,9 @@ public class HttpDecoder {
             return null;
         }
 
-        String result = null;
-        if (terminatorPos > 1) {
-            ByteBuffer line = in.slice();
-            line.limit(terminatorPos - beginPos - 1);
-            result = line.getString(decoder.get());
-        }
+        ByteBuffer line = in.slice();
+        line.limit(terminatorPos - beginPos - 1);
+        String result = line.getString(decoder.get());
 
         in.position(terminatorPos + 1);
 
@@ -158,7 +157,9 @@ public class HttpDecoder {
      * 
      * @param in ByteBuffer containing data
      * 
-     * @return a <code>String</code> representing the decoded line
+     * @return a <code>String</code> representing the decoded line, an empty
+     * String if we encountered an empty CR/LF, or null if we don't have a full
+     * line to process
      * 
      * @throws Exception for any Exception that is encountered
      */
@@ -205,12 +206,9 @@ public class HttpDecoder {
             return null;
         }
 
-        String result = null;
-        if (terminatorPos > 1) {
-            ByteBuffer line = in.slice();
-            line.limit(terminatorPos - beginPos - 1);
-            result = line.getString(decoder.get());
-        }
+        ByteBuffer line = in.slice();
+        line.limit(terminatorPos - beginPos - 1);
+        String result = line.getString(decoder.get());
 
         in.position(terminatorPos + 1);
 
