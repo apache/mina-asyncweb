@@ -86,5 +86,30 @@ public class ChunkedTest extends TestCase {
         assertTrue(
             Arrays.equals(response.getContent(), "abcdefghijklmnopqrstuvwxyz1234567890abcdef".getBytes()));
     }
-
+    
+    public void testChunkingBoundary() throws Exception {
+        // create a boundary condition where the last CRLF is around the edge of the buffer
+    	int size = FAKE_HTTP.length();
+        ByteBuffer buffer = ByteBuffer.allocate(size-1);
+        buffer.put(FAKE_HTTP.getBytes(), 0, size-1);
+        buffer.flip();
+        
+        HttpRequestMessage request = new HttpRequestMessage(null, null);
+        IoSession session = new FakeIoSession();
+        session.setAttribute(HttpIoHandler.CURRENT_REQUEST, request);
+        HttpResponseDecoder decoder = new HttpResponseDecoder();
+        FakeProtocolDecoderOutput out = new FakeProtocolDecoderOutput();
+        decoder.decode(session, buffer, out);
+        
+        // create a new buffer that carries the last remaining byte
+        buffer = ByteBuffer.allocate(size-1);
+        buffer.put(FAKE_HTTP.getBytes(), size-1, 1);
+        buffer.flip();
+        // finish decoding
+        decoder.decode(session, buffer, out);
+        
+        HttpResponseMessage response = (HttpResponseMessage)out.getObject();
+        assertTrue(
+            Arrays.equals(response.getContent(), "abcdefghijklmnopqrstuvwxyz1234567890abcdef".getBytes()));
+    }
 }
