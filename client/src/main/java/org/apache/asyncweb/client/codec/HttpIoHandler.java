@@ -178,7 +178,7 @@ public class HttpIoHandler extends IoHandlerAdapter {
             // if we've been provided with a cache, put this session into 
             // the cache. 
             SessionCache cache = getSessionCache(); 
-            if (cache != null) {
+            if (cache != null && !HttpDecoder.CLOSE.equals(response.getConnection())) {
                 // cache the session before we return
                 cache.cacheSession(ioSession);
             }
@@ -207,7 +207,7 @@ public class HttpIoHandler extends IoHandlerAdapter {
                 // if we've been provided with a cache, put this session into 
                 // the cache. 
                 SessionCache cache = getSessionCache(); 
-                if (cache != null) {
+                if (cache != null && !HttpDecoder.CLOSE.equals(response.getConnection())) {
                     // cache the session before we return
                     cache.cacheSession(ioSession);
                 }
@@ -234,7 +234,7 @@ public class HttpIoHandler extends IoHandlerAdapter {
         // if we've been provided with a cache, put this session into 
         // the cache. 
         SessionCache cache = getSessionCache(); 
-        if (cache != null) {
+        if (cache != null && !HttpDecoder.CLOSE.equals(response.getConnection())) {
             // cache the session before we return
             cache.cacheSession(ioSession);
         }
