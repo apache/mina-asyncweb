@@ -32,20 +32,16 @@ import org.apache.mina.filter.codec.statemachine.DecodingStateProtocolDecoder;
  *
  * @author The Apache MINA Project (dev@mina.apache.org)
  */
-public class HttpRequestDecoder extends DecodingStateProtocolDecoder
-{
-    public HttpRequestDecoder()
-    {
-        super( new HttpRequestDecodingStateMachine()
-        {
+public class HttpRequestDecoder extends DecodingStateProtocolDecoder {
+    public HttpRequestDecoder() {
+        super( new HttpRequestDecodingStateMachine() {
             @Override
             protected DecodingState finishDecode(List<Object> childProducts,
-                    ProtocolDecoderOutput out) throws Exception
-            {
-                for ( Object m: childProducts )
-                {
+                    ProtocolDecoderOutput out) throws Exception {
+                for (Object m: childProducts) {
                     out.write( m );
                 }
+                
                 return null;
             }
         });
