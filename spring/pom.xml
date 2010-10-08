@@ -30,7 +30,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>${groupId}</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>asyncweb-server</artifactId>
     </dependency>
 

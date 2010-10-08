@@ -28,12 +28,12 @@
   <packaging>bundle</packaging>
   <name>Apache Asyncweb File Service</name>
   <properties>
-    <exportedPackage>${groupId}.fileservice</exportedPackage>
+    <exportedPackage>${project.groupId}.fileservice</exportedPackage>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>${groupId}</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>asyncweb-server</artifactId>
     </dependency>
   </dependencies>

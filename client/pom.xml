@@ -30,12 +30,12 @@
   <packaging>bundle</packaging>  
 
   <properties>
-    <exportedPackage>${groupId}.client</exportedPackage>
+    <exportedPackage>${project.groupId}.client</exportedPackage>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>${groupId}</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>asyncweb-common</artifactId>
     </dependency>
 

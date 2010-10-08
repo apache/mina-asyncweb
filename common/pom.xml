@@ -30,7 +30,7 @@
 
 
   <properties>
-    <exportedPackage>${groupId}.common</exportedPackage>
+    <exportedPackage>${project.groupId}.common</exportedPackage>
   </properties>
 
   <dependencies>

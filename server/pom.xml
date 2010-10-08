@@ -28,7 +28,7 @@
   <packaging>bundle</packaging>
   <name>Apache Asyncweb Server</name>
   <properties>
-    <exportedPackage>${groupId}.server</exportedPackage>
+    <exportedPackage>${project.groupId}.server</exportedPackage>
   </properties>
       <build>
         <plugins>
@@ -51,7 +51,7 @@
     </dependency>
 
     <dependency>
-      <groupId>${groupId}</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>asyncweb-common</artifactId>
     </dependency>
   </dependencies>
