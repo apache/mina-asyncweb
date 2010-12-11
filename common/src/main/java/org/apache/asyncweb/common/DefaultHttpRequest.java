@@ -423,7 +423,7 @@ public class DefaultHttpRequest extends DefaultHttpMessage implements
                 
                 buf.append(';');
                 
-                addHeader(HttpHeaderConstants.KEY_SET_COOKIE, buf.toString());
+                addHeader( HttpHeaderConstants.KEY_COOKIE, buf.toString() );
             }
         }
         
