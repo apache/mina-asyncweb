@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
 import java.util.Random;
 
 import org.apache.asyncweb.fileservice.fileloader.SimpleFileLoader;
@@ -17,7 +18,7 @@ public class SimpleFileLoaderTest {
 	@Test
 	public void testLoadFile() throws Exception {
 		// generate temp file
-		File tempFile=File.createTempFile("dummy",null);
+		File tempFile=Files.createTempFile("dummy", null).toFile();
 		tempFile.deleteOnExit();
 		FileOutputStream fos=new FileOutputStream(tempFile);
 		Random rng=new Random();
