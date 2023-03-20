@@ -32,12 +32,15 @@ import org.apache.asyncweb.server.util.TimedPermit;
 /**
  * A <code>TimedPermitIssuer</code> which stores all issued permits in a linked
  * list.
+ * <p>
  * As a permit is renewed, its lifetime is extended and it is simply moved to the
  * back of the list (As <code>LinkedPermitIssuer</code> uses a fixed lifetime for
- * all permits and renewals).<br/>
+ * all permits and renewals).
+ * </p>
+ * <p>
  * Each permit issued by this issuer has direct access to its place in the list -
  * allowing constant time renewals.
- *
+ * </p>
  *
  */
 public class LinkedPermitIssuer implements TimedPermitIssuer

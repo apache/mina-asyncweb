@@ -246,8 +246,10 @@ public class SingleHttpSessionIoHandler implements SingleSessionIoHandler
     /**
      * Invoked when data wrote has been fully written.
      * If we have scheduled closure after sending a final response, we will
-     * be provided with the <code>CLOSE_MARKER</code> as our marker object.<br/>
+     * be provided with the <code>CLOSE_MARKER</code> as our marker object.
+     * <p>
      * This signals us to schedule closure of the connection
+     * </p>
      *
      * @param message   The marker provided when writing data. If this is
      *                 our closure marker, we schedule closure of the connection

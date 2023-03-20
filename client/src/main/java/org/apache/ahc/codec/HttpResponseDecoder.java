@@ -38,7 +38,7 @@ public class HttpResponseDecoder extends CumulativeProtocolDecoder {
     /**
      * Decodes the raw HTTP response from a server into a {@link HttpResponseMessage} object.
      * 
-     * @param ioSession the {@link org.apache.mina.core.IoSession} representing the connection to the server.
+     * @param ioSession the {@link IoSession} representing the connection to the server.
      * @param in the <code>ByteBuffer</code> that contains the raw bytes from the server
      * @param out {@link org.apache.mina.filter.codec.ProtocolDecoderOutput} used for output
      * 

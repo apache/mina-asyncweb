@@ -78,10 +78,10 @@ public class HttpRequestEncoder extends ProtocolEncoderAdapter {
     /**
      * Method responsible for encoding a HttpRequestMessage into raw bytes.
      * 
-     * @param ioSession the {@link org.apache.mina.core.IoSession} representing the connection to the server.
+     * @param ioSession the {@link IoSession} representing the connection to the server.
      * @param message the {@link HttpRequestMessage} object
      * @param out {@link org.apache.mina.filter.codec.ProtocolEncoderOutput} used for output
-     * @see org.apache.mina.filter.codec.ProtocolEncoder#encode(org.apache.mina.core.IoSession, java.lang.Object, org.apache.mina.filter.codec.ProtocolEncoderOutput)
+     * @see org.apache.mina.filter.codec.ProtocolEncoder#encode(IoSession, java.lang.Object, org.apache.mina.filter.codec.ProtocolEncoderOutput)
      */
     public void encode(IoSession ioSession, Object message, ProtocolEncoderOutput out) throws Exception {
         HttpRequestMessage msg = (HttpRequestMessage)message;

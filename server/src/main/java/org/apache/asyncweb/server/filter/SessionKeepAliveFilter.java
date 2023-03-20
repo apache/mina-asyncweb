@@ -29,11 +29,11 @@ import org.apache.asyncweb.server.HttpServiceFilter;
  * A <code>ServiceHandler</code> which causes any existing session associated with
  * each request it handles to be renewed.
  * This causes sessions attached to requests to be renewed per-request - even if
- * the request does not cause session access to occur.<br/>
- *
+ * the request does not cause session access to occur.
+ * <p>
  * This handler does not need to be installed for deployments which do not employ
  * sessions
- *
+ * </p>
  */
 public class SessionKeepAliveFilter implements HttpServiceFilter
 {

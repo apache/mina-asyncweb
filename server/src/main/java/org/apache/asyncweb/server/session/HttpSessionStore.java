@@ -54,7 +54,7 @@ public interface HttpSessionStore {
     /**
      * Locates an existing session with the specified key.
      * Any store which employs session time-outs should perform the appropriate
-     * action to mark the session as recently used before returning it.<br/>
+     * action to mark the session as recently used before returning it.
      *
      * @param key  The key for which a session is required
      * @return     The session, or <code>null</code> if no session was found with

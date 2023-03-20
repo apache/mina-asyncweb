@@ -35,7 +35,7 @@ public interface RequestPipeline {
      * of the specified response becoming available.
      * If the associated request has not been previously added to this pipeline,
      * it joins the pipeline at the back of the queue: All previously added
-     * requests must be responded to before the new request can take its turn<br/>
+     * requests must be responded to before the new request can take its turn.
      */
     public void releaseResponse(HttpServiceContext context);
 

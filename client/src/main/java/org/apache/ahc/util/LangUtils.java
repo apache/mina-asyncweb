@@ -23,7 +23,7 @@ package org.apache.ahc.util;
  * A set of utility methods to help produce consistent Object#equals(Object) and
  * Object#hashCode methods.
  * 
- * @author <a href="mailto:oleg at ural.ru">Oleg Kalnichevski</a>
+ * @author oleg at ural.ru Oleg Kalnichevski
  */
 public final class LangUtils {
 

@@ -26,19 +26,22 @@ import org.slf4j.LoggerFactory;
 /**
  * A very simple resolver which simply uses the full URI after
  * stripping an optional prefix as the name of the service.
- *
+ * <p>
  * <code>SimplePrefixResolver</code> is useful when a very
  * naming scheme is used - and allows services to be resolved
- * "dynamically" without any global configuration.<br/>
- * </br>
+ * "dynamically" without any global configuration.
+ * </p>
+ * <p>
  * Request URIs which do not begin with the configured prefix are
- * not resolved.<br/>
- * <br/>
+ * not resolved.
+ * </p>
+ * <p>
  * For example, suppose all <code>HttpService</code>s are addressed
  * under the prefix <code>/services/</code>. We would then map as
- * follows for the following URIs:<br/>
- * <br/>
+ * follows for the following URIs:
+ * </p>
  * <table border="1" cellpadding="2">
+ *  <caption>Example Mappings</caption>
  *  <tr><td>URI</td><td>Service Name</td></tr>
  *  <tr><td>/services/serviceA</td><td>serviceA</td></tr>
  *  <tr><td>/services/serviceB</td><td>serviceB</td></tr>
@@ -59,9 +62,10 @@ public class SimplePrefixResolver implements ServiceResolver {
      * Sets the prefix associated with this resolver.
      * URIs which begin with the specified prefix are resolved to the URI
      * with the prefix stripped. URIs which do not begin with the specified
-     * prefix are not resolved.<br/>
-     * <br/>
+     * prefix are not resolved.
+     * <p>
      * If a prefix is not set, requests are resolved to their URI value.
+     * </p>
      *
      * @param uriPrefix  The uri prefix to apply
      */
@@ -73,10 +77,12 @@ public class SimplePrefixResolver implements ServiceResolver {
     /**
      * Resolves the name of the service to be employed for the specified request.
      * If this resolver is not configured with a prefix, the request resoves to
-     * the request URI.<br/>
+     * the request URI.
+     * <p>
      * Otherwise, if the request URI begins with the configured prefix, the request
      * resolves to the URI with the prefix stripped. If the request URI does not
      * begin with the configured prefix, the request is unresolved
+     * </p>
      *
      * @param request The request to resolve to a service name
      * @return        The resolved service name, or <code>null</code> if

@@ -31,8 +31,8 @@ import org.apache.ahc.codec.HttpResponseMessage;
 import org.apache.ahc.util.MonitoringEvent;
 import org.apache.ahc.util.NameValuePair;
 import org.apache.asyncweb.common.HttpMethod;
-import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.service.IoHandlerAdapter;
+import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 
 
@@ -86,7 +86,7 @@ public class HttpIoHandler extends IoHandlerAdapter {
     /**
      * Stub for handling sessionOpened events.
      *
-     * @see org.apache.mina.core.IoHandlerAdapter#sessionOpened(org.apache.mina.core.IoSession)
+     * @see IoHandlerAdapter#sessionOpened(IoSession)
      */
     public void sessionOpened(IoSession ioSession) throws Exception {
     }
@@ -94,9 +94,9 @@ public class HttpIoHandler extends IoHandlerAdapter {
     /**
      * Handler for receiving a response from a remote server.
      *
-     * @param ioSession the {@link org.apache.mina.core.IoSession} representing the connection to the server.
+     * @param ioSession the {@link IoSession} representing the connection to the server.
      * @param object    the {@link HttpResponseMessage} object
-     * @see org.apache.mina.core.IoHandlerAdapter#messageReceived(org.apache.mina.core.IoSession,java.lang.Object)
+     * @see IoHandlerAdapter#messageReceived(IoSession,java.lang.Object)
      */
     public void messageReceived(IoSession ioSession, Object object) throws Exception {
 
@@ -182,9 +182,9 @@ public class HttpIoHandler extends IoHandlerAdapter {
     /**
      * Handler for receiving a notification that an Exception occurred in the communication with the server
      *
-     * @param ioSession the {@link org.apache.mina.core.IoSession} representing the connection to the server.
+     * @param ioSession the {@link IoSession} representing the connection to the server.
      * @param throwable the {@link java.lang.Throwable} object representing the exception that occurred
-     * @see org.apache.mina.core.IoHandlerAdapter#exceptionCaught(org.apache.mina.core.IoSession,java.lang.Throwable)
+     * @see IoHandlerAdapter#exceptionCaught(IoSession,java.lang.Throwable)
      */
     public void exceptionCaught(IoSession ioSession, Throwable throwable) throws Exception {
         //Clean up if any in-proccess decoding was occurring
@@ -207,8 +207,8 @@ public class HttpIoHandler extends IoHandlerAdapter {
     /**
      * Handler for notifying that a connection was closed to the remote server.
      *
-     * @param ioSession the {@link org.apache.mina.core.IoSession} representing the connection to the server.
-     * @see org.apache.mina.core.IoHandlerAdapter#sessionClosed(org.apache.mina.core.IoSession)
+     * @param ioSession the {@link IoSession} representing the connection to the server.
+     * @see IoHandlerAdapter#sessionClosed(IoSession)
      */
     public void sessionClosed(IoSession ioSession) throws Exception {
         //Clean up if any in-proccess decoding was occurring

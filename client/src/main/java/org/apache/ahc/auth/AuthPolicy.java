@@ -35,8 +35,7 @@ public class AuthPolicy {
      * The key used to look up the list of IDs of supported {@link AuthScheme
      * authentication schemes} in their order of preference. The scheme IDs are
      * stored in a {@link java.util.Collection} as {@link java.lang.String}s.
-     * <p/>
-     * <p/>
+     * <p>
      * If several schemes are returned in the <tt>WWW-Authenticate</tt>
      * or <tt>Proxy-Authenticate</tt> header, this parameter defines which
      * {@link AuthScheme authentication schemes} takes precedence over others.
@@ -82,8 +81,7 @@ public class AuthPolicy {
      * the given identifier. If a class with the given ID already exists it will be overridden.
      * This ID is the same one used to retrieve the {@link AuthScheme authentication scheme}
      * from {@link #getAuthScheme(String)}.
-     * <p/>
-     * <p/>
+     * <p>
      * Please note that custom authentication preferences, if used, need to be updated accordingly
      * for the new {@link AuthScheme authentication scheme} to take effect.
      * </p>

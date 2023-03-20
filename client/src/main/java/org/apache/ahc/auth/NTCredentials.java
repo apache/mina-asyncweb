@@ -46,7 +46,7 @@ public class NTCredentials extends UsernamePasswordCredentials {
     /**
      * Default constructor.
      *
-     * @deprecated Do not use. Null user name, domain & host no longer allowed
+     * @deprecated Do not use. Null user name, domain and host no longer allowed
      */
     public NTCredentials() {
         super();

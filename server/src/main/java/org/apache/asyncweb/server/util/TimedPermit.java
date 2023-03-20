@@ -24,8 +24,6 @@ package org.apache.asyncweb.server.util;
  * A <code>TimedPermit</code> is issued for a target object by a <code>TimedPermitIssue</code>.
  * When the time limit (determined by the issuer) is reached, any listeners attached to
  * the issuer are notified.
- *
- *
  */
 public interface TimedPermit {
 
@@ -33,11 +31,14 @@ public interface TimedPermit {
      * Extends the lifetime of this permit.
      * This is typically used as a "keep-alive" mechanism. For example, if a permit is
      * issued to manage the idle expiry time of an http session, the permit might be
-     * extended each time the client issues a request associated with the session.<br/>
+     * extended each time the client issues a request associated with the session.
+     * <p>
      * The amount of time added to the lifetime of this permit by invoking this method
      * is determined by the <code>TimedPermitIssuer</code> which issued this permit.
-     *
+     * </p>
+     * <p>
      * Invoking this method has no effect if this permit is already expired
+     * </p>
      */
     public void renew();
 

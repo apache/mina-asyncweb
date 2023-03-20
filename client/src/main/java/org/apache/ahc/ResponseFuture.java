@@ -57,8 +57,6 @@ public class ResponseFuture extends FutureTask<HttpResponseMessage>
      * 
      * @param queue optional completion queue.  If not null, this future will be
      * placed in the queue on completion.
-     * @param callback optional callback object.  If not null, the callback will
-     * be invoked at proper stages on completion.
      */
     public ResponseFuture(HttpRequestMessage request, 
             BlockingQueue<ResponseFuture> queue) {

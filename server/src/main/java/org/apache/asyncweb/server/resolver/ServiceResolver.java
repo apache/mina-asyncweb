@@ -30,10 +30,11 @@ public interface ServiceResolver {
 
     /**
      * Determines the name of the <code>HttpService</code> to be employed
-     * to service a given <code>HttpRequest</code>.<br/>
-     *
+     * to service a given <code>HttpRequest</code>.
+     * <p>
      * If no service can be resolved for the specified request, this method
      * should return <code>null</code>.
+     * </p>
      *
      * @param request  The request for which a service name is required
      * @return         The name of the <code>HttpService</code> which

@@ -270,7 +270,7 @@ public class HttpDecoder {
      * 
      * @param cookieStr the cookie <code>String</code> header line
      * 
-     * @return the decoded <code>Cookie</cookie>
+     * @return the decoded <code>Cookie</code>
      * 
      * @throws Exception if any exception occurs
      * @see Cookie

@@ -136,7 +136,7 @@ public class HttpRequestMessage extends HttpMessage {
     /**
      * Gets the request method.
      *
-     * @return the request method.  Defaults to {@link #REQUEST_GET} if not set.
+     * @return the request method.  Defaults to {@link HttpMethod#GET} if not set.
      */
     public HttpMethod getRequestMethod() {
         return requestMethod;
@@ -169,9 +169,9 @@ public class HttpRequestMessage extends HttpMessage {
      * Sets the request method.
      *
      * @param requestMethod the new request method
-     * @throws ProtocolException if the request method is not of type {@link #REQUEST_GET},
-     *                           {@link #REQUEST_POST},{@link #REQUEST_HEAD},{@link #REQUEST_OPTIONS},
-     *                           {@link #REQUEST_PUT},{@link #REQUEST_DELETE}, or {@link #REQUEST_TRACE}
+     * @throws ProtocolException if the request method is not of type {@link HttpMethod#GET},
+     *                           {@link HttpMethod#POST},{@link HttpMethod#HEAD},{@link HttpMethod#OPTIONS},
+     *                           {@link HttpMethod#PUT},{@link HttpMethod#DELETE}, or {@link HttpMethod#TRACE}
      */
     public void setRequestMethod(HttpMethod requestMethod) throws ProtocolException {
         this.requestMethod = requestMethod;

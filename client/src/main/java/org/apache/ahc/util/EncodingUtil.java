@@ -49,17 +49,18 @@ public final class EncodingUtil {
 
     /**
      * Form-urlencoding routine.
-     * <p/>
+     * <p>
      * The default encoding for all forms is `application/x-www-form-urlencoded'.
      * A form data set is represented in this media type as follows:
-     * <p/>
+     * </p>
+     * <p>
      * The form field names and values are escaped: space characters are replaced
      * by `+', and then reserved characters are escaped as per [URL]; that is,
      * non-alphanumeric characters are replaced by `%HH', a percent sign and two
      * hexadecimal digits representing the ASCII code of the character. Line breaks,
      * as in multi-line text field values, are represented as CR LF pairs, i.e. `%0D%0A'.
-     * <p/>
-     * <p/>
+     * </p>
+     * <p>
      * if the given charset is not supported, ISO-8859-1 is used instead.
      * </p>
      *

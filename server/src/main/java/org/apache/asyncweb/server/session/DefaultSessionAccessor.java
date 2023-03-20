@@ -28,13 +28,12 @@ import org.slf4j.LoggerFactory;
 /**
  * A simple <code>SessionAccessor</code> implementation which acts as a facade
  * to an employed <code>SessionIdentifier</code>, <code>SessionKeyFactory</code>
- * and <code>SessionStore</code>.<br/>
- *
+ * and <code>SessionStore</code>.
+ * <p>
  * A Default identifier and key factory is employed by this accessor, but the
  * implementations used can be switched (if required) using the appropriate
- * setter methods.<br/>
- *
- *
+ * setter methods.
+ * </p>
  */
 public class DefaultSessionAccessor implements HttpSessionAccessor {
 

@@ -28,26 +28,26 @@ package org.apache.ahc.util;
  *  <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6">Section 3.6</a>
  *  of <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.txt">RFC 2616</a>
  * </p>
- * <h>2.1 Augmented BNF</h>
+ * <h2>2.1 Augmented BNF</h2>
  * <p>
  *  Many HTTP/1.1 header field values consist of words separated by LWS or special
  *  characters. These special characters MUST be in a quoted string to be used within
  *  a parameter value (as defined in section 3.6).
- * <p>
- * <pre>
+ * </p>
+ * <pre>{@code
  * token          = 1*<any CHAR except CTLs or separators>
  * separators     = "(" | ")" | "<" | ">" | "@"
  *                | "," | ";" | ":" | "\" | <">
  *                | "/" | "[" | "]" | "?" | "="
  *                | "{" | "}" | SP | HT
- * </pre>
+ * }</pre>
  * <p>
  *  A string of text is parsed as a single word if it is quoted using double-quote marks.
  * </p>
- * <pre>
+ * <pre>{@code
  * quoted-string  = ( <"> *(qdtext | quoted-pair ) <"> )
  * qdtext         = <any TEXT except <">>
- * </pre>
+ * }</pre>
  * <p>
  *  The backslash character ("\") MAY be used as a single-character quoting mechanism only
  *  within quoted-string and comment constructs.
@@ -55,7 +55,7 @@ package org.apache.ahc.util;
  * <pre>
  * quoted-pair    = "\" CHAR
  * </pre>
- * <h>3.6 Transfer Codings</h>
+ * <h2>3.6 Transfer Codings</h2>
  * <p>
  *  Parameters are in the form of attribute/value pairs.
  * </p>
@@ -65,7 +65,7 @@ package org.apache.ahc.util;
  * value                   = token | quoted-string
  * </pre>
  *
- * @author <a href="mailto:oleg at ural.ru">Oleg Kalnichevski</a>
+ * @author oleg at ural.ru Oleg Kalnichevski
  * 
  */
 public class ParameterFormatter {

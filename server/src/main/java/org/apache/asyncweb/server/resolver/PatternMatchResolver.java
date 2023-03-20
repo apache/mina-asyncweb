@@ -31,9 +31,11 @@ import org.slf4j.LoggerFactory;
 /**
  * A <code>ServiceResolver</code> which maps request URIs to service names. An
  * pattern match is required on a request URI to a service name for returning
- * the matching service. Pattern are in the {@link Pattern} format.<br/>
+ * the matching service. Pattern are in the {@link Pattern} format.
+ * <p>
  * For example : "/hello/.*" will match all the URI begining by the string
  * "/hello/".
+ * </p>
  * 
  * @author The Apache MINA Project (dev@mina.apache.org)
  */
