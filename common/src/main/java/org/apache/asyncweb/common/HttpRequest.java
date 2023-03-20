@@ -72,12 +72,15 @@ public interface HttpRequest extends HttpMessage {
     /**
      * Determines whether the HTTP connection should remain open
      * after handling this request.
+     * <p>
      * If the request is a <code>HTTP/1.1</code> request, we keep
      * the connection alive unless an explicit <code>"Connection: close"</code>
-     * header is sent.<br/>
+     * header is sent.
+     * </p>
+     * <p>
      * Otherwise, the connection is only kept alive if an explicit
      * <code>"Connection: keep-alive"</code> header is sent
-     *
+     * </p>
      * @return  <code>true</code> if the connection should remain
      *          open following the handling of this request
      */
@@ -88,12 +91,15 @@ public interface HttpRequest extends HttpMessage {
      * A client may set a continuation expectation when sending a request
      * before continuing to send the body of a request (e.g. because it
      * would be inefficient to send the whole body if the server will
-     * reject the request based on the headers alone)<br/>
+     * reject the request based on the headers alone)
+     * <p>
      * If this request requires a continuation response, it should be
-     * sent to the client if the server is prepared to handle the request<br/>
-     *
+     * sent to the client if the server is prepared to handle the request
+     * </p>
+     * <p>
      * Note that if a continuation response is sent to the client, the server
      * MUST ultimately also send a final status code.
+     * </p>
      *
      * @return <code>true</code> if this request requires a continuation
      *         response to be sent

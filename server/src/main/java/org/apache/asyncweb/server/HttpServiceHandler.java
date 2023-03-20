@@ -54,9 +54,10 @@ public class HttpServiceHandler implements HttpServiceFilter {
      * Adds an <code>HttpService</code> against a service name.
      * The service will be invoked this handlers associated
      * <code>ServiceResolver</code> resolves a request to the
-     * specified service name.<br/>
-     *
+     * specified service name.
+     * <p>
      * Any existing registration against the given name is overwritten.
+     * </p>
      *
      * @param name         The service name
      * @param httpService  The service
@@ -73,7 +74,7 @@ public class HttpServiceHandler implements HttpServiceFilter {
     /**
      * Remove an <code>HttpService</code> which was previously added.
      *
-     * @param String name The key name of the HttpService you want to remove
+     * @param name The key name of the HttpService you want to remove
      */
     public void removeHttpService(String name) {
         HttpService service = serviceMap.remove(name);
@@ -98,10 +99,12 @@ public class HttpServiceHandler implements HttpServiceFilter {
     /**
      * Attempts to resolve the specified request to an <code>HttpService</code>
      * known to this handler by employing this handlers associated
-     * <code>ServiceResolver</code>.<br/>
+     * <code>ServiceResolver</code>.
+     * <p>
      * If an <code>HttpService</code> is located for the request, it is provided
      * with the request. Otherwise, a <code>404</code> response is committed
      * for the request
+     * </p>
      */
     public void handleRequest(NextFilter next, HttpServiceContext context)
             throws Exception {

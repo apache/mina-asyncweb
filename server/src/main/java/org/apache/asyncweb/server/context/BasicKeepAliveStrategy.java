@@ -49,7 +49,7 @@ public class BasicKeepAliveStrategy implements KeepAliveStrategy {
      * This method returns true iff either:
      * <ul>
      *   <li>The request is not committed</li>
-     * </u>
+     * </ul>
      * or (in order):
      * <ul>
      *   <li>The status of a response does not force closure</li>

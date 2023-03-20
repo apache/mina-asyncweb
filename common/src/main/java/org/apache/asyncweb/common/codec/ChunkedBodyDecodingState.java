@@ -34,16 +34,19 @@ import org.apache.mina.filter.codec.statemachine.SkippingState;
 /**
  * A decoder which decodes the body of HTTP Requests having
  * a "chunked" transfer-coding.
- *
+ * <p>
  * This decoder does <i>not</i> decode trailing entity-headers - it simply
  * discards them. Tomcat currently does the same - so this is probably
- * the most stable approach for now.<br/>
+ * the most stable approach for now.
+ * </p>
+ * <p>
  * If the need arises to decode them in the future, we simply need to employ a
  * <code>HttpHeaderDecoder</code> following the last chunk - yielding
- * headers for the encountered trailing entity-headers.<p/>
- *
+ * headers for the encountered trailing entity-headers.
+ * </p>
+ * <p>
  * This decoder decodes the following format:
- *
+ * </p>
  * <pre>
  *      Chunked-Body   = *chunk
  *                       last-chunk
@@ -59,12 +62,12 @@ import org.apache.mina.filter.codec.statemachine.SkippingState;
  *      chunk-data     = chunk-size(OCTET)
  *      trailer        = *(entity-header CRLF)
  * </pre>
- *
+ * <p>
  * <code>ChunkedBodyDecoder</code> employs a <code>SharedBytesAllocator</code>
  * to enable the content of each decoded chunk to contribute to a single
  * <code>Bytes</code>. This enables all chunks to be read without requiring
  * copying.
- *
+ * </p>
  * @author The Apache MINA Project (dev@mina.apache.org)
  */
 public abstract class ChunkedBodyDecodingState extends DecodingStateMachine {

@@ -65,7 +65,8 @@ public interface MutableCookie extends Cookie {
     /**
      * Mark the cookie a only for HTTP. Browser are supposed to block access to this cookie
      * from client side code.
-     * {@link http://www.owasp.org/index.php/HTTPOnly}
+     *
+     * See <a href="http://www.owasp.org/index.php/HTTPOnly">HTTPOnly</a>
      */
     void setHttpOnly(boolean httpOnly);
 

@@ -132,8 +132,6 @@ public interface MutableHttpRequest extends MutableHttpMessage, HttpRequest {
      * <li>Adds '<tt>Host</tt>' header if necessary.</li>
      * <li>Adds '<tt>Content-length</tt>' header if possible.</li>
      * </ol>
-     *
-     * @param request the request that pairs with this response
      */
     void normalize();
 }

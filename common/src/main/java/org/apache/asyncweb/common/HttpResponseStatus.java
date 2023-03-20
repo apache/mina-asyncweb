@@ -228,15 +228,18 @@ public class HttpResponseStatus implements Serializable {
     /**
      * Returns the <code>ResponseStatus</code> with the specified
      * status id.
+     * <p> 
      * If no status exists with the specified id, a new status is created
-     * and registered based on the category applicable to the id:<br/>
+     * and registered based on the category applicable to the id:
+     * </p> 
      * <table border="1">
+     *   <caption>Status</caption>
      *   <tr><td>100 - 199</td><td>Informational</td></tr>
      *   <tr><td>200 - 299</td><td>Successful</td></tr>
      *   <tr><td>300 - 399</td><td>Redirection</td></tr>
      *   <tr><td>400 - 499</td><td>Client Error</td></tr>
      *   <tr><td>500 - 599</td><td>Server Error</td></tr>
-     * <table>.
+     * </table>
      *
      * @param id  The id of the desired response status
      * @return    The <code>ResponseStatus</code>

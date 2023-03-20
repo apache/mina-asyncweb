@@ -101,7 +101,8 @@ public interface Cookie extends Serializable, Comparable<Cookie> {
 
     /**
      * Returns if this cookie is marked as "HTTP only".
-     * {@link http://www.owasp.org/index.php/HTTPOnly}
+     *
+     * @see <a href="http://www.owasp.org/index.php/">HTTPOnly</a>
      */
     boolean isHttpOnly();
 }

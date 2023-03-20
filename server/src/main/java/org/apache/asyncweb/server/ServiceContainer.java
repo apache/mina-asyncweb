@@ -69,7 +69,7 @@ public interface ServiceContainer {
      * as it passes through the container.
      * The accessor is shutdown when this container is stopped
      *
-     * @param sessionAccessor  The accessor
+     * @param accessor  The accessor
      */
     void setSessionAccessor( HttpSessionAccessor accessor);
 
