@@ -303,7 +303,7 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-core</artifactId>
-        <version>2.0.8</version>
+        <version>5.2.24.RELEASE</version>
       </dependency>
 
       <dependency>
