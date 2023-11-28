@@ -78,7 +78,7 @@ final class NTLM {
             throws AuthenticationException {
 
         final String response;
-        if (message == null || message.trim().equals("")) {
+        if (message == null || message.trim().isEmpty()) {
             response = getType1Message(host, domain);
         } else {
             response = getType3Message(username, password, host, domain,

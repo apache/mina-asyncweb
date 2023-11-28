@@ -51,7 +51,7 @@ public class AuthChallengeParser {
         } else {
             s = challengeStr.substring(0, idx);
         }
-        if (s.equals("")) {
+        if (s.isEmpty()) {
             throw new MalformedChallengeException("Invalid challenge: " + challengeStr);
         }
         return s.toLowerCase();
